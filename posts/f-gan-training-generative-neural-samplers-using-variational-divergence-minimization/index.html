@@ -1,328 +1,444 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+&lt;?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
 
-  <title>    f-GAN: Training Generative Neural Samplers using Variational Divergence Minimization</title>
-  <meta property="og:title" content="    f-GAN: Training Generative Neural Samplers using Variational Divergence Minimization" />
-  <meta name="twitter:title" content="    f-GAN: Training Generative Neural Samplers using Variational …" />
-  <meta name="description" content="The f-divergence Family The f-divergence Family f-divergence  \begin{eqnarray*} D_f(P||Q) &= & \int_{\mathcal{X}}q(x)f(\frac{p(x)}{q(x)})dx\\ \end{eqnarray*} $f$ : $\mathbb{R}_{&#43;}\rightarrow \mathbb{R}$ is a convex, lower-semicontinuous function satisfying $f(1)=0$  Fenchel conjugate \begin{eqnarray*} f^{}(t) & =& \sup_{u\in dom_f}\{ut-f(u)\}\\ \end{eqnarray}
-The f-divergence of $P$ and $Q$: What is $T^{*}(x)$ \begin{eqnarray} \label{eq:3} D_f(P||Q)&=&\int_{\mathcal{X}}q(x)\sup_{t\in dom_{f^{}}}\{t\frac{p(x)}{q(x)}-f^{}(t)\}dx\\ &\ge&\sup_{T\in \mathcal{T}}(\int_{\mathcal{X}}p(x)T(x)dx-\int_{\mathcal{X}}q(x)f^{}(T(x))dx)\\ &=&\sup_{T\in \mathcal{T}}(\mathbb{E}_{x\sim P}[T(x)]-\mathbb{E}_{x\sim Q}[f^{}(T(x))]) \end{eqnarray} By taking the variation of the lower bound in the equation we find that under mild conditions on f 1, the bound is tight for \begin{equation} \label{eq:4} T^{*}(x)=f^{&#39;}(\frac{p(x)}{q(x)}) \end{equation}">
-  <meta property="og:description" content="The f-divergence Family The f-divergence Family f-divergence  \begin{eqnarray*} D_f(P||Q) &= & \int_{\mathcal{X}}q(x)f(\frac{p(x)}{q(x)})dx\\ \end{eqnarray*} $f$ : $\mathbb{R}_{&#43;}\rightarrow \mathbb{R}$ is a convex, lower-semicontinuous function satisfying $f(1)=0$  Fenchel conjugate \begin{eqnarray*} f^{}(t) & =& \sup_{u\in dom_f}\{ut-f(u)\}\\ \end{eqnarray}
-The f-divergence of $P$ and $Q$: What is $T^{*}(x)$ \begin{eqnarray} \label{eq:3} D_f(P||Q)&=&\int_{\mathcal{X}}q(x)\sup_{t\in dom_{f^{}}}\{t\frac{p(x)}{q(x)}-f^{}(t)\}dx\\ &\ge&\sup_{T\in \mathcal{T}}(\int_{\mathcal{X}}p(x)T(x)dx-\int_{\mathcal{X}}q(x)f^{}(T(x))dx)\\ &=&\sup_{T\in \mathcal{T}}(\mathbb{E}_{x\sim P}[T(x)]-\mathbb{E}_{x\sim Q}[f^{}(T(x))]) \end{eqnarray} By taking the variation of the lower bound in the equation we find that under mild conditions on f 1, the bound is tight for \begin{equation} \label{eq:4} T^{*}(x)=f^{&#39;}(\frac{p(x)}{q(x)}) \end{equation}">
-  <meta name="twitter:description" content="The f-divergence Family The f-divergence Family f-divergence  \begin{eqnarray*} D_f(P||Q) &= & \int_{\mathcal{X}}q(x)f(\frac{p(x)}{q(x)})dx\\ \end{eqnarray*} $f$ : $\mathbb{R}_{&#43;}\rightarrow …">
-  <meta name="author" content=""/>
-  <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://mingzailao.github.io/posts/f-gan-training-generative-neural-samplers-using-variational-divergence-minimization/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="mingzaialo&#39;s blog" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>f-GAN: Training Generative Neural Samplers using Variational Divergence Minimization</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="mingzailao" />
+<style type="text/css">
+ <!-- 
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+   
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+   
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+   
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+   
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+   
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+   
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+   
+  pre.src-conf:before { content: 'Configuration File'; }
 
-  <meta name="generator" content="Hugo 0.37.1" />
-  <link rel="canonical" href="https://mingzailao.github.io/posts/f-gan-training-generative-neural-samplers-using-variational-divergence-minimization/" />
-  <link rel="alternate" href="https://mingzailao.github.io/index.xml" type="application/rss+xml" title="mingzaialo&#39;s blog">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://mingzailao.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://mingzailao.github.io/css/syntax.css" /><link rel="stylesheet" href="https://mingzailao.github.io/css/codeblock.css" />
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+   -->
+</style>
+<script type="text/javascript">
 
 
+<!-- 
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+ 
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
-
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">f-GAN: Training Generative Neural Samplers using Variational Divergence Minimization</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org5bd7e84">1. The f-divergence Family</a>
+<ul>
+<li><a href="#org0a0dffa">1.1. The f-divergence Family</a>
+<ul>
+<li><a href="#org1fb92bd">1.1.1. f-divergence</a></li>
+<li><a href="#org02039cd">1.1.2. Fenchel conjugate</a></li>
+</ul>
+</li>
+<li><a href="#org10b3f3c">1.2. The f-divergence of \(P\) and \(Q\):</a></li>
+<li><a href="#orge037373">1.3. What is \(T^{*}(x)\)</a></li>
+</ul>
+</li>
+<li><a href="#org49f62e9">2. Variational Divergence Minimization</a>
+<ul>
+<li><a href="#orgb1cc0d9">2.1. Variational Divergence Minimization</a></li>
+<li><a href="#orgf8f8c11">2.2. Variational Divergence Minimization</a>
+<ul>
+<li><a href="#org80fd0a1">2.2.1. Min-max The Loss(minimise with respect to \(\theta\) and maximum with respect to \(\omega\))</a></li>
+</ul>
+</li>
+<li><a href="#org91625e9">2.3. Variational Divergence Minimization</a></li>
+</ul>
+</li>
+<li><a href="#orgc6d3b11">3. Algorithms for Variational Divergence Minimization (VDM)</a>
+<ul>
+<li><a href="#org8c6e9ce">3.1. Single-Step Gradient Method</a></li>
+<li><a href="#orgbee304f">3.2. Analysis.</a></li>
+<li><a href="#org5367e3b">3.3. Analysis</a>
+<ul>
+<li><a href="#org09a5968">3.3.1. Theorem</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
 </div>
 
-</head>
 
-  <body>
-    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="https://mingzailao.github.io">mingzaialo&#39;s blog</a>
-    </div>
-
-    <div class="collapse navbar-collapse" id="main-navbar">
-      <ul class="nav navbar-nav navbar-right">
-        
-
-        
-
-        
-      </ul>
-    </div>
-
-    <div class="avatar-container">
-      <div class="avatar-img-border">
-        
-      </div>
-    </div>
-
-  </div>
-</nav>
-
-
-
-
-    
-  
-  
-  
-
-
-
-
-  
-
-  <header class="header-section ">
-    
-    <div class="intro-header no-img">
-      
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="posts-heading">
-              <h1>    f-GAN: Training Generative Neural Samplers using Variational Divergence Minimization</h1>
-                
-                
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
-
-
-    
-<div class="container" role="main">
-  <div class="row">
-    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-      <article role="main" class="blog-post">
-        <h1 id="the-f-divergence-family">The f-divergence Family</h1>
-
-<h2 id="the-f-divergence-family-1">The f-divergence Family</h2>
-
-<h3 id="f-divergence">f-divergence</h3>
-
-<ul>
+<div id="outline-container-org5bd7e84" class="outline-2">
+<h2 id="org5bd7e84"><span class="section-number-2">1</span> The f-divergence Family</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-org0a0dffa" class="outline-3">
+<h3 id="org0a0dffa"><span class="section-number-3">1.1</span> The f-divergence Family</h3>
+<div class="outline-text-3" id="text-1-1">
+</div><div id="outline-container-org1fb92bd" class="outline-4">
+<h4 id="org1fb92bd"><span class="section-number-4">1.1.1</span> f-divergence</h4>
+<div class="outline-text-4" id="text-1-1-1">
 \begin{eqnarray*}
 D_f(P||Q) &= & \int_{\mathcal{X}}q(x)f(\frac{p(x)}{q(x)})dx\\
 \end{eqnarray*}
-<li>$f$ : $\mathbb{R}_{+}\rightarrow \mathbb{R}$ is a convex, lower-semicontinuous function satisfying $f(1)=0$</li>
+<ul class="org-ul">
+<li>\(f\) : \(\mathbb{R}_{+}\rightarrow \mathbb{R}\) is a convex, lower-semicontinuous function satisfying \(f(1)=0\)</li>
 </ul>
+</div>
+</div>
 
-<h3 id="fenchel-conjugate">Fenchel conjugate</h3>
+<div id="outline-container-org02039cd" class="outline-4">
+<h4 id="org02039cd"><span class="section-number-4">1.1.2</span> Fenchel conjugate</h4>
+<div class="outline-text-4" id="text-1-1-2">
+\begin{eqnarray*}
+f^{*}(t) & =& \sup_{u\in dom_f}\{ut-f(u)\}\\
+\end{eqnarray*}
+</div>
+</div>
+</div>
 
-<p>\begin{eqnarray*}
-f^{<strong>}(t) & =& \sup_{u\in dom_f}\{ut-f(u)\}\\
-\end{eqnarray</strong>}</p>
-
-<h2 id="the-f-divergence-of-p-and-q">The f-divergence of $P$ and $Q$:</h2>
-
-<h2 id="what-is-t-x">What is $T^{*}(x)$</h2>
-
-<p>\begin{eqnarray}
+<div id="outline-container-org10b3f3c" class="outline-3">
+<h3 id="org10b3f3c"><span class="section-number-3">1.2</span> The f-divergence of \(P\) and \(Q\):</h3>
+<div class="outline-text-3" id="text-1-2">
+\begin{eqnarray}
 \label{eq:3}
-D_f(P||Q)&=&\int_{\mathcal{X}}q(x)\sup_{t\in dom_{f^{<strong>}}}\{t\frac{p(x)}{q(x)}-f^{</strong>}(t)\}dx\\
-&\ge&\sup_{T\in \mathcal{T}}(\int_{\mathcal{X}}p(x)T(x)dx-\int_{\mathcal{X}}q(x)f^{<strong>}(T(x))dx)\\
-&=&\sup_{T\in \mathcal{T}}(\mathbb{E}_{x\sim P}[T(x)]-\mathbb{E}_{x\sim Q}[f^{</strong>}(T(x))])
+D_f(P||Q)&=&\int_{\mathcal{X}}q(x)\sup_{t\in dom_{f^{*}}}\{t\frac{p(x)}{q(x)}-f^{*}(t)\}dx\\
+&\ge&\sup_{T\in \mathcal{T}}(\int_{\mathcal{X}}p(x)T(x)dx-\int_{\mathcal{X}}q(x)f^{*}(T(x))dx)\\
+&=&\sup_{T\in \mathcal{T}}(\mathbb{E}_{x\sim P}[T(x)]-\mathbb{E}_{x\sim Q}[f^{*}(T(x))])
 \end{eqnarray}
-By taking the variation of the lower bound in the equation we find that under mild conditions on f <sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>, the bound is tight for
+</div>
+</div>
+<div id="outline-container-orge037373" class="outline-3">
+<h3 id="orge037373"><span class="section-number-3">1.3</span> What is \(T^{*}(x)\)</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+By taking the variation of the lower bound in the equation we find that under mild conditions on f <sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>, the bound is tight for
+</p>
 \begin{equation}
 \label{eq:4}
 T^{*}(x)=f^{'}(\frac{p(x)}{q(x)})
-\end{equation}</p>
-
-<h1 id="variational-divergence-minimization">Variational Divergence Minimization</h1>
-
-<h2 id="variational-divergence-minimization-1">Variational Divergence Minimization</h2>
-
-<ul>
-<li>use the bound on f-divergence $D_f(P||Q)$ in order to estimate a generative model $Q$ given the true distribution $P$.</li>
-<li>$Q_{\theta}$ is the generative model with parameter $\theta$, taking as input a random vector and outputting a sample of interest.</li>
-<li>$T_{\omega}$ is the Discriminate model with parameter $\omega$. taking as input a sample and returning a scalar.</li>
-</ul>
-
-<h2 id="variational-divergence-minimization-2">Variational Divergence Minimization</h2>
-
-<h3 id="min-max-the-loss-minimise-with-respect-to-theta-and-maximum-with-respect-to-omega">Min-max The Loss(minimise with respect to $\theta$ and maximum with respect to $\omega$)</h3>
-
-<h2 id="variational-divergence-minimization-3">Variational Divergence Minimization</h2>
-
-<p>\begin{equation}
-\label{eq:5}
-F(\theta,\omega)=\mathbb{E}_{x\sim P}[T_{\omega}(x)]-\mathbb{E}_{x\sim Q_{\theta}}[f^{<strong>}(T_{\omega}(x))]
 \end{equation}
-To optimize this on a finite training data set, we approximate the expectations using minibatch samples. To approximate $\mathbb{E}_{x\sim P}[\cdot]$ we sample $B$ instances without replacement from the training set. To approximate $\mathbb{E}_{x\sim Q_{\theta}}[\cdot]$, we sample B instances from the current generative model $Q_{\theta}$
-we assume that variational function $T\omega$ is represented in the form $T\omega(x)=g_f(V_{\omega}(x))$, then:
+</div>
+</div>
+</div>
+
+<div id="outline-container-org49f62e9" class="outline-2">
+<h2 id="org49f62e9"><span class="section-number-2">2</span> Variational Divergence Minimization</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-orgb1cc0d9" class="outline-3">
+<h3 id="orgb1cc0d9"><span class="section-number-3">2.1</span> Variational Divergence Minimization</h3>
+<div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li>use the bound on f-divergence \(D_f(P||Q)\) in order to estimate a generative model \(Q\) given the true distribution \(P\).</li>
+<li>\(Q_{\theta}\) is the generative model with parameter \(\theta\), taking as input a random vector and outputting a sample of interest.</li>
+<li>\(T_{\omega}\) is the Discriminate model with parameter \(\omega\). taking as input a sample and returning a scalar.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgf8f8c11" class="outline-3">
+<h3 id="orgf8f8c11"><span class="section-number-3">2.2</span> Variational Divergence Minimization</h3>
+<div class="outline-text-3" id="text-2-2">
+</div><div id="outline-container-org80fd0a1" class="outline-4">
+<h4 id="org80fd0a1"><span class="section-number-4">2.2.1</span> Min-max The Loss(minimise with respect to \(\theta\) and maximum with respect to \(\omega\))</h4>
+<div class="outline-text-4" id="text-2-2-1">
+\begin{equation}
+\label{eq:5}
+F(\theta,\omega)=\mathbb{E}_{x\sim P}[T_{\omega}(x)]-\mathbb{E}_{x\sim Q_{\theta}}[f^{*}(T_{\omega}(x))]
+\end{equation}
+<p>
+To optimize this on a finite training data set, we approximate the expectations using minibatch samples. To approximate \(\mathbb{E}_{x\sim P}[\cdot]\) we sample \(B\) instances without replacement from the training set. To approximate \(\mathbb{E}_{x\sim Q_{\theta}}[\cdot]\), we sample B instances from the current generative model \(Q_{\theta}\)
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org91625e9" class="outline-3">
+<h3 id="org91625e9"><span class="section-number-3">2.3</span> Variational Divergence Minimization</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+we assume that variational function \(T\omega\) is represented in the form \(T\omega(x)=g_f(V_{\omega}(x))\), then:
+</p>
 \begin{equation}
 \label{eq:6}
-F(\theta,\omega)=\mathbb{E}_{x\sim P}[g_f(V_{\omega}(x))]-\mathbb{E}_{x\sim Q_{\theta}}[-f^{</strong>}(g_f(V_{\omega}(x)))]
-\end{equation}</p>
+F(\theta,\omega)=\mathbb{E}_{x\sim P}[g_f(V_{\omega}(x))]-\mathbb{E}_{x\sim Q_{\theta}}[-f^{*}(g_f(V_{\omega}(x)))]
+\end{equation}
 
-<h1 id="algorithms-for-variational-divergence-minimization-vdm">Algorithms for Variational Divergence Minimization (VDM)</h1>
-
-<h2 id="single-step-gradient-method">Single-Step Gradient Method</h2>
-
-<ul>
-<li>$g_f$ : an output activation function specific to the f -divergence used</li>
-<li>$V_{\omega}$ : $\mathcal{X}\rightarrow \mathbb{R}$</li>
-<li><strong>function</strong> SINGLE-STEP-GRADIENT-ITERATION($P,\theta^t,\omega^t,B,\eta$)</li>
-<li>Sample $X_P=\{x_1,x_2,\cdots,x_B\}$ and $X_Q=\{x_1^{'},\cdots,x_B^{'}\}$, from $P$ and $Q_{\theta^t}$, respectively.</li>
-<li>Update : $\omega^{t+1}=\omega^t+\eta \nabla_{\omega}F(\theta^t,\omega^t)$.</li>
-<li>Update : $\theta^{t+1}=\omega^t-\eta \nabla_{\theta}F(\theta^t,\omega^t)$.</li>
+<ul class="org-ul">
+<li>\(g_f\) : an output activation function specific to the f -divergence used</li>
+<li>\(V_{\omega}\) : \(\mathcal{X}\rightarrow \mathbb{R}\)</li>
 </ul>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc6d3b11" class="outline-2">
+<h2 id="orgc6d3b11"><span class="section-number-2">3</span> Algorithms for Variational Divergence Minimization (VDM)</h2>
+<div class="outline-text-2" id="text-3">
+</div><div id="outline-container-org8c6e9ce" class="outline-3">
+<h3 id="org8c6e9ce"><span class="section-number-3">3.1</span> Single-Step Gradient Method</h3>
+<div class="outline-text-3" id="text-3-1">
+<ul class="org-ul">
+<li><b>function</b> SINGLE-STEP-GRADIENT-ITERATION(\(P,\theta^t,\omega^t,B,\eta\))
+<ul class="org-ul">
+<li>Sample \(X_P=\{x_1,x_2,\cdots,x_B\}\) and \(X_Q=\{x_1^{'},\cdots,x_B^{'}\}\), from \(P\) and \(Q_{\theta^t}\), respectively.</li>
+<li>Update : \(\omega^{t+1}=\omega^t+\eta \nabla_{\omega}F(\theta^t,\omega^t)\).</li>
+<li>Update : \(\theta^{t+1}=\omega^t-\eta \nabla_{\theta}F(\theta^t,\omega^t)\).</li>
+</ul></li>
+</ul>
+</div>
+</div>
 
-<h2 id="analysis">Analysis.</h2>
 
-<p>This algorithm geometrically converges to a saddle point $(\theta^{<strong>},\omega^{</strong>})$ if there is a neighborhood around the saddle point in which F is strongly convex in $\theta$ and strongly concave in $\omega$:</p>
+<div id="outline-container-orgbee304f" class="outline-3">
+<h3 id="orgbee304f"><span class="section-number-3">3.2</span> Analysis.</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+This algorithm geometrically converges to a saddle point \((\theta^{*},\omega^{*})\) if there is a neighborhood around the saddle point in which F is strongly convex in \(\theta\) and strongly concave in \(\omega\):
+</p>
 
-<h2 id="analysis-1">Analysis</h2>
-
-<h3 id="theorem">Theorem</h3>
-
-<p>$$\nabla_{\theta}F(\theta^{<strong>},\omega^{</strong>})=0$$
-$$\nabla_{\omega}F(\theta^{<strong>},\omega^{</strong>})=0$$
-$$\nabla_{\theta}^2F(\theta,\omega)\ge \delta I$$
-$$\nabla_{\omega}^2F(\theta,\omega)\le -\delta I$$
-Define $\pi^t=(\theta^t,\omega^t)$,
-Suppose that there is a saddle point $\pi^t$ with a neighborhood that satisfies those conditions, Moreover, we define $J(\pi)=\frac{1}{2}||\nabla F(\pi)||_2^2$ and assume that in the above neighborhood $F$ is sufficiently smooth so that there is a constant $L>0$ such that $$||\nabla J(\pi^{'})-\nabla J(\pi)||_{2}\le L ||\pi^{'}-\pt||_2$$ for any $\pi,\pi^{'}$ in the neighborhood of $\pi^{*}$,  Then using the step-size $\eta=\delta/L$ in Algorithm we have :
+<p>
+\[\nabla_{\theta}F(\theta^{*},\omega^{*})=0\]
+\[\nabla_{\omega}F(\theta^{*},\omega^{*})=0\]
+\[\nabla_{\theta}^2F(\theta,\omega)\ge \delta I\]
+\[\nabla_{\omega}^2F(\theta,\omega)\le -\delta I\]
+</p>
+</div>
+</div>
+<div id="outline-container-org5367e3b" class="outline-3">
+<h3 id="org5367e3b"><span class="section-number-3">3.3</span> Analysis</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+Define \(\pi^t=(\theta^t,\omega^t)\),
+</p>
+</div>
+<div id="outline-container-org09a5968" class="outline-4">
+<h4 id="org09a5968"><span class="section-number-4">3.3.1</span> Theorem</h4>
+<div class="outline-text-4" id="text-3-3-1">
+<p>
+Suppose that there is a saddle point \(\pi^t\) with a neighborhood that satisfies those conditios, Moreover, we define \(J(\pi)=\frac{1}{2}||\nabla F(\pi)||_2^2\) and assume that in the above neighborhood \(F\) is sufficiently smooth so that there is a constant \(L>0\) such that \[||\nabla J(\pi^{'})-\nabla J(\pi)||_{2}\le L ||\pi^{'}-\pt||_2\] for any \(\pi,\pi^{'}\) in the neighborhood of \(\pi^{*}\),  Then using the step-size \(\eta=\delta/L\) in Algorithm we have :
+</p>
 \begin{equation}
 \label{eq:7}
 J(\pi^t)\le (1-\frac{\delta^2}{2L})J(\pi^0)
-\end{equation}</p>
-
-<h1 id="footnotes">Footnotes</h1>
-<div class="footnotes">
-
-<hr />
-
-<ol>
-<li id="fn:1">X. Nguyen, M. J. Wainwright, and M. I. Jordan. Estimating divergence functionals and the likelihood ratio by convex risk minimization. Information Theory, IEEE, 56(11):5847–5861, 2010. <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
-</ol>
+\end{equation}
 </div>
-
-        
-      </article>
-
-      
-        <ul class="pager blog-pager">
-          
-            <li class="previous">
-              <a href="https://mingzailao.github.io/posts/adversarial-autoencoders/" data-toggle="tooltip" data-placement="top" title="Adversarial Autoencoders">&larr; Previous Post</a>
-            </li>
-          
-          
-            <li class="next">
-              <a href="https://mingzailao.github.io/posts/test/" data-toggle="tooltip" data-placement="top" title="">Next Post &rarr;</a>
-            </li>
-          
-        </ul>
-      
-
-
-      
-
-    </div>
-  </div>
 </div>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
 
-    <footer>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        <ul class="list-inline text-center footer-links">
-          
-          
-        </ul>
-        <p class="credits copyright text-muted">
-          
-
-          &nbsp;&bull;&nbsp;
-          0001
-
-          
-            &nbsp;&bull;&nbsp;
-            <a href="https://mingzailao.github.io">mingzaialo&#39;s blog</a>
-          
-        </p>
-        
-        <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.37.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
-          
-        </p>
-      </div>
-    </div>
-  </div>
-</footer>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="https://mingzailao.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
-<script src="https://mingzailao.github.io/js/load-photoswipe.js"></script>
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+X. Nguyen, M. J. Wainwright, and M. I. Jordan. Estimating divergence functionals and the likelihood ratio by convex risk minimization. Information Theory, IEEE, 56(11):5847–5861, 2010.
+</p></div></div>
 
 
-
-
-
-
-  </body>
+</div>
+</div></div>
+<div id="postamble" class="status">
+<p class="date">Date: Sun Dec 25 00:56:07 2016</p>
+<p class="author">Author: mingzailao</p>
+<p class="date">Created: 2018-04-13 五 17:20</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
 </html>
-

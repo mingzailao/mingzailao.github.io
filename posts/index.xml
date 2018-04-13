@@ -20,36 +20,6 @@
     </item>
     
     <item>
-      <title></title>
-      <link>https://mingzailao.github.io/posts/test/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://mingzailao.github.io/posts/test/</guid>
-      <description>what what s s s s s s s ss s s s s s
-s
-ss s
-s s s s s s ss s s s
-s s s s
-s s s s s
-s s s s s s s s s s s ss s
-s s ss s s
-ss s s s s s
-s s s s ss
-s s s
-s s s s \begin{equation} \label{eq:2} a_{1} \end{equation}</description>
-    </item>
-    
-    <item>
-      <title>    f-GAN: Training Generative Neural Samplers using Variational Divergence Minimization</title>
-      <link>https://mingzailao.github.io/posts/f-gan-training-generative-neural-samplers-using-variational-divergence-minimization/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://mingzailao.github.io/posts/f-gan-training-generative-neural-samplers-using-variational-divergence-minimization/</guid>
-      <description>The f-divergence Family The f-divergence Family f-divergence  \begin{eqnarray*} D_f(P||Q) &amp;= &amp; \int_{\mathcal{X}}q(x)f(\frac{p(x)}{q(x)})dx\\ \end{eqnarray*} $f$ : $\mathbb{R}_{+}\rightarrow \mathbb{R}$ is a convex, lower-semicontinuous function satisfying $f(1)=0$  Fenchel conjugate \begin{eqnarray*} f^{}(t) &amp; =&amp; \sup_{u\in dom_f}\{ut-f(u)\}\\ \end{eqnarray}
-The f-divergence of $P$ and $Q$: What is $T^{*}(x)$ \begin{eqnarray} \label{eq:3} D_f(P||Q)&amp;=&amp;\int_{\mathcal{X}}q(x)\sup_{t\in dom_{f^{}}}\{t\frac{p(x)}{q(x)}-f^{}(t)\}dx\\ &amp;\ge&amp;\sup_{T\in \mathcal{T}}(\int_{\mathcal{X}}p(x)T(x)dx-\int_{\mathcal{X}}q(x)f^{}(T(x))dx)\\ &amp;=&amp;\sup_{T\in \mathcal{T}}(\mathbb{E}_{x\sim P}[T(x)]-\mathbb{E}_{x\sim Q}[f^{}(T(x))]) \end{eqnarray} By taking the variation of the lower bound in the equation we find that under mild conditions on f 1, the bound is tight for \begin{equation} \label{eq:4} T^{*}(x)=f^{&#39;}(\frac{p(x)}{q(x)}) \end{equation}</description>
-    </item>
-    
-    <item>
       <title>Adversarial Autoencoders</title>
       <link>https://mingzailao.github.io/posts/adversarial-autoencoders/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
