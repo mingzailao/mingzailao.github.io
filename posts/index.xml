@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mingzaialo&#39;s blog</title>
+    <link>https://mingzailao.github.io/posts/</link>
+    <description>Recent content on mingzaialo&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>© 2017 PPAP blog powered by Hugo</copyright>
+    
+	<atom:link href="https://mingzailao.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title></title>
+      <link>https://mingzailao.github.io/posts/f-gan-training-generative-neural-samplers-using-variational-divergence-minimization/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/f-gan-training-generative-neural-samplers-using-variational-divergence-minimization/</guid>
+      <description>f-GAN: Training Generative Neural Samplers using Variational Divergence Minimization */-- /* @licstart The following is the entire license notice for the JavaScript code in this tag. Copyright (C) 2012-2013 Free Software Foundation, Inc. The JavaScript code in this tag is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License (GNU GPL) as published by the Free Software Foundation, either version 3</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://mingzailao.github.io/posts/test/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/test/</guid>
+      <description>what what s s s s s s s ss s s s s s
+s
+ss s
+s s s s s s ss s s s
+s s s s
+s s s s s
+s s s s s s s s s s s ss s
+s s ss s s
+ss s s s s s
+s s s s ss
+s s s
+s s s s \begin{equation} \label{eq:2} a_{1} \end{equation}</description>
+    </item>
+    
+    <item>
+      <title>    f-GAN: Training Generative Neural Samplers using Variational Divergence Minimization</title>
+      <link>https://mingzailao.github.io/posts/f-gan-training-generative-neural-samplers-using-variational-divergence-minimization/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/f-gan-training-generative-neural-samplers-using-variational-divergence-minimization/</guid>
+      <description>The f-divergence Family The f-divergence Family f-divergence  \begin{eqnarray*} D_f(P||Q) &amp;= &amp; \int_{\mathcal{X}}q(x)f(\frac{p(x)}{q(x)})dx\\ \end{eqnarray*} $f$ : $\mathbb{R}_{+}\rightarrow \mathbb{R}$ is a convex, lower-semicontinuous function satisfying $f(1)=0$  Fenchel conjugate \begin{eqnarray*} f^{}(t) &amp; =&amp; \sup_{u\in dom_f}\{ut-f(u)\}\\ \end{eqnarray}
+The f-divergence of $P$ and $Q$: What is $T^{*}(x)$ \begin{eqnarray} \label{eq:3} D_f(P||Q)&amp;=&amp;\int_{\mathcal{X}}q(x)\sup_{t\in dom_{f^{}}}\{t\frac{p(x)}{q(x)}-f^{}(t)\}dx\\ &amp;\ge&amp;\sup_{T\in \mathcal{T}}(\int_{\mathcal{X}}p(x)T(x)dx-\int_{\mathcal{X}}q(x)f^{}(T(x))dx)\\ &amp;=&amp;\sup_{T\in \mathcal{T}}(\mathbb{E}_{x\sim P}[T(x)]-\mathbb{E}_{x\sim Q}[f^{}(T(x))]) \end{eqnarray} By taking the variation of the lower bound in the equation we find that under mild conditions on f 1, the bound is tight for \begin{equation} \label{eq:4} T^{*}(x)=f^{&#39;}(\frac{p(x)}{q(x)}) \end{equation}</description>
+    </item>
+    
+    <item>
+      <title>Adversarial Autoencoders</title>
+      <link>https://mingzailao.github.io/posts/adversarial-autoencoders/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/adversarial-autoencoders/</guid>
+      <description>#+hugo_section : posts
+Adversarial Autoencoders Adversarial Autoencoders     Adversarial Autoencoders Notations  \(\mathbf{x}\) : input code vector of an autoencoder \(\mathbf{z}\) : latent code vector of an autoencoder \(p(\mathbf{z})\) : the prior distribution we want to impose on the codes \(q(\mathbf{z}|\mathbf{x})\) : an encoding distribution \(p(\mathbf{x}|\mathbf{z})\) : the decoding distribution \(p_d(\mathbf{x})\) : the data distribution \(p(\mathbf{x})\) : the model distribution  Adversarial Autoencoders aggregated posterior The encoding function of the autoencoder \(q(\mathbf{z}|\mathbf{x})\) defines an aggregated posterior distribution of \(q(\mathbf{z})\) on the hidden code vector of the autoencoder as follows :</description>
+    </item>
+    
+    <item>
+      <title>Adversarial Images for Variational Autoencoders</title>
+      <link>https://mingzailao.github.io/posts/adversarial-images-for-variational-autoencoders/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/adversarial-images-for-variational-autoencoders/</guid>
+      <description>Autoencoders and Variational Autoencoders Autoencoders and Variational Autoencoders     Autoencoders and Variational Autoencoders Variants of Autoencoders  sparse autoencoders(with \(l_{1}\) -norm) denoising autoencoders(use implicit regularization by feeding noise to the input)  Variational Autoencoders pass
+Adversarial Images for Autoencoders Adversarial Images for Autoencoders Mislead  Maximize the misdirection towards a certain wrong label [@szegedy13:intrig], [@tabacof15:explor_space_adver_images] or away from the correct one [@goodfellow14:explain_harnes_adver_examp] -  Reference \bibliographystyle{unsrtnat}</description>
+    </item>
+    
+    <item>
+      <title>Adversarial Multiclass Classification: A Risk Minimization Perspective</title>
+      <link>https://mingzailao.github.io/posts/adversarial-multiclass-classification-a-risk-minimization-perspective/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/adversarial-multiclass-classification-a-risk-minimization-perspective/</guid>
+      <description>Multiclass SVM generalizations Multiclass SVM generalizations multiclass support vector machine (SVM) seeks class-based potentials \(f_y(\mathbf{x}_i)\) for each input vector \(\mathbf{x}\in \mathcal{X}\) and class \(y\in \mathcal{Y}\) so that the discriminant function \(\hat{y}_f(\mathbf{x}_i)=\arg\max_{y} f_y(\mathbf{x}_i)\) minimize the misclassification errors, \(loss_f(\mathbf{x}_i,y_i)=I(y_i\neq \hat{y}_f(\mathbf{x}_i))\)
+Multiclass SVM generalizations Empirical Risk Minimization \begin{equation} \label{eq:1} \min_f\mathbb{E}_{(\mathbf{x},y)\in P_{data}(\mathbf{x},y)}[loss_f(x,y)] \end{equation}
+for Zero-one loss is NP-hard
+hinge loss approximation In the binary setting, \(y_i\in {-1,+1}\) where the potential of one class can be set to zero(\(f_{-1}=0\)) with no loss in generality, the hinge loss is defined as \([1-y_if_{+1}(x_i)]_+\).</description>
+    </item>
+    
+  </channel>
+</rss>

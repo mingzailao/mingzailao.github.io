@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://mingzailao.github.io/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/f-gan-training-generative-neural-samplers-using-variational-divergence-minimization/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/test/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/f-gan-training-generative-neural-samplers-using-variational-divergence-minimization/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/adversarial-autoencoders/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/adversarial-images-for-variational-autoencoders/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/adversarial-multiclass-classification-a-risk-minimization-perspective/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/tags/</loc>
+    <priority>0</priority>
+  </url>
+  
+</urlset>

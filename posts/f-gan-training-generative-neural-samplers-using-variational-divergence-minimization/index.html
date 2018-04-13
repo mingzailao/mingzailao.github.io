@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>    f-GAN: Training Generative Neural Samplers using Variational Divergence Minimization</title>
+  <meta property="og:title" content="    f-GAN: Training Generative Neural Samplers using Variational Divergence Minimization" />
+  <meta name="twitter:title" content="    f-GAN: Training Generative Neural Samplers using Variational …" />
+  <meta name="description" content="The f-divergence Family The f-divergence Family f-divergence  \begin{eqnarray*} D_f(P||Q) &= & \int_{\mathcal{X}}q(x)f(\frac{p(x)}{q(x)})dx\\ \end{eqnarray*} $f$ : $\mathbb{R}_{&#43;}\rightarrow \mathbb{R}$ is a convex, lower-semicontinuous function satisfying $f(1)=0$  Fenchel conjugate \begin{eqnarray*} f^{}(t) & =& \sup_{u\in dom_f}\{ut-f(u)\}\\ \end{eqnarray}
+The f-divergence of $P$ and $Q$: What is $T^{*}(x)$ \begin{eqnarray} \label{eq:3} D_f(P||Q)&=&\int_{\mathcal{X}}q(x)\sup_{t\in dom_{f^{}}}\{t\frac{p(x)}{q(x)}-f^{}(t)\}dx\\ &\ge&\sup_{T\in \mathcal{T}}(\int_{\mathcal{X}}p(x)T(x)dx-\int_{\mathcal{X}}q(x)f^{}(T(x))dx)\\ &=&\sup_{T\in \mathcal{T}}(\mathbb{E}_{x\sim P}[T(x)]-\mathbb{E}_{x\sim Q}[f^{}(T(x))]) \end{eqnarray} By taking the variation of the lower bound in the equation we find that under mild conditions on f 1, the bound is tight for \begin{equation} \label{eq:4} T^{*}(x)=f^{&#39;}(\frac{p(x)}{q(x)}) \end{equation}">
+  <meta property="og:description" content="The f-divergence Family The f-divergence Family f-divergence  \begin{eqnarray*} D_f(P||Q) &= & \int_{\mathcal{X}}q(x)f(\frac{p(x)}{q(x)})dx\\ \end{eqnarray*} $f$ : $\mathbb{R}_{&#43;}\rightarrow \mathbb{R}$ is a convex, lower-semicontinuous function satisfying $f(1)=0$  Fenchel conjugate \begin{eqnarray*} f^{}(t) & =& \sup_{u\in dom_f}\{ut-f(u)\}\\ \end{eqnarray}
+The f-divergence of $P$ and $Q$: What is $T^{*}(x)$ \begin{eqnarray} \label{eq:3} D_f(P||Q)&=&\int_{\mathcal{X}}q(x)\sup_{t\in dom_{f^{}}}\{t\frac{p(x)}{q(x)}-f^{}(t)\}dx\\ &\ge&\sup_{T\in \mathcal{T}}(\int_{\mathcal{X}}p(x)T(x)dx-\int_{\mathcal{X}}q(x)f^{}(T(x))dx)\\ &=&\sup_{T\in \mathcal{T}}(\mathbb{E}_{x\sim P}[T(x)]-\mathbb{E}_{x\sim Q}[f^{}(T(x))]) \end{eqnarray} By taking the variation of the lower bound in the equation we find that under mild conditions on f 1, the bound is tight for \begin{equation} \label{eq:4} T^{*}(x)=f^{&#39;}(\frac{p(x)}{q(x)}) \end{equation}">
+  <meta name="twitter:description" content="The f-divergence Family The f-divergence Family f-divergence  \begin{eqnarray*} D_f(P||Q) &= & \int_{\mathcal{X}}q(x)f(\frac{p(x)}{q(x)})dx\\ \end{eqnarray*} $f$ : $\mathbb{R}_{&#43;}\rightarrow …">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://mingzailao.github.io/posts/f-gan-training-generative-neural-samplers-using-variational-divergence-minimization/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="mingzaialo&#39;s blog" />
+
+  <meta name="generator" content="Hugo 0.37.1" />
+  <link rel="canonical" href="https://mingzailao.github.io/posts/f-gan-training-generative-neural-samplers-using-variational-divergence-minimization/" />
+  <link rel="alternate" href="https://mingzailao.github.io/index.xml" type="application/rss+xml" title="mingzaialo&#39;s blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://mingzailao.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://mingzailao.github.io/css/syntax.css" /><link rel="stylesheet" href="https://mingzailao.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://mingzailao.github.io">mingzaialo&#39;s blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              <h1>    f-GAN: Training Generative Neural Samplers using Variational Divergence Minimization</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="the-f-divergence-family">The f-divergence Family</h1>
+
+<h2 id="the-f-divergence-family-1">The f-divergence Family</h2>
+
+<h3 id="f-divergence">f-divergence</h3>
+
+<ul>
+\begin{eqnarray*}
+D_f(P||Q) &= & \int_{\mathcal{X}}q(x)f(\frac{p(x)}{q(x)})dx\\
+\end{eqnarray*}
+<li>$f$ : $\mathbb{R}_{+}\rightarrow \mathbb{R}$ is a convex, lower-semicontinuous function satisfying $f(1)=0$</li>
+</ul>
+
+<h3 id="fenchel-conjugate">Fenchel conjugate</h3>
+
+<p>\begin{eqnarray*}
+f^{<strong>}(t) & =& \sup_{u\in dom_f}\{ut-f(u)\}\\
+\end{eqnarray</strong>}</p>
+
+<h2 id="the-f-divergence-of-p-and-q">The f-divergence of $P$ and $Q$:</h2>
+
+<h2 id="what-is-t-x">What is $T^{*}(x)$</h2>
+
+<p>\begin{eqnarray}
+\label{eq:3}
+D_f(P||Q)&=&\int_{\mathcal{X}}q(x)\sup_{t\in dom_{f^{<strong>}}}\{t\frac{p(x)}{q(x)}-f^{</strong>}(t)\}dx\\
+&\ge&\sup_{T\in \mathcal{T}}(\int_{\mathcal{X}}p(x)T(x)dx-\int_{\mathcal{X}}q(x)f^{<strong>}(T(x))dx)\\
+&=&\sup_{T\in \mathcal{T}}(\mathbb{E}_{x\sim P}[T(x)]-\mathbb{E}_{x\sim Q}[f^{</strong>}(T(x))])
+\end{eqnarray}
+By taking the variation of the lower bound in the equation we find that under mild conditions on f <sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>, the bound is tight for
+\begin{equation}
+\label{eq:4}
+T^{*}(x)=f^{'}(\frac{p(x)}{q(x)})
+\end{equation}</p>
+
+<h1 id="variational-divergence-minimization">Variational Divergence Minimization</h1>
+
+<h2 id="variational-divergence-minimization-1">Variational Divergence Minimization</h2>
+
+<ul>
+<li>use the bound on f-divergence $D_f(P||Q)$ in order to estimate a generative model $Q$ given the true distribution $P$.</li>
+<li>$Q_{\theta}$ is the generative model with parameter $\theta$, taking as input a random vector and outputting a sample of interest.</li>
+<li>$T_{\omega}$ is the Discriminate model with parameter $\omega$. taking as input a sample and returning a scalar.</li>
+</ul>
+
+<h2 id="variational-divergence-minimization-2">Variational Divergence Minimization</h2>
+
+<h3 id="min-max-the-loss-minimise-with-respect-to-theta-and-maximum-with-respect-to-omega">Min-max The Loss(minimise with respect to $\theta$ and maximum with respect to $\omega$)</h3>
+
+<h2 id="variational-divergence-minimization-3">Variational Divergence Minimization</h2>
+
+<p>\begin{equation}
+\label{eq:5}
+F(\theta,\omega)=\mathbb{E}_{x\sim P}[T_{\omega}(x)]-\mathbb{E}_{x\sim Q_{\theta}}[f^{<strong>}(T_{\omega}(x))]
+\end{equation}
+To optimize this on a finite training data set, we approximate the expectations using minibatch samples. To approximate $\mathbb{E}_{x\sim P}[\cdot]$ we sample $B$ instances without replacement from the training set. To approximate $\mathbb{E}_{x\sim Q_{\theta}}[\cdot]$, we sample B instances from the current generative model $Q_{\theta}$
+we assume that variational function $T\omega$ is represented in the form $T\omega(x)=g_f(V_{\omega}(x))$, then:
+\begin{equation}
+\label{eq:6}
+F(\theta,\omega)=\mathbb{E}_{x\sim P}[g_f(V_{\omega}(x))]-\mathbb{E}_{x\sim Q_{\theta}}[-f^{</strong>}(g_f(V_{\omega}(x)))]
+\end{equation}</p>
+
+<h1 id="algorithms-for-variational-divergence-minimization-vdm">Algorithms for Variational Divergence Minimization (VDM)</h1>
+
+<h2 id="single-step-gradient-method">Single-Step Gradient Method</h2>
+
+<ul>
+<li>$g_f$ : an output activation function specific to the f -divergence used</li>
+<li>$V_{\omega}$ : $\mathcal{X}\rightarrow \mathbb{R}$</li>
+<li><strong>function</strong> SINGLE-STEP-GRADIENT-ITERATION($P,\theta^t,\omega^t,B,\eta$)</li>
+<li>Sample $X_P=\{x_1,x_2,\cdots,x_B\}$ and $X_Q=\{x_1^{'},\cdots,x_B^{'}\}$, from $P$ and $Q_{\theta^t}$, respectively.</li>
+<li>Update : $\omega^{t+1}=\omega^t+\eta \nabla_{\omega}F(\theta^t,\omega^t)$.</li>
+<li>Update : $\theta^{t+1}=\omega^t-\eta \nabla_{\theta}F(\theta^t,\omega^t)$.</li>
+</ul>
+
+<h2 id="analysis">Analysis.</h2>
+
+<p>This algorithm geometrically converges to a saddle point $(\theta^{<strong>},\omega^{</strong>})$ if there is a neighborhood around the saddle point in which F is strongly convex in $\theta$ and strongly concave in $\omega$:</p>
+
+<h2 id="analysis-1">Analysis</h2>
+
+<h3 id="theorem">Theorem</h3>
+
+<p>$$\nabla_{\theta}F(\theta^{<strong>},\omega^{</strong>})=0$$
+$$\nabla_{\omega}F(\theta^{<strong>},\omega^{</strong>})=0$$
+$$\nabla_{\theta}^2F(\theta,\omega)\ge \delta I$$
+$$\nabla_{\omega}^2F(\theta,\omega)\le -\delta I$$
+Define $\pi^t=(\theta^t,\omega^t)$,
+Suppose that there is a saddle point $\pi^t$ with a neighborhood that satisfies those conditions, Moreover, we define $J(\pi)=\frac{1}{2}||\nabla F(\pi)||_2^2$ and assume that in the above neighborhood $F$ is sufficiently smooth so that there is a constant $L>0$ such that $$||\nabla J(\pi^{'})-\nabla J(\pi)||_{2}\le L ||\pi^{'}-\pt||_2$$ for any $\pi,\pi^{'}$ in the neighborhood of $\pi^{*}$,  Then using the step-size $\eta=\delta/L$ in Algorithm we have :
+\begin{equation}
+\label{eq:7}
+J(\pi^t)\le (1-\frac{\delta^2}{2L})J(\pi^0)
+\end{equation}</p>
+
+<h1 id="footnotes">Footnotes</h1>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">X. Nguyen, M. J. Wainwright, and M. I. Jordan. Estimating divergence functionals and the likelihood ratio by convex risk minimization. Information Theory, IEEE, 56(11):5847–5861, 2010. <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+</ol>
+</div>
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://mingzailao.github.io/posts/adversarial-autoencoders/" data-toggle="tooltip" data-placement="top" title="Adversarial Autoencoders">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://mingzailao.github.io/posts/test/" data-toggle="tooltip" data-placement="top" title="">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;
+          0001
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://mingzailao.github.io">mingzaialo&#39;s blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.37.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+
