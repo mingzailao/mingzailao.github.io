@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Cmake</title>
+  <meta property="og:title" content="Cmake" />
+  <meta name="twitter:title" content="Cmake" />
+  <meta name="description" content="初识cmake 初识cmake 背景知识 官网: www.cmake.org 特点 开放源代码。 跨平台, 并可生成 native 编译配置文件, 在 Linux/Unix 平台, 生成 makefile, 在苹果平台, 可以生成 xcode, 在 Windows 平台,">
+  <meta property="og:description" content="初识cmake 初识cmake 背景知识 官网: www.cmake.org 特点 开放源代码。 跨平台, 并可生成 native 编译配置文件, 在 Linux/Unix 平台, 生成 makefile, 在苹果平台, 可以生成 xcode, 在 Windows 平台,">
+  <meta name="twitter:description" content="初识cmake 初识cmake 背景知识 官网: www.cmake.org 特点 开放源代码。 跨平台, 并可生成 native 编译配置文件, 在 Linux/Unix 平台, 生成 makefile, 在苹果平台, 可以生成 xcode, 在 Windows 平台,">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://mingzailao.github.io/posts/cmake-tutorial/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="mingzaialo&#39;s blog" />
+
+  <meta name="generator" content="Hugo 0.37.1" />
+  <link rel="canonical" href="https://mingzailao.github.io/posts/cmake-tutorial/" />
+  <link rel="alternate" href="https://mingzailao.github.io/index.xml" type="application/rss+xml" title="mingzaialo&#39;s blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://mingzailao.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://mingzailao.github.io/css/syntax.css" /><link rel="stylesheet" href="https://mingzailao.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              <h1>Cmake</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h2 id="初识cmake">初识cmake</h2>
+
+<h3 id="初识cmake-1">初识cmake</h3>
+
+<h4 id="背景知识">背景知识</h4>
+
+<p>官网: <a href="http:www.cmake.org">www.cmake.org</a></p>
+
+<h4 id="特点">特点</h4>
+
+<ol>
+<li>开放源代码。</li>
+<li>跨平台, 并可生成 native 编译配置文件, 在 Linux/Unix 平台, 生成 makefile, 在苹果平台, 可以生成 xcode, 在 Windows 平台, 可以生成 MSVC 的工程文件。</li>
+<li>能够管理大型项目。</li>
+<li>简化编译构建过程和编译过程。</li>
+<li>高效虑。</li>
+<li>可扩展。</li>
+</ol>
+
+<h3 id="初试cmake">初试cmake</h3>
+
+<h4 id="问题">问题</h4>
+
+<ol>
+<li>cmake 很简单, 但绝对没有听起来或者想象中那么简单。</li>
+<li>cmake 编写的过程实际上是编程的过程不过你需要编写的是 CMakeLists.txt(每个目录一个), 使用的是”cmake 语言和语 法”。</li>
+</ol>
+
+<h4 id="建议">建议</h4>
+
+<ol>
+<li>如果你的工程只有几个文件, 直接编写 Makefile 是最好的选 择。</li>
+<li>如果使用的是 C/C++/Java 之外的语言, 请不要使用 cmake。</li>
+<li>结合具体的项目使用</li>
+</ol>
+
+<h2 id="安装-cmake">安装 cmake</h2>
+
+<h3 id="安装-cmake-1">安装 cmake</h3>
+
+<h4 id="下载地址">下载地址</h4>
+
+<p>在这个页面, 提供了源代码的下载以及针对各种不同操作系统的二 进制下载, 可以选择适合自己操作系统的版本下载安装:
+<a href="http:www.cmake.org/HTML/Download.html">www.cmake.org/HTML/Download.html</a></p>
+
+<h2 id="初试-cmake">初试 cmake</h2>
+
+<h3 id="初试-cmake-1">初试 cmake</h3>
+
+<h4 id="准备工作">准备工作</h4>
+
+<pre><code class="language-bash">mkdir ~/cmake
+cd ~/cmake
+mkdir project1
+cd project1
+touch main.cpp
+touch CMakeList.txt
+emacs CMakeList.txt
+</code></pre>
+
+<p>注意:所有的 cpp,hpp 文件均为写好的。</p>
+
+<h3 id="初试-cmake-2">初试 cmake</h3>
+
+<h4 id="cmakelist-dot-txt-写法-1">CMakeList.txt 写法 1</h4>
+
+<pre><code class="language-bash"># 工程名
+PROJECT (HELLO) cmake_minimum_required(VERSION 3.6) add_compile_options(-std=c++11)
+# 设定2 hello.o 由hello.cpp构建 ADD_EXECUTABLE(hello hello.cpp)
+</code></pre>
+
+<h3 id="初试cmake-1">初试cmake</h3>
+
+<h4 id="开始构建">开始构建</h4>
+
+<pre><code class="language-bash">ls ~/PAPERS/project1/
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th>CMakeLists.txt</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>hello.cpp</td>
+</tr>
+</tbody>
+</table>
+
+<pre><code class="language-bash">d ~/PAPERS/project1
+cmake .
+</code></pre>
+
+<p>– Configuring done</p>
+
+<p>– Generating done</p>
+
+<p>– Build files have been written to: /Users/apple/PAPERS/project1</p>
+
+<h3 id="初试cmake-2">初试cmake</h3>
+
+<h4 id="问题-1">问题</h4>
+
+<pre><code class="language-bash">ls ~/PAPERS/project1
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th>CMakeCache.txt</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>CMakeFiles</td>
+</tr>
+
+<tr>
+<td>CMakeLists.txt</td>
+</tr>
+
+<tr>
+<td>Makefile</td>
+</tr>
+
+<tr>
+<td>cmake_install.cmake</td>
+</tr>
+
+<tr>
+<td>hello</td>
+</tr>
+
+<tr>
+<td>hello.cpp</td>
+</tr>
+</tbody>
+</table>
+
+<p>无法达到分离式编译的效果。</p>
+
+<h3 id="初试cmake-3">初试cmake</h3>
+
+<h4 id="改进">改进</h4>
+
+<p>上面的方式称为内部构建看到生成的临时文件比代码文件还要多, 强迫症接受不了。估计这辈子你都不希望再使用内部构建。 下面介绍外部构建。</p>
+
+<ol>
+<li>首先, 请清除 project1 目录中除 hello.cpp CmakeLists.txt 之外 的所有中间文件。</li>
+<li>在当前目录下新建 build 目录然后进入 build 目录运行 cmak ..</li>
+</ol>
+
+<h3 id="初试cmake-4">初试cmake</h3>
+
+<h4 id="语法">语法</h4>
+
+<pre><code class="language-bash">PROJECT(projectname [CXX] [C] [Java])
+</code></pre>
+
+<p>你可以用这个指令定义工程名称, 并可指定工程支持的语言, 支持 的语言列表是可以忽略的, 默认情况表示支持所有语言。</p>
+
+<h3 id="初试cmake-5">初试cmake</h3>
+
+<h4 id="语法-1">语法</h4>
+
+<pre><code class="language-bash">SET(VAR [VALUE] [CACHE TYPE DOCSTRING [FORCE]])
+#现阶段,你只需要了解 SET 指令可以用来显式的定义变量即可。
+#比如我们用到的是SET(SRC_LIST hello.cpp),
+#如果有多个源文件,也可以定义成:
+# SET(SRC_LIST main.c t1.c t2.c)。
+</code></pre>
+
+<h3 id="初试cmake-6">初试cmake</h3>
+
+<h4 id="语法-2">语法</h4>
+
+<pre><code class="language-bash">ADD_EXECUTABLE(hello ${SRC_LIST})
+</code></pre>
+
+<p>定义了这个工程会生成一个文件名为 hello 的可执行文件, 相关的 源文件是 \(SRC\_LIST\) 中定义的源文件列表, 本例中你也可以直接写成 \(ADD\_EXECUTABLE\)(hello main.c)。</p>
+
+<h3 id="初试cmake-7">初试cmake</h3>
+
+<h4 id="基本语法规则">基本语法规则</h4>
+
+<ol>
+<li>变量使用${}方式取值,但是在 IF 控制语句中是直接使用变量名。</li>
+<li>指令(参数1 参数2&hellip;)</li>
+<li>指令是大小写无关的,参数和变量是大小写相关的。但,推荐你全部使用大写指令。</li>
+</ol>
+
+<h2 id="more-better">More better</h2>
+
+<h3 id="more-better-1">More better</h3>
+
+<h4 id="需求">需求</h4>
+
+<ol>
+<li>为工程添加一个子目录 src,用来放置工程源代码;</li>
+<li>添加一个子目录 doc,用来放置这个工程的文档 hello.txt；</li>
+<li>在工程目录添加文本文件COPYRIGHT, README;</li>
+<li>在工程目录添加一个 runhello.sh 脚本,用来调用 hello 二进制</li>
+<li>将构建后的目标文件放入构建目录的 bin 子目录;</li>
+<li>将hpp文件全部放在lib文件夹。</li>
+</ol>
+
+<h3 id="more-better-2">More better</h3>
+
+<h4 id="solve">Solve</h4>
+
+<pre><code class="language-bash">cd ~/PAPERS/project1
+mkdir src
+cd src
+touch CMakeLists.txt
+</code></pre>
+
+<p>project1/CMakeLists应该修改为如下</p>
+
+<pre><code class="language-makefile">PROJECT(HELLO)
+ADD_SUBDIRECTORY(src bin)
+</code></pre>
+
+<h3 id="more-better-3">More better</h3>
+
+<h4 id="solve-1">Solve</h4>
+
+<p>project1/src/CMakeLists应该如下</p>
+
+<pre><code class="language-makefile"># for Q6
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/lib)
+# for Q5
+SET(EXECUTABLE_OUTPUT_PATH  ${CMAKE_SOURCE_DIR}/bin)
+
+add_executable(hello hello.cpp)
+#target.cpp 需要用到新写的一个库
+# Student.hpp(#include &quot;Student.hpp&quot;)
+add_executable(target target.cpp)
+</code></pre>
+
+<h3 id="more-better-4">More better</h3>
+
+<h4 id="solve-2">Solve</h4>
+
+<p>project1/lib/CMakeLists应该如下</p>
+
+<pre><code class="language-makefile">SET(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
+SET(LIBSTUDENT_SRC Sales_item.h)
+ADD_LIBRARY(Student SHARED ${LIBSTUDENT_SRC})
+</code></pre>
+
+<p>ALL DONE!</p>
+
+<h2 id="more">More</h2>
+
+<h3 id="more-1">More</h3>
+
+<p>THANKS</p>
+
+<p>其实还有挺多没有讲到，不过这就是一个基本的CMake 工程的构造，里面涉及到的路径没有细说，不过网上都有
+详细的文档说明。还有就是关于动态库和静态库的部分没有说。虽说都是细节，但是用到的时候还是需要自己查找
+的。</p>
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://mingzailao.github.io/posts/learning-a-deep-compact-image-representation-for-visual-tracking-code/" data-toggle="tooltip" data-placement="top" title="Code : Learning a Deep Compact Representation for Visial Tracking">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://mingzailao.github.io/posts/c-rnn-gan-continuous-recurrent-neural-networks-with-adversarial-training/" data-toggle="tooltip" data-placement="top" title="C-RNN-GAN: Continuous recurrent neural networks with adversarial training">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.37.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

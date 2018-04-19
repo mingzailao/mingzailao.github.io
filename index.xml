@@ -1,22 +1,108 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>mingzaialo&#39;s blog</title>
+    <title>Sitemap on mingzaialo&#39;s blog</title>
     <link>https://mingzailao.github.io/</link>
-    <description>Recent content on mingzaialo&#39;s blog</description>
+    <description>Recent content in Sitemap on mingzaialo&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>© 2017 PPAP blog powered by Hugo</copyright>
+    <lastBuildDate>Wed, 17 May 2017 00:00:00 +0800</lastBuildDate>
     
 	<atom:link href="https://mingzailao.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title></title>
-      <link>https://mingzailao.github.io/posts/f-gan-training-generative-neural-samplers-using-variational-divergence-minimization/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <title>Introduction to NLP and Deep Learning</title>
+      <link>https://mingzailao.github.io/posts/introduction-to-nlp-and-deep-learning/</link>
+      <pubDate>Wed, 17 May 2017 00:00:00 +0800</pubDate>
       
-      <guid>https://mingzailao.github.io/posts/f-gan-training-generative-neural-samplers-using-variational-divergence-minimization/</guid>
-      <description>f-GAN: Training Generative Neural Samplers using Variational Divergence Minimization */-- /* @licstart The following is the entire license notice for the JavaScript code in this tag. Copyright (C) 2012-2013 Free Software Foundation, Inc. The JavaScript code in this tag is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License (GNU GPL) as published by the Free Software Foundation, either version 3</description>
+      <guid>https://mingzailao.github.io/posts/introduction-to-nlp-and-deep-learning/</guid>
+      <description>Word Embedding Basic Idea If each attribute is a dimension, then we might give each word a vector, like this: \[ q_\text{mathematician} = \left[ \overbrace{2.3}^\text{can run}, \overbrace{9.4}^\text{likes coffee}, \overbrace{-5.5}^\text{majored in Physics}, \dots \right] \] \[ q_\text{physicist} = \left[ \overbrace{2.5}^\text{can run}, \overbrace{9.1}^\text{likes coffee}, \overbrace{6.4}^\text{majored in Physics}, \dots \right] \]
+Basic Iead Then we can get a measure of similarity between these words by doing: \[ \text{Similarity}(\text{physicist}, \text{mathematician}) = q_\text{physicist} \cdot q_\text{mathematician} \]</description>
+    </item>
+    
+    <item>
+      <title>Semi-supervised learning with ladder networks</title>
+      <link>https://mingzailao.github.io/todo/semi-supervised-learning-with-ladder-networks/</link>
+      <pubDate>Wed, 07 Dec 2016 00:00:00 +0800</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/semi-supervised-learning-with-ladder-networks/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Generative Adversarial Parallelization</title>
+      <link>https://mingzailao.github.io/posts/generative-adversarial-parallelization/</link>
+      <pubDate>Tue, 22 Nov 2016 00:00:00 +0800</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/generative-adversarial-parallelization/</guid>
+      <description>Table of Contents GANs GANs GANs GANs GANs Paralletizing Generative Adversarial Networks(GAP) Paralletizing Generative Adversarial Networks Paralletizing Generative Adversarial Networks Paralletizing Generative Adversarial Networks Paralletizing Generative Adversarial Networks Paralletizing Generative Adversarial Networks Experiments Experiments Experiments Experiments Experiments Experiments Experiments Experiments Reference GANs GANs min-max \begin{equation} \label{eq:1} \min_{G}\max_{D}\mathbb{E}_{\mathbf{x}\sim P_{data}(\mathbf{x})}[\log D(\mathbf{x})]+\mathbb{E}_{\mathbf{z}\sim P_z(\mathbf{z})}[\log (1-D(G(\mathbf{z})))] \end{equation} GANs Empirical Observations The reality of training GANs is quite different from the ideal case due to the</description>
+    </item>
+    
+    <item>
+      <title>InfoGAN: Interpretable Representation Learning by Information Maximizing Generative Adversarial Nets</title>
+      <link>https://mingzailao.github.io/posts/infogan-interpretable-representation-learning-by-information-maximizing-generative-adversarial-nets/</link>
+      <pubDate>Mon, 21 Nov 2016 00:00:00 +0800</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/infogan-interpretable-representation-learning-by-information-maximizing-generative-adversarial-nets/</guid>
+      <description>Table of Contents  GAN  GAN  Mutual Information for Inducing Latent Codes  Mutual Information for Inducing Latent Codes Mutual Information for Inducing Latent Codes  Variational Mutual Information Maximization  Variational Mutual Information Maximization Variational Mutual Information Maximization Variational Mutual Information Maximization    
+GAN GAN  Min-Max
+\begin{equation} \label{eq:1} \min_G\max_D \mathbb{\mathbf{x}\sim P_{data}(\mathbf{x})}[\log D(\mathbf{x})]+\mathbb{E}_{\mathbf{z}\sim P_z(\mathbf{z})}[\log (1-D(z))] \end{equation}
+  Mutual Information for Inducing Latent Codes Mutual Information for Inducing Latent Codes  Input : 2 parts</description>
+    </item>
+    
+    <item>
+      <title>CNN</title>
+      <link>https://mingzailao.github.io/posts/notes-for-cnn/</link>
+      <pubDate>Sun, 20 Nov 2016 00:00:00 +0800</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/notes-for-cnn/</guid>
+      <description>  Table of Contents  Introduction  Introduction  Reference   
+Introduction Introduction  Class
+CNN1 is invented by Yan Lecun in 1998,
+  Reference \bibliographystyle{unsrtnat}
+&amp;lt;~/BibTex/mingzailao.bib&amp;gt;
+ In 1998, Yan Lecun first introduced this special neural network in the paper [return]   </description>
+    </item>
+    
+    <item>
+      <title>CNN</title>
+      <link>https://mingzailao.github.io/todo/notes-for-cnn/</link>
+      <pubDate>Sun, 20 Nov 2016 00:00:00 +0800</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/notes-for-cnn/</guid>
+      <description>  Table of Contents  Introduction  Introduction  Reference   
+Introduction Introduction  Class
+CNN1 is invented by Yan Lecun in 1998,
+  Reference \bibliographystyle{unsrtnat}
+&amp;lt;~/BibTex/mingzailao.bib&amp;gt;
+ In 1998, Yan Lecun first introduced this special neural network in the paper [return]   </description>
+    </item>
+    
+    <item>
+      <title>Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks</title>
+      <link>https://mingzailao.github.io/posts/unsupervised-representation-learning-with-deep-convolutional-generative-adversarial-networks/</link>
+      <pubDate>Fri, 04 Nov 2016 00:00:00 +0800</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/unsupervised-representation-learning-with-deep-convolutional-generative-adversarial-networks/</guid>
+      <description>Table of Contents  Introduction  Introduction Introduction Introduction  Reference   
+ \AtBeginSection[] {
+\begin{frame} \frametitle{Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks} \tableofcontents[currentsection] \end{frame}
+}
+
+Introduction Introduction  Keys
+By trainging a GAN&amp;nbsp;1 NIPS2014_5423 and later reusing parts of the generator and discriminator networks as feature extractors for supervised tasks.
+  Introduction  Contributions
+ We propose and evaluate a set of constraints on the architectural topology of Convolutional GANs that make them stable to train in most settings.</description>
+    </item>
+    
+    <item>
+      <title>Visualizing and Understanding Recurrent Networks</title>
+      <link>https://mingzailao.github.io/posts/visualizing-and-understanding-recurrent-networks/</link>
+      <pubDate>Tue, 11 Oct 2016 00:00:00 +0800</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/visualizing-and-understanding-recurrent-networks/</guid>
+      <description>Table of Contents  EXPERIMENTAL SETUP  RECURRENT NEURAL NETWORK MODELS RECURRENT NEURAL NETWORK MODELS RECURRENT NEURAL NETWORK MODELS CHARACTER-LEVEL LANGUAGE MODELING CHARACTER-LEVEL LANGUAGE MODELING  EXPERIMENTS  EXPERIMENTS DATASETS AND PROCESSING COMPARING RECURRENT NETWORKS COMPARING RECURRENT NETWORKS INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM UNDERSTANDING LONG-RANGE INTERACTIONS UNDERSTANDING LONG-RANGE INTERACTIONS UNDERSTANDING LONG-RANGE INTERACTIONS UNDERSTANDING LONG-RANGE INTERACTIONS UNDERSTANDING LONG-RANGE INTERACTIONS UNDERSTANDING LONG-RANGE INTERACTIONS</description>
     </item>
     
     <item>
@@ -25,8 +111,7 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://mingzailao.github.io/posts/adversarial-autoencoders/</guid>
-      <description>#+hugo_section : posts
-Adversarial Autoencoders Adversarial Autoencoders     Adversarial Autoencoders Notations  \(\mathbf{x}\) : input code vector of an autoencoder \(\mathbf{z}\) : latent code vector of an autoencoder \(p(\mathbf{z})\) : the prior distribution we want to impose on the codes \(q(\mathbf{z}|\mathbf{x})\) : an encoding distribution \(p(\mathbf{x}|\mathbf{z})\) : the decoding distribution \(p_d(\mathbf{x})\) : the data distribution \(p(\mathbf{x})\) : the model distribution  Adversarial Autoencoders aggregated posterior The encoding function of the autoencoder \(q(\mathbf{z}|\mathbf{x})\) defines an aggregated posterior distribution of \(q(\mathbf{z})\) on the hidden code vector of the autoencoder as follows :</description>
+      <description>Adversarial Autoencoders Adversarial Autoencoders     Adversarial Autoencoders Notations  \(\mathbf{x}\) : input code vector of an autoencoder \(\mathbf{z}\) : latent code vector of an autoencoder \(p(\mathbf{z})\) : the prior distribution we want to impose on the codes \(q(\mathbf{z}|\mathbf{x})\) : an encoding distribution \(p(\mathbf{x}|\mathbf{z})\) : the decoding distribution \(p_d(\mathbf{x})\) : the data distribution \(p(\mathbf{x})\) : the model distribution  Adversarial Autoencoders aggregated posterior The encoding function of the autoencoder \(q(\mathbf{z}|\mathbf{x})\) defines an aggregated posterior distribution of \(q(\mathbf{z})\) on the hidden code vector of the autoencoder as follows :</description>
     </item>
     
     <item>
@@ -35,8 +120,7 @@ Adversarial Autoencoders Adversarial Autoencoders     Adversarial Autoencoders N
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://mingzailao.github.io/posts/adversarial-images-for-variational-autoencoders/</guid>
-      <description>Autoencoders and Variational Autoencoders Autoencoders and Variational Autoencoders     Autoencoders and Variational Autoencoders Variants of Autoencoders  sparse autoencoders(with \(l_{1}\) -norm) denoising autoencoders(use implicit regularization by feeding noise to the input)  Variational Autoencoders pass
-Adversarial Images for Autoencoders Adversarial Images for Autoencoders Mislead  Maximize the misdirection towards a certain wrong label [@szegedy13:intrig], [@tabacof15:explor_space_adver_images] or away from the correct one [@goodfellow14:explain_harnes_adver_examp] -  Reference \bibliographystyle{unsrtnat}</description>
+      <description>Autoencoders and Variational Autoencoders Autoencoders and Variational Autoencoders     Autoencoders and Variational Autoencoders Variants of Autoencoders  sparse autoencoders(with \(l_{1}\) -norm) denoising autoencoders(use implicit regularization by feeding noise to the input)  Variational Autoencoders pass</description>
     </item>
     
     <item>
@@ -49,6 +133,622 @@ Adversarial Images for Autoencoders Adversarial Images for Autoencoders Mislead 
 Multiclass SVM generalizations Empirical Risk Minimization \begin{equation} \label{eq:1} \min_f\mathbb{E}_{(\mathbf{x},y)\in P_{data}(\mathbf{x},y)}[loss_f(x,y)] \end{equation}
 for Zero-one loss is NP-hard
 hinge loss approximation In the binary setting, \(y_i\in {-1,+1}\) where the potential of one class can be set to zero(\(f_{-1}=0\)) with no loss in generality, the hinge loss is defined as \([1-y_if_{+1}(x_i)]_+\).</description>
+    </item>
+    
+    <item>
+      <title>Adversarial Neural Machine Translation</title>
+      <link>https://mingzailao.github.io/posts/adversarial-neural-machine-translation/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/adversarial-neural-machine-translation/</guid>
+      <description>Adversarial Neural Machine Translation Adversarial Neural Machine Translation     Adversarial Neural Machine Translation  Ref : ground-truth translation Hyp : model translation sentence  NMT Model Recurrent Neural Network (RNN) based encoder-decoder as the NMT model to seek a target language translation \(y^{&amp;lsquo;}\) given the source sentence \(x\),which means \(y^{&amp;lsquo;}\sim G(y|x)\). To be specific, given source sentence \(x\) and previously generated words \(y_{&amp;lt;t}\) the probability of generating word \(y_t\) is :</description>
+    </item>
+    
+    <item>
+      <title>Adversarially Learned Inference</title>
+      <link>https://mingzailao.github.io/posts/adversarially-learned-inference/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/adversarially-learned-inference/</guid>
+      <description>Adversarially learned inference Adversarially learned inference(ALI) Two distributions  Encoder joint distribution \(q(\mathbf{x},\mathbf{z})=q(\mathbf{x})q(\mathbf{z}|\mathbf{x})\) Decoder joint distribution \(p(\mathbf{x},\mathbf{z})=p(\mathbf{z})p(\mathbf{x}|\mathbf{z})\)  Notes  Encoder margin : \(q(\mathbf{x})\) is the empirical distribution; Decider margin : \(p(\mathbf{z})\) is the sampler distribution(Maybe Gaussian);  Adversarially learned inference(ALI) Objective Matching two joint distributions.
+Matching game  Joint pairs \((\mathbf{x},\mathbf{z})\) are drawn either from \(q(\mathbf{x},\mathbf{z})\) or \(p(\mathbf{x},\mathbf{z})\); A discriminator network learns to discriminate between the two; The encoder and decoder networks are trained to fool the discriminator.</description>
+    </item>
+    
+    <item>
+      <title>An Architecture for Deep, Hierarchical Generative Models</title>
+      <link>https://mingzailao.github.io/todo/an-architecture-for-deep-hierarchical-generative-models/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/an-architecture-for-deep-hierarchical-generative-models/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Attention Is All You Need</title>
+      <link>https://mingzailao.github.io/todo/attention-is-all-you-need/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/attention-is-all-you-need/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Auto-Encoding Variational Bayes</title>
+      <link>https://mingzailao.github.io/posts/auto-encoding-variational-bayes/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/auto-encoding-variational-bayes/</guid>
+      <description>Variational Inference Variational Inference Notations  latent variables : \(\mathbf{z}=z_{1:m}\) obseevations : \(\mathbf{x}=x_{1:n}\)  Joint density \begin{eqnarray*} p(\mathbf{z},\mathbf{x})&amp;amp; =&amp;amp; p(\mathbf{z})p(\mathbf{x}|\mathbf{z})\\
+\end{eqnarray*}
+Variational Inference Notes \begin{eqnarray*} p(\mathbf{x}|\mathbf{z})&amp;amp; =&amp;amp; \frac{p(\mathbf{z},\mathbf{x})}{p(\mathbf{z})}\\
+\end{eqnarray*}
+\begin{eqnarray*} p(\mathbf{z}|\mathbf{x})&amp;amp; =&amp;amp; \frac{p(\mathbf{z},\mathbf{x})}{p(\mathbf{x})}\\
+\end{eqnarray*}
+\begin{eqnarray*} p(\mathbf{x})&amp;amp; =&amp;amp; \int p(\mathbf{z},\mathbf{x})d\mathbf{z}\\
+\end{eqnarray*}
+Variational Inference One example Bayesian mixture of unit-variance univariate Gaussians.
+\begin{eqnarray*} \mu_k\sim \mathcal{N}(0,\sigma^2) &amp;amp; k=1,\cdots,K\\
+c_i\sim Categorical(1/K,\cdots,1/K)&amp;amp; i=1,\cdots n\\
+x_i|c_i,\mathbf{\mu}\sim \mathcal{N}(c_i^T\mu,1)&amp;amp; i=1,\cdots,n \end{eqnarray*}
+Variational Inference One example For a sample of size \(n\), the joint density of latent and observed variables is:</description>
+    </item>
+    
+    <item>
+      <title>Autoencoding beyond pixels using a learned similarity metric</title>
+      <link>https://mingzailao.github.io/posts/autoencoding-beyond-pixels-using-a-learned-similarity-metric/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/autoencoding-beyond-pixels-using-a-learned-similarity-metric/</guid>
+      <description>Overview Overview     Variational autoencoder  \(\mathbf{z}\sim Enc(\mathbf{x})=q(\mathbf{z}|\mathbf{x})\) \(\hat{\mathbf{}x}\sim Dec(\mathbf{z})=p(\mathbf{x}|\mathbf{z})\)
+then :
+  \begin{eqnarray*} \mathcal{L}_{VAE}&amp;amp;=&amp;amp;-\mathbb{E}_{q(\mathbf{z}|\mathbf{x})}[\log p(\mathbf{x}|\mathbf{z})]+D_{KL}(q(\mathbf{z}|\mathbf{x})||p(\mathbf{z}))\\
+&amp;amp;=&amp;amp;\mathcal{L}_{like}^{pixel}+\mathcal{L}_{prior} \end{eqnarray*}
+GAN maxi- mize/minimize the binary cross entropy:
+\begin{eqnarray*} \mathcal{L}_{GAN} &amp;amp; =&amp;amp; \log (Dis(\mathbf{x}))+\log (1-Dis(Gen(\mathbf{z})))\\
+\end{eqnarray*}
+with respect to Dis / Gen with \(\mathbf{x}\) being a training sample and \(\mathbf{z}\sim p(\mathbf{z})\)
+Beyond element-wise reconstruction error Beyond element-wise reconstruction error Keys Replacing the VAE reconstruction (expected log likelihood) error term with a reconstruction error expressed in the GAN discriminator</description>
+    </item>
+    
+    <item>
+      <title>Batch Normalization</title>
+      <link>https://mingzailao.github.io/posts/batch-normalization/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/batch-normalization/</guid>
+      <description>Introduction SGD Introduction SGD optimize function \begin{equation} \label{eq:1} \Theta=arg\min_{\Theta}\frac{1}{N}\sum_{i=1}^Nl(x_i,\Theta) \end{equation}
+ \(x_{1&amp;hellip;N}\) : the training set \(l(\cdot)\) : loss function \(\Theta\) : the parameters.  with SGD, the training proceeds in steps,and at each step we consider a minibatch \(x_{1&amp;hellip;m}\) of size \(m\).
+SGD workflow How SGD works The mini-batch is used to approximate the gradient of the loss function with respect to the parameters, by computing
+\begin{equation} \label{eq:2} \frac{1}{m}\sum_{i=1}^m\frac{\partial l(x_i,\Theta)}{\partial \theta} \end{equation}</description>
+    </item>
+    
+    <item>
+      <title>C-RNN-GAN: Continuous recurrent neural networks with adversarial training</title>
+      <link>https://mingzailao.github.io/posts/c-rnn-gan-continuous-recurrent-neural-networks-with-adversarial-training/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/c-rnn-gan-continuous-recurrent-neural-networks-with-adversarial-training/</guid>
+      <description>C-RNN-GAN C-RNN-GAN Loss \begin{eqnarray*} L_G &amp;amp; =&amp;amp; \frac{1}{m}\sum_{i=1}^{m}\log (1-D(G(\boldsymbol{z}^{(i)})))\\
+L_D&amp;amp;=&amp;amp; \frac{1}{m}\sum_{i=1}^m[-\log D(\boldsymbol{x}^{(i)})-\log D(G(\boldsymbol{z}^{(i)}))] \end{eqnarray*}
+ \(\boldsymbol{z}^{(i)}\) : a sequence of uniform random vectors in \([0,1]^k\) \(\boldsymbol{x}^{(i)}\) : a sequence from the training data \(k\) : the dimensionality of the data in the random sequence  C-RNN-GAN Generator  The input of the generator \(G\) : a random vector, concatenated with the output of the previous cell&amp;nbsp;1  Discriminator The discriminator consists of a bidirectional recurrent net.</description>
+    </item>
+    
+    <item>
+      <title>Cmake</title>
+      <link>https://mingzailao.github.io/posts/cmake-tutorial/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/cmake-tutorial/</guid>
+      <description>初识cmake 初识cmake 背景知识 官网: www.cmake.org 特点 开放源代码。 跨平台, 并可生成 native 编译配置文件, 在 Linux/Unix 平台, 生成 makefile, 在苹果平台, 可以生成 xcode, 在 Windows 平台,</description>
+    </item>
+    
+    <item>
+      <title>Code : Learning a Deep Compact Representation for Visial Tracking</title>
+      <link>https://mingzailao.github.io/posts/learning-a-deep-compact-image-representation-for-visual-tracking-code/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/learning-a-deep-compact-image-representation-for-visual-tracking-code/</guid>
+      <description>Table of Contents  MatLab Code  Set the parameters    
+MatLab Code Set the parameters  Load data
+   Name Type Means     dataPath String the dir of all the tracking benchmark datasets   title String which dataset we use    fullPath=[dataPath,title,&#39;/img/&#39;]; d=dir(fullPath,&amp;quot;*.jpg&amp;quot;); if size(d,1)==0 d=dir(fullPath,&amp;quot;*.png&amp;quot;); end if size(d,1)==0 d=dir(fullPath,&amp;quot;*.bmp&amp;quot;); end seq.opt=opt; seq.init_rect=[p(1)-p(3)/2,p(2)-p(4)/2,p(3),p(4),p(5)]; for i=1:size(d,1): seq.s_frames{i}=[fullPath,d(i).name]; end  run_DLT</description>
+    </item>
+    
+    <item>
+      <title>DRAW : A Reccurrent Neural Network for Image Generation</title>
+      <link>https://mingzailao.github.io/posts/draw-a-recurrent-neural-network-for-image-generation/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/draw-a-recurrent-neural-network-for-image-generation/</guid>
+      <description>Table of Contents  Introduction  Introduction Introduction Introduction  The DRAW Network  The DRAW Network Network Architecture Network Architecture Network Architecture Network Architecture Network Architecture Network Architecture Network Architecture Network Architecture  Read and Write Operations  Read and Write Operations Reading and Writing Without Attention Selective Attention Model Selective Attention Model Selective Attention Model Reading and Writing With Attention  Next article  Next article  Reference</description>
+    </item>
+    
+    <item>
+      <title>Deep Reinforcement Learning</title>
+      <link>https://mingzailao.github.io/todo/lecture-1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/lecture-1/</guid>
+      <description>  Table of Contents  What is Reinforcement Learning?  What is Reinforcement Learning?  Terminology &amp;amp; notation  Terminology &amp;amp; notation Terminology &amp;amp; notation    
+What is Reinforcement Learning? What is Reinforcement Learning?  Branch of machine learning concerned with taking sequences of actions Usually described in terms of target interacting with a previously unknown enviroment, trying to maximize cumulative reward Formalized as partially observable Markov decision process (POMDP)      Terminology &amp;amp; notation Terminology &amp;amp; notation     Terminology &amp;amp; notation     </description>
+    </item>
+    
+    <item>
+      <title>Deep Reinforcement Learning-based Image Captioning with Embedding Reward</title>
+      <link>https://mingzailao.github.io/todo/deep-reinforcement-learning-based-image-captioning-with-embedding-reward/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/deep-reinforcement-learning-based-image-captioning-with-embedding-reward/</guid>
+      <description>  Table of Contents  [](#)   
+TODO  </description>
+    </item>
+    
+    <item>
+      <title>Deep Tracking : Seeing Beyond Seeing Using Recurrent Neural Networks</title>
+      <link>https://mingzailao.github.io/posts/deep-tracking-seeing-beyond-seeing-using-recurrent-neural-networks/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/deep-tracking-seeing-beyond-seeing-using-recurrent-neural-networks/</guid>
+      <description>Table of Contents  Deep Tracking  The Bayes Model The Bayes Model The Bayes Model Filtering Using a Recurrent Neural Network  Training  Supervised mode Unsupervised mode(difficult)    
+Deep Tracking The Bayes Model  Graphical Model
+     The Bayes Model  Joint Probability
+\begin{equation} P(y_{1:N},x_{1:N},h_{1:N})=\prod_{t=1}^NP(x_t|y_t)P(y_t|h_t)P(h_t|h_{t-1}) \end{equation}
+ \(P(h_t|h_{t-1})\) : the hidden state transition probability capturing the dynamics of the world; \(P(y_t|h_t)\) : modelling the instantaneous unoccluded sensor space; \(P(x_t|y_t)\) : describes the actual sensing process.</description>
+    </item>
+    
+    <item>
+      <title>Deep Visual-Semantic Alignments for Generating Image Descriptions</title>
+      <link>https://mingzailao.github.io/todo/deep-visual-semantic-alignments-for-generating-image-descriptions/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/deep-visual-semantic-alignments-for-generating-image-descriptions/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Directed GMs: Bayesian Networks</title>
+      <link>https://mingzailao.github.io/posts/directed-gms-bayesian-networks/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/directed-gms-bayesian-networks/</guid>
+      <description>Notation  Variable, value and index Random variable Random vector Random matrix Parameters  Knowledge Engineering  Picking variables  Observed Hidden  Picking structure  CAUSAL Generative Coupling  Picking Probabilities  Zero probabilities Orders of magnitudes Relative values   Hidden Markov Model     Probability of a parse  Joint PDF  \begin{equation} \label{eq:1} p(\mathbf{x},\mathbf{y})=p(y_1,\cdots,y_T)p(x_1,\cdots,x_T|y_1,\cdots,y_T) \end{equation}
+ Marginal probability  \begin{equation} \label{eq:2} p(\mathbf{x})=\sum_yp(\mathbf{x},\mathbf{y})=\sum_{y_1}\sum_{y_2}\cdots\sum_{y_N}\pi_{y_1}\prod_{t=2}^Ta_{y_{t-1},y_t}\prod_{t=1}^Tp(x_t|y_t) \end{equation}</description>
+    </item>
+    
+    <item>
+      <title>Energy-Based Generative Adversarial Networks</title>
+      <link>https://mingzailao.github.io/posts/energy-based-generative-adversarial-networks/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/energy-based-generative-adversarial-networks/</guid>
+      <description>Table of Contents  Theory  Theory Theory Theory Theory Theory Theory Theory Theory Theory  Repelling Regularizer  Repelling Regularizer    
+Theory Theory  The Loss
+\begin{eqnarray} \label{eq:2} \mathcal{L}_D(\mathbf{x},\mathbf{z}) &amp;amp; = &amp;amp; D(\mathbf{x})+[m-D(G(\mathbf{z}))]^+\\
+\mathcal{L}_G(\mathbf{z})&amp;amp;=&amp;amp;D(G(\mathbf{z})) \end{eqnarray}
+ The Target
+\begin{eqnarray} \label{eq:3} V(G,D) &amp;amp; = &amp;amp; \mathbb{E}_{\mathbf{x}\sim P_{data}(\mathbf{x})}[D(\mathbf{x})]+\mathbb{E}_{\mathbf{z}\sim P_z(\mathbf{z})}[ [m-D(G(z))]^+ ]\\
+U(G,D)&amp;amp; = &amp;amp; \mathbb{E}_{\mathbf{z}\sim P_z(\mathbf{z})}[D(G(\mathbf{z}))] \end{eqnarray}
+  Theory  Nash equilibrium
+A Nash equilibrium of the system is a pair \((G^{*},D^{*})\) that satisfies:</description>
+    </item>
+    
+    <item>
+      <title>First Step Toward Model-free, Anonymous Object Tracking with Recurrent Neural Networks</title>
+      <link>https://mingzailao.github.io/posts/first-step-toward-model-free-anonymous-object-tracking-with-recurrent-neural-networks/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/first-step-toward-model-free-anonymous-object-tracking-with-recurrent-neural-networks/</guid>
+      <description>Table of Contents  Introduction  Introduction  Background  Filtering-based Visual Object Tracking Filtering-based Visual Object Tracking Filtering-based Visual Object Tracking Tracking-by-Detection Tracking-by-Detection  Visual Object Tracking with Deep Neural Networks  Visual Object Tracking with Deep Neural Networks Visual Object Tracking with Deep Neural Networks Model Description Model Description Model Descripteion Model Description Model Description Preprocessing Input Frame xt Preprocessing Input Frame \(x_t\)  Training  Training Training Training Training Training Characteristics Data Generation Data Generation Data Generation Data Generation Evaluate Model by Two Dataset Novel Test Digit Classes Generalization to Longer Video Sequence  Models and Training  Models and Training Network Architectures Network Architectures Training Details  Result and Analysis  Result and Analysis  Code Analysis  Data Generation</description>
+    </item>
+    
+    <item>
+      <title>GAN and VAE from an Optimal Transport Point of View</title>
+      <link>https://mingzailao.github.io/posts/gan-and-vae-from-an-optimal-transport-point-of-view/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/gan-and-vae-from-an-optimal-transport-point-of-view/</guid>
+      <description>Minimum Kantorovitch Estimators MKE  empirical distribution \(\nu:= \frac{1}{n}\sum_{j=1}^n\delta_{y_j}\), \(y_j\in \mathcal{X}\subset \mathbb{R}^p\) parametric distribution family \((\mu_{\theta})_{\theta\in \Theta}\subset \mathcal{P}(\mathcal{X})\), \(\Theta\subset \mathbb{R}^q\)  MKE for \(\theta\) is defined as any solution of the problem
+\begin{equation} \label{eq:1} \min_{\theta}W_c(\mu_{\theta},\nu) \end{equation}
+ \(W_c\) : Wassertein distance for some cost function \(c\):  \begin{equation} \label{eq:2} W_c(\mu,\nu)=\min_{\gamma\in P(\mathcal{X}\times \mathcal{X})}{\int_{\mathcal{X}\times \mathcal{X}}c(x,y)d\gamma(x,y); P_{1#\gamma}=\mu,P_{2#\gamma}=\nu} \end{equation}
+ \(P_{1#}\) , \(P_{2#}\) : marginalization operators  MKE-GM  \(\mu_{\theta}\) is defined by a map and a given distribution \(\zeta\) : \(g_{\theta}: \mathcal{Z}\rightarrow \mathcal{X}\), i.</description>
+    </item>
+    
+    <item>
+      <title>Generative Adversarial Nets</title>
+      <link>https://mingzailao.github.io/posts/generative-adversarial-nets/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/generative-adversarial-nets/</guid>
+      <description>Table of Contents  Adversarial nets  Adversarial nets Adversarial nets Adversarial nets  Theoretical Results  Theoretical Results Theoretical Results Theoretical Results Theoretical Results Theoretical Results Theoretical Results  Conditional Generative Adversarial Nets  Conditional Generative Adversarial Nets  Deep Convolutional GANs  Deep Convolutional GANs Deep Convolutional GANs Deep Convolutional GANs Deep Convolutional GANs Deep Convolutional GANs Deep Convolutional GANs Deep Convolutional GANs Deep Convolutional GANs Deep Convolutional GANs Deep Convolutional GANs Deep Convolutional GANs Deep Convolutional GANs Deep Convolutional GANs  Generating Images With Recurrent Adversarial Networks  Generating Images With Recurrent Adversarial Networks Structure Generating Images with Recurrent Adversarial Networks  Reference  Reference</description>
+    </item>
+    
+    <item>
+      <title>Generative Adversarial Networks as Variational Training of Energy Based Models</title>
+      <link>https://mingzailao.github.io/posts/generative-adversarial-networks-as-variational-training-of-energy-based-models/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/generative-adversarial-networks-as-variational-training-of-energy-based-models/</guid>
+      <description>Table of Contents  Energy Based Model and Adversarial Networks  Energy Based Model and Adversarial Networks Energy Based Model and Adversarial Networks Energy Based Model and Adversarial Networks Energy Based Model and Adversarial Networks  Variational Generative Adversarial Networks  Variational Generative Adversarial Networks  Bounded Multi-Modal Energy   
+Energy Based Model and Adversarial Networks Energy Based Model and Adversarial Networks  Adversarial Networks optimization equation</description>
+    </item>
+    
+    <item>
+      <title>Git</title>
+      <link>https://mingzailao.github.io/posts/git-tutorial/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/git-tutorial/</guid>
+      <description>Table of Contents Git的一般流程 Git的一般流程 git add git rm git branch [branchname] git check out git 版本回溯(git log + git reset &amp;ndash;hard ) git diff Github Github Git的一般流程 Git的一般流程 git init git add [file] git</description>
+    </item>
+    
+    <item>
+      <title>GloVe: Global Vectors for Word Representation</title>
+      <link>https://mingzailao.github.io/posts/glove-global-vectors-for-word-representation/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/glove-global-vectors-for-word-representation/</guid>
+      <description>  Table of Contents  Related work  Matrix Factorization Methods    
+Related work Matrix Factorization Methods  Keys
+These methods utilize low-rank approximations to decompose large matrices that capture statistical information about a corpus.1.
+   The particular type of information captured by such matrices varies by application. [return]   </description>
+    </item>
+    
+    <item>
+      <title>Hierarchical Variational Models</title>
+      <link>https://mingzailao.github.io/posts/hierarchical-variational-models/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/hierarchical-variational-models/</guid>
+      <description>Table of Contents  BBVI  BBVI  Technical summary  Technical summary Technical summary Technical summary  Hierarchical Variational Models  Hierarchical Variational Models Hierarchical Variational Models Specifying an HVM Specifying an HVM    
+BBVI BBVI  Definition
+It sets up a parameterized family of distributions over the latent variables and then optimizes the parameters to be close to the posterior.
+  Technical summary Technical summary Consider a posterior distribution \(p(\mathbf{z}|\mathbf{x})\), a distribution on \(d\) latent variables \(z_1,\cdots,z_d\) conditional on a set of observations \(\mathbf{x}\).</description>
+    </item>
+    
+    <item>
+      <title>Improved Techniques for Training GANs</title>
+      <link>https://mingzailao.github.io/posts/improved-techniques-for-training-gans/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/improved-techniques-for-training-gans/</guid>
+      <description>Table of Contents  Tricks  Feature Matching Minibatch discrimination Minibatch discrimination Minibatch discrimination Historical averaging One-sided label smoothing BN  Reference   
+Tricks Feature Matching  Notations
+ \(f(\mathbf{x})\) : activations on an intermediate layer of the discriminator;  New objective for the generator
+\begin{equation} \label{eq:1} ||\mathbb{E}_{\mathbf{x}\sim P_{data}(\mathbf{x})}[f(\mathbf{x})]-\mathbb{E}_{\mathbf{z}\sim P_z(\mathbf{z})}[f(G(\mathbf{z}))]||^{2} \end{equation}
+As with regular GAN training, the objective has a fixed point where \(G\) exactly matches the distribution of training data.</description>
+    </item>
+    
+    <item>
+      <title>Improving Generative Adversarial Networks with Denoising Feature Matching</title>
+      <link>https://mingzailao.github.io/posts/improving-generative-adversarial-networks-with-denoising-feature-matching/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/improving-generative-adversarial-networks-with-denoising-feature-matching/</guid>
+      <description>Table of Contents  Generative Adversarial Networks  Generative Adversarial Networks  Challenges and Limitations of GANs  Challenges and Limitations of GANs  Reference   
+Generative Adversarial Networks Generative Adversarial Networks  min-max game
+\begin{equation} \label{eq:1} arg\min_Garg\max_D\mathbb{E}_{\mathbf{x}\sim P_{data}(\mathbf{x})}[\log D(\mathbf{x})]+\mathbb{E}_{\mathbf{z}\sim P_z(\mathbf{z})}[log(1-D(G(\mathbf{z})))] \end{equation}
+ In Practice
+Minimizing Eq (1) with respect to the parameters of \(G\) proved difficult, and elected instead to optimize an alternate objective,
+\begin{equation} \label{eq:2} arg\max_G \mathbb{E}_{\mathbf{z}\sim P_z(\mathbf{z})}[\log D(G(\mathbf{z}))] \end{equation}</description>
+    </item>
+    
+    <item>
+      <title>Introduction</title>
+      <link>https://mingzailao.github.io/posts/introduction/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/introduction/</guid>
+      <description>  Table of Contents  Introduction  Elements of Reinforcement Learning Example : Tic-Tac-Toe    
+Introduction Elements of Reinforcement Learning  policy reward signal value function optional model(of the environment)  Example : Tic-Tac-Toe </description>
+    </item>
+    
+    <item>
+      <title>Knowing When to Look: Adaptive Attention via A Visual Sentinel for Image Captioning</title>
+      <link>https://mingzailao.github.io/todo/knowing-when-to-look-adaptive-attention-via-a-visual-sentinel-for-image-captioning/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/knowing-when-to-look-adaptive-attention-via-a-visual-sentinel-for-image-captioning/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Layer Normalization</title>
+      <link>https://mingzailao.github.io/posts/layer-normalization/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/layer-normalization/</guid>
+      <description>  Table of Contents  Layer Normalization  Layer Normalization    
+Layer Normalization Layer Normalization  Compute the layer normalization statistics
+\begin{equation*} \label{eq:1} \begin{array}[tb]{rcl} \mu^l&amp;amp;=&amp;amp;\frac{1}{H}\sum_{i=1}^Ha_i^l\\
+\sigma^l&amp;amp;=&amp;amp;\sqrt{\frac{1}{H}\sum_{i=1}^H(a_i^l-\mu_l)^2}\\
+\end{array} \end{equation*}
+ H : the number of hidden units in a layer.   </description>
+    </item>
+    
+    <item>
+      <title>Learning to Generate with Memory</title>
+      <link>https://mingzailao.github.io/posts/learning-to-generate-with-memory/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/learning-to-generate-with-memory/</guid>
+      <description>Table of Contents  Probabilistic DGMs with Memory  Overall Architecture Overall Architecture Concrete Examples with Hierarchical Memory Mechanisms Concrete Examples with Hierarchical Memory Mechanisms    
+Probabilistic DGMs with Memory Overall Architecture  training data : \(\mathcal{D}\)  each sample \(\mathbf{x}\in \mathcal{D}\) is independently generated with latent factors \(\mathbf{z}_{L},\cdots,\mathbf{z}_1\):
+ Draw the top-layer factors \(\mathbf{z}_L\sim \mathcal{N}(0,1)\) For \(l=L-1,\cdots,0\), calculate the mean parameters \(\mathbf{\mu}_l=g_l(\mathbf{z}_{l+1};M_l)\) and draw the factors \(\mathbf{z}_l\sim P_l(\mathbf{\mu}_l)\)  \(g_l\) is a feed-forward deep neural network with \(I_l\) deterministic layers and a set of memories \({M_l^{(i)}}_{i=0}^{I_l-1}\).</description>
+    </item>
+    
+    <item>
+      <title>Learning to Refine Object Segments</title>
+      <link>https://mingzailao.github.io/posts/learning-to-refine-object-segments/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/learning-to-refine-object-segments/</guid>
+      <description>Table of Contents  Network Structure  Network Structure Network Structure  DeepMask  DeepMask Structure DeepMask notations DeepMask Segmentation Branch DeepMask Loss DeepMask Implementation Details  Fully convolutional networks for semantic segmentation  PASS  SharpMask  Refinement Overview Refinement Details Refinement Details Refinement Details Training and Inference Feedforward Architecture Experiments Details    
+Network Structure Network Structure     Network Structure  Feedforward nets, such as DeepMask0 with skip architectures,such as Fully convolutional networks for semantic segmentation0 This model (c,d)  DeepMask DeepMask Structure     DeepMask notations Each sample \(k\) in the training set is a triplet containing</description>
+    </item>
+    
+    <item>
+      <title>LightRNN: Memory and Computation-Efficient Recurrent Neural Networks</title>
+      <link>https://mingzailao.github.io/posts/lightrnn-memory-and-computation-efficient-recurrent-neural-networks/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/lightrnn-memory-and-computation-efficient-recurrent-neural-networks/</guid>
+      <description>Table of Contents  LightRNN  RNN Model with 2-Component Shared Embedding RNN Model with 2-Component Shared Embedding RNN Model with 2-Component Shared Embedding RNN Model with 2-Component Shared Embedding    
+LightRNN RNN Model with 2-Component Shared Embedding     RNN Model with 2-Component Shared Embedding Then for a vocabulary with \(|V|\) words, we only need \(2\sqrt{|V|}\) unique vectors for input word embeddings, it is the same case for the output word embeddings.</description>
+    </item>
+    
+    <item>
+      <title>Maxout Networks</title>
+      <link>https://mingzailao.github.io/todo/maxout-networks/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/maxout-networks/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications</title>
+      <link>https://mingzailao.github.io/posts/mobilenets-efficient-convolutional-neural-networks-for-mobile-vision-applications/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/mobilenets-efficient-convolutional-neural-networks-for-mobile-vision-applications/</guid>
+      <description>Table of Contents  Architecture  Depthwise Separable Convolution  Depthwise Separable Convolution Depthwise Separable Convolution depthwise convolutions Pointwise convolution Cost Analysis     
+Architecture Depthwise Separable Convolution Depthwise Separable Convolution  Keys
+ factorize a standard convolution into a depthwise convolution and a \(1\times 1\) convolution called a pointwise convolution.   Depthwise Separable Convolution  Original
+ Input size : \(D_F\times D_F\times M\) output : \(D_F\times D_F\times N\) Kernel Size: \(D_K\)  \begin{equation} \label{eq:1} G_{k,l,n}=\sum_{i,j,m} K_{i,j,m,n}\cdot F_{k+i-1,l+j-1,m} \end{equation}</description>
+    </item>
+    
+    <item>
+      <title>Neural Style Transfor</title>
+      <link>https://mingzailao.github.io/posts/neural-style-transfor/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/neural-style-transfor/</guid>
+      <description>Table of Contents  Network Structure  Network Structure Content Loss Style Loss Total Loss    
+Network Structure Network Structure     Content Loss \begin{equation} \label{eq:1} \mathcal{L}_{content}(\vec{p},\vec{x},l)=\frac{1}{2}\sum_{i,j}(F_{ij}^l-P_{ij}^l)^2 \end{equation}
+ \(l\) : the layer output we chose \(F_{ij}^l\) : the combination image&amp;rsquo;s \(l\) layer&amp;rsquo;s output \(P_{ij}^l\) : the content image&amp;rsquo;s \(l\) layer&amp;rsquo;s output  Style Loss  Gram Matrix  \begin{equation} \label{eq:2} G_{ij}^l=\sum_k F_{ik}^lF_{jk}^l \end{equation}</description>
+    </item>
+    
+    <item>
+      <title>Optimal Transport</title>
+      <link>https://mingzailao.github.io/todo/optimal-transport/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/optimal-transport/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Pattern Recogniton and Machine Learning 2</title>
+      <link>https://mingzailao.github.io/prml/pattern-recognition-and-machine-learning-2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/prml/pattern-recognition-and-machine-learning-2/</guid>
+      <description>  Table of Contents  Binary Variables  Bernoulli distribution Bernoulli distribution Binomial distribution The beta distribution    
+Binary Variables Bernoulli distribution \begin{equation} \label{eq:1} Bern(\mathbf{x}|\mu)=\mu^x(1-\mu)^{1-x} \end{equation}
+ \(E[\mathbf{x}]=\mu\) \(var[\mathbf{x}]=\mu(1-\mu)\)  Bernoulli distribution set \(\mathcal{D}={x_{1},\cdots,x_N}\)
+\begin{equation} \label{eq:2} p(\mathcal{D}|\mu)=\prod_{n=1}^Np(x_n|\mu)=\prod_{n=1}^N\mu^{x_n}(1-\mu)^{1-x_{n}} \end{equation}
+\begin{equation} \label{eq:3} \ln p(\mathcal{D}|\mu)=\sum_{n=1}^N{x_n\ln \mu+(1-x_n)\ln(1-\mu)} \end{equation}
+\begin{equation} \label{eq:4} \mu_{ML}=\frac{1}{N}\sum_{n=1}^Nx_n \end{equation}
+Binomial distribution \begin{equation} \label{eq:5} Bin(m|N,\mu)=C_m^N\mu^m(1-\mu)^{N-m} \end{equation}
+ \(E[m]=N\mu\) \(var[m]=N\mu(1-\mu)\)  The beta distribution </description>
+    </item>
+    
+    <item>
+      <title>Pattern Recogniton and Machine Learning(1)</title>
+      <link>https://mingzailao.github.io/prml/pattern-recognition-and-machine-learning-1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/prml/pattern-recognition-and-machine-learning-1/</guid>
+      <description>Table of Contents  Mathematical notation  Mathematical notation  An example  Polynomial Curve Fitting Polynomial Curve Fitting Polynomial Curve Fitting Polynomial Curve Fitting Polynomial Curve Fitting How to chose \(M\) Regularization My Notes: Regularization  Probability Theory(only some important concepts)  The Rules of Probability Probability densities Probability densities Multi-variable case Sum rule and product rule Expectations and covariances Expectations and covariances Expectations and covariances Expectations and covariances The Gaussian distribution The Gaussian distribution The Gaussian distribution Back to the example Back to example More Bayes Bayesian curve fitting Decision Theory Information Theory Information Theory Information Theory Information Theory Relative entropy and mutual information Relative entropy and mutual information Relative entropy and mutual information Relative entropy and mutual information</description>
+    </item>
+    
+    <item>
+      <title>Predicting Deeper into the Future of Semantic Segmentation</title>
+      <link>https://mingzailao.github.io/todo/predicting-deeper-into-the-future-of-semantic-segmentation/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/predicting-deeper-into-the-future-of-semantic-segmentation/</guid>
+      <description>  Table of Contents  What is this paper about?  What is this paper about?  Predicting future frames and segmentations  Predicting future frames and segmentations    
+What is this paper about? What is this paper about?  Predicting the Semantic Segmentation of the future image.  Predicting future frames and segmentations Predicting future frames and segmentations  Notations  \(X_i\) : the i-th frame of a video sequence \(X_{t:T}\) : the sequences of frames from \(X_t\) to \(X_T\) \(S_i\) : the log-probabilities of frame \(X_t\)  Experiements  </description>
+    </item>
+    
+    <item>
+      <title>RATM: Recurrent Attentive Tracking Model</title>
+      <link>https://mingzailao.github.io/posts/ratm-recurrent-attentive-tracking-model/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/ratm-recurrent-attentive-tracking-model/</guid>
+      <description>RECURRENT NEURAL NETWORKS IRNN Structure Basic RNN
+Initialization of \(W_rec\) A scaled version of the identity matrix
+Hidden activation function ReLU
+Initialization of \(h_0\) Zero vector
+NEURAL ATTENTION MECHANISMS Attention Mechanism DRAW Links :
+A MODULAR FRAMEWORK FOR VISION Feature-extraction module Aims The feature-extraction module computes a feature representation of a given input glimpse.
+Pre-train is useful After pre-training, the feature extractor’s parameters can either be continued to be updated during end-to-end training, or kept fixed.</description>
+    </item>
+    
+    <item>
+      <title>SCA-CNN: Spatial and Channel-wise Attention in Convolutional Networks for Image Captioning</title>
+      <link>https://mingzailao.github.io/todo/sca-cnn-spatial-and-channel-wise-attention-in-convolutional-networks-for-image-captioning/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/sca-cnn-spatial-and-channel-wise-attention-in-convolutional-networks-for-image-captioning/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Self-Normalizing Neural Networks</title>
+      <link>https://mingzailao.github.io/posts/self-normalizing-neural-networks/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/self-normalizing-neural-networks/</guid>
+      <description>Table of Contents  Self-normalizing Neural Networks  Definition Constructing Self-Normalizing Neural Networks Constructing Self-Normalizing Neural Networks Constructing Self-Normalizing Neural Networks Deriving the Mean and Variance Mapping Function Deriving the Mean and Variance Mapping Function Stable and Attracting Fixed Point (0, 1) for Normalized Weights    
+Self-normalizing Neural Networks Definition A neural network is self-normalizing if it possesses a mapping \(g : \Omega \rightarrow \Omega\) for each activation \(y\) that maps mean and variance from one layer to the next and has a stable and attracting fixed point depending on \((\omega,\tau)\) in \(\Omega\).</description>
+    </item>
+    
+    <item>
+      <title>Show and Tell: A Neural Image Caption Generator</title>
+      <link>https://mingzailao.github.io/posts/show-and-tell-a-neural-image-caption-generator/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/show-and-tell-a-neural-image-caption-generator/</guid>
+      <description>Table of Contents  Main Work  Model  Loss LSTM-based Sentence Generator LSTM-based Sentence Generator Inference   Implementation  Dataset  Dataset Model     
+Main Work Model Loss \begin{eqnarray*} \theta^{*} &amp;amp; =&amp;amp; \arg\max_{\theta}\sum_{(I,S)}\log p(S|I,\theta)\\
+\end{eqnarray*}
+ \(\theta\) : paramaters of the model; \(I\) : the image; \(S\) : correct transcription;
+ hints: the length of \(S\) is unknown
+  \begin{eqnarray*} \log p(S|I) &amp;amp;= &amp;amp;\sum_{t=0}^{N}\log p(S_t|I,S_0,\cdots,S_{t-1}) \\</description>
+    </item>
+    
+    <item>
+      <title>Show, Attend and Tell: Neural Image Caption Generation with Visual Attention</title>
+      <link>https://mingzailao.github.io/posts/show-attend-and-tell-neural-image-caption-generation-with-visual-attention/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/show-attend-and-tell-neural-image-caption-generation-with-visual-attention/</guid>
+      <description>Table of Contents  Model  Model Details  Encoder Decoder Attention Attention Initialization of LSTM  Learning Stochastic “Hard” vs Deterministic “Soft” Attention  Stochastic “Hard” Attention     
+Model Model Details Encoder  Encoder extract \(L\) vectors Extract features from a lower convolutional layer unlike previous work which instead used a fully connected layer&amp;nbsp;1  Decoder  LSTM      Attention What difference between &amp;ldquo;show and tell&amp;rdquo; is &amp;ldquo;Attention&amp;rdquo;</description>
+    </item>
+    
+    <item>
+      <title>ShuffleNet: An Extremely Efficient Convolutional Neural Network for Mobile Devices</title>
+      <link>https://mingzailao.github.io/posts/shufflenet-an-extremely-efficient-convolutional-neural-network-for-mobile-devices/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/shufflenet-an-extremely-efficient-convolutional-neural-network-for-mobile-devices/</guid>
+      <description>  Table of Contents  Approach  Channel Shuffle for Group Convolutions  Structure  ShuffleNet Unit  Structure Network Architecture     
+Approach Channel Shuffle for Group Convolutions Structure     ShuffleNet Unit Structure     Network Architecture     </description>
+    </item>
+    
+    <item>
+      <title>Skeleton Key: Image Captioning by Skeleton-Attribute Decomposition</title>
+      <link>https://mingzailao.github.io/todo/skeleton-key-image-captioning-by-skeleton-attribute-decomposition/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/skeleton-key-image-captioning-by-skeleton-attribute-decomposition/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Towards Principled Methods for Training Generative Adversarial Networks</title>
+      <link>https://mingzailao.github.io/posts/towards-principled-methods-for-training-generative-adversarial-networks/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/towards-principled-methods-for-training-generative-adversarial-networks/</guid>
+      <description>Table of Contents  The GAN  The GAN  Sources of Instability  Sources of Instability The Perfect Discrimination Theorem The Perfect Discrimination Theorem The Perfect Discrimination Theorem The Perfect Discrimination Theorem The Perfect Discrimination Theorem The Perfect Discrimination Theorem The Perfect Discrimination Theorem The Perfect Discrimination Theorem The Perfect Discrimination Theorem The Perfect Discrimination Theorem The Perfect Discrimination Theorem The Perfect Discrimination Theorem The Perfect Discrimination Theorem The Perfect Discrimination Theorem The Perfect Discrimination Theorem [](#)</description>
+    </item>
+    
+    <item>
+      <title>Transferring Rich Feature Hierarchies for Robust Visual Tracking</title>
+      <link>https://mingzailao.github.io/posts/transferring-rich-feature-hierarchies-for-robust-visual-tracking/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/transferring-rich-feature-hierarchies-for-robust-visual-tracking/</guid>
+      <description>Introduction Introduction Goal Given this single (labeled) instance, the goal is to track the movement of the object in an online manner.
+The Contributions To alleviate the overfitting and drifting problems during online tracking, we pre-train the CNN to distinguish objects from non-objects instead of simply reconstructing the input or performing categorical classification on large-scale datasets with object-level annotations.
+Introduction The Contributions The output of the CNN is a pixel-wise map to indicate the probability that each pixel in the input image belongs to the bounding box of an object.</description>
+    </item>
+    
+    <item>
+      <title>Tutorial: Deep Reinforcement Learning</title>
+      <link>https://mingzailao.github.io/posts/tutorial-deep-reinforcement-learning/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/tutorial-deep-reinforcement-learning/</guid>
+      <description> Reinforcement Learning in a nutshell Reinforcement Learning in a nutshell RL is a general-purpose framework for decision-making  RL is for an agent with the capacity to act Each action influences the agent’s future state Success is measured by a scalar reward signal Goal: select actions to maximise future reward  Reinforcement Learning in a nutshell DL is a general-purpose framework for representation learning  Given an objective Learn representation that is required to achieve objective Directly from raw inputs Using minimal domain knowledge  Deep Reinforcemnet Learning: AI = RL + DL Deep Reinforcement Learning: AI = RL + DL We seek a single agent which can solve any human-level task  RL defines the objective DL gives the mechanism RL + DL = general intelligence  Introduction to Deep Learning Deep Representations  A deep representation is a composition of many functions      Deep Representations  Its gradient can be backpropagated by the chain rule      </description>
+    </item>
+    
+    <item>
+      <title>Unsupervised Learning Using Generative Adversarial Training And Clustering</title>
+      <link>https://mingzailao.github.io/posts/unsupervised-learning-using-generative-adversarial-training-and-clustering/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/unsupervised-learning-using-generative-adversarial-training-and-clustering/</guid>
+      <description>Table of Contents  InfoGAN  InfoGAN  Unsupervised Learning With Adversarial Training and K-means++ clustering  Unsupervised Learning With Adversarial Training and K-means++ clustering    
+InfoGAN InfoGAN  Use Latent variables \(c\)
+maximum the mutual information, but the mutual information is hard to compute, get the variational lower bound is obtained :
+\begin{equation} L_I(G,Q)=\mathbb{E}_{\mathbf{c}\sim P(\mathbf{c}),\mathbf{z}\sim P_{noise}(\mathbf{z})}[\log Q(\mathbf{c}|G(\mathbf{c},\mathbf{z}))]+H(\mathbf{c}) \end{equation}
+The InfoGAN objective is a regularized version of the original GAN objective:</description>
+    </item>
+    
+    <item>
+      <title>Variational Approaches for Auto-Encoding Generative Adversarial Networks</title>
+      <link>https://mingzailao.github.io/posts/variational-approaches-for-auto-encoding-generative-adversarial-networks/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/variational-approaches-for-auto-encoding-generative-adversarial-networks/</guid>
+      <description>Table of Contents  Overcoming Intractability in Generative Models  Latent Variable Models The Density Ratio Trick Variational Inference Synthetic Likelihoods Implicit Variational Distributions Likelihood Choice Hybrid Loss Function  Algorithm  Algorithm Architectures    
+Overcoming Intractability in Generative Models Latent Variable Models Latent variable models describe a stochastic process by which modeled data is assumed to be generated (and thereby a process by which synthetic data can be simulated from the model distribution).</description>
+    </item>
+    
+    <item>
+      <title>Video Tracking Using Learned Hierarchical Features</title>
+      <link>https://mingzailao.github.io/posts/video-tracking-using-learned-hierarchical-features/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/video-tracking-using-learned-hierarchical-features/</guid>
+      <description>Tracking System Overview TODO  ASLSA(adaptive structural local sparse appearance model) Tracking System Overview Briefly Introduction of the Tracking System Suppose we have an observation set of target \(x_{1:t}={x_1,\cdots,x_t}\) , a corresponding feature representation set \(z_{1:t}={z_1,\cdots,z_t}\), the target state \(y_t\) can be calculated by:
+\begin{equation} \label{eq:1} y_t=arg\max_{y_t^i} p(y_t^i|z_{1:t}) \end{equation}
+where \(y_t^i\) denotes the \(i^{th}\) sample in the \(t^{th}\) frame.
+Tracking System Overview Briefly Introduction of the Tracking System The posterior probability \(p(y_t|z_{1:t})\) can be inferred by the Bayes’ theorem as follows:</description>
+    </item>
+    
+    <item>
+      <title>Word Embedding</title>
+      <link>https://mingzailao.github.io/posts/word-embedding/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/word-embedding/</guid>
+      <description>Table of Contents  Word Embedding  Basic Idea Basic Iead Example Result N-Gram Language Modeling The Continuous Bag-of-Words model (CBOW) Sequence Models and Long-Short Term Memory Networks Bi-LSTM Conditional Random Field Discussion    
+Word Embedding Basic Idea If each attribute is a dimension, then we might give each word a vector, like this: \[ q_\text{mathematician} = \left[ \overbrace{2.3}^\text{can run}, \overbrace{9.4}^\text{likes coffee}, \overbrace{-5.5}^\text{majored in Physics}, \dots \right] \] \[ q_\text{physicist} = \left[ \overbrace{2.</description>
+    </item>
+    
+    <item>
+      <title>b-GAN: Unified Framework of Generative Adversarial Networks</title>
+      <link>https://mingzailao.github.io/posts/b-gan-unified-framework-of-generative-adversarial-networks/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/b-gan-unified-framework-of-generative-adversarial-networks/</guid>
+      <description>Table of Contents  GANs  GANs GANs  Reference   
+GANs GANs  min-max
+\begin{equation} \label{eq:1} \min_G\max_D\mathbb{E}_{\mathbf{x}\sim P_{data}(\mathbf{x})}[\log D(\mathbf{x})]+\mathbb{E}_{\mathbf{z}\sim P_z(\mathbf{z})}[\log(1-D(G(\mathbf{z})))] \end{equation}
+  GANs  Given \(G\)
+\begin{equation} \label{eq:2} D_G^{*}(\mathbf{x})=\frac{P_{data}(\mathbf{x})}{P_{data}(\mathbf{x})+P_g(\mathbf{x})} \end{equation}
+  Reference \bibliographystyle{unsrtnat}
+&amp;lt;~/BibTex/mingzailao.bib&amp;gt;</description>
+    </item>
+    
+    <item>
+      <title>f-GAN: Training Generative Neural Samplers using Variational Divergence</title>
+      <link>https://mingzailao.github.io/posts/f-gan-training-generative-neural-samplers-using-variational-divergence-minimization/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/posts/f-gan-training-generative-neural-samplers-using-variational-divergence-minimization/</guid>
+      <description>Table of Contents  The f-divergence Family  The f-divergence Family The f-divergence of \(P\) and \(Q\): What is \(T^{*}(x)\)  Variational Divergence Minimization  Variational Divergence Minimization Variational Divergence Minimization Variational Divergence Minimization  Algorithms for Variational Divergence Minimization (VDM)  Single-Step Gradient Method Analysis. Analysis    
+Minimization
+The f-divergence Family The f-divergence Family  f-divergence
+\begin{eqnarray*} D_f(P||Q) &amp;amp;= &amp;amp; \int_{\mathcal{X}}q(x)f(\frac{p(x)}{q(x)})dx\\
+\end{eqnarray*}
+ \(f\) : \(\mathbb{R}_{+}\rightarrow \mathbb{R}\) is a convex, lower-semicontinuous function satisfying \(f(1)=0\)  Fenchel conjugate</description>
     </item>
     
   </channel>

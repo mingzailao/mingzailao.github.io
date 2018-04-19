@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>RATM: Recurrent Attentive Tracking Model</title>
+  <meta property="og:title" content="RATM: Recurrent Attentive Tracking Model" />
+  <meta name="twitter:title" content="RATM: Recurrent Attentive Tracking Model" />
+  <meta name="description" content="RECURRENT NEURAL NETWORKS IRNN Structure Basic RNN
+Initialization of \(W_rec\) A scaled version of the identity matrix
+Hidden activation function ReLU
+Initialization of \(h_0\) Zero vector
+NEURAL ATTENTION MECHANISMS Attention Mechanism DRAW Links :
+A MODULAR FRAMEWORK FOR VISION Feature-extraction module Aims The feature-extraction module computes a feature representation of a given input glimpse.
+Pre-train is useful After pre-training, the feature extractor’s parameters can either be continued to be updated during end-to-end training, or kept fixed.">
+  <meta property="og:description" content="RECURRENT NEURAL NETWORKS IRNN Structure Basic RNN
+Initialization of \(W_rec\) A scaled version of the identity matrix
+Hidden activation function ReLU
+Initialization of \(h_0\) Zero vector
+NEURAL ATTENTION MECHANISMS Attention Mechanism DRAW Links :
+A MODULAR FRAMEWORK FOR VISION Feature-extraction module Aims The feature-extraction module computes a feature representation of a given input glimpse.
+Pre-train is useful After pre-training, the feature extractor’s parameters can either be continued to be updated during end-to-end training, or kept fixed.">
+  <meta name="twitter:description" content="RECURRENT NEURAL NETWORKS IRNN Structure Basic RNN
+Initialization of \(W_rec\) A scaled version of the identity matrix
+Hidden activation function ReLU
+Initialization of \(h_0\) Zero vector
+NEURAL …">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://mingzailao.github.io/posts/ratm-recurrent-attentive-tracking-model/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="mingzaialo&#39;s blog" />
+
+  <meta name="generator" content="Hugo 0.37.1" />
+  <link rel="canonical" href="https://mingzailao.github.io/posts/ratm-recurrent-attentive-tracking-model/" />
+  <link rel="alternate" href="https://mingzailao.github.io/index.xml" type="application/rss+xml" title="mingzaialo&#39;s blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://mingzailao.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://mingzailao.github.io/css/syntax.css" /><link rel="stylesheet" href="https://mingzailao.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              <h1>RATM: Recurrent Attentive Tracking Model</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h2 id="recurrent-neural-networks">RECURRENT NEURAL NETWORKS</h2>
+
+<h3 id="irnn">IRNN</h3>
+
+<h4 id="structure">Structure</h4>
+
+<p>Basic RNN</p>
+
+<h4 id="initialization-of--w-rec">Initialization of \(W_rec\)</h4>
+
+<p>A scaled version of the identity matrix</p>
+
+<h4 id="hidden-activation-function">Hidden activation function</h4>
+
+<p>ReLU</p>
+
+<h4 id="initialization-of--h-0">Initialization of \(h_0\)</h4>
+
+<p>Zero vector</p>
+
+<h2 id="neural-attention-mechanisms">NEURAL ATTENTION MECHANISMS</h2>
+
+<h3 id="attention-mechanism">Attention Mechanism</h3>
+
+<h4 id="draw">DRAW</h4>
+
+<p><a href="~/PAPERS/org/DRAW:%20A%20Recurrent%20Neural%20Network%20For%20Image%20Generation/DRAW:%20A%20Recurrent%20Neural%20Network%20For%20Image%20Generation.pdf">Links</a> :</p>
+
+<h2 id="a-modular-framework-for-vision">A MODULAR FRAMEWORK FOR VISION</h2>
+
+<h3 id="feature-extraction-module">Feature-extraction module</h3>
+
+<h4 id="aims">Aims</h4>
+
+<p>The feature-extraction module computes a feature representation of a given input glimpse.</p>
+
+<h4 id="pre-train-is-useful">Pre-train is useful</h4>
+
+<p>After pre-training, the feature extractor’s parameters can either be continued to be updated during end-to-end training, or kept fixed.</p>
+
+<h3 id="attention-module">Attention Module</h3>
+
+
+<link rel="stylesheet" href="/css/hugo-easy-gallery.css" />
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/1.png" />
+    </div>
+    <a href="/ox-hugo/1.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="objective-module">Objective Module</h3>
+
+<h4 id="aims-1">Aims</h4>
+
+<p>An objective module guides the model to learn an attentional policy to solve a given task.</p>
+
+<h4 id="output">Output</h4>
+
+<ul>
+<li>Cost : function of its target and prediction inputs.</li>
+</ul>
+
+<p>\begin{equation}
+\label{eq:1}
+\mathcal{L}_{MSE}=\frac{1}{n}\sum_{i=1}^n||\mathbf{y}_{target}-\mathbf{y}_{pred}||_2^2
+\end{equation}</p>
+
+<h2 id="building-a-recurrent-attentive-tracking-model">BUILDING A RECURRENT ATTENTIVE TRACKING MODEL</h2>
+
+<h3 id="architecture">Architecture</h3>
+
+<h4 id="penalty-term">Penalty Term</h4>
+
+<p>\begin{enumerate}
+\item
+\begin{equation}
+\mathcal{L}_{pixel}=||\hat{p}-p||_2^2
+\end{equation}
+where $\hat{p}$ : the glimpse extracted by the attention mechanism
+$p$ : ground truth image
+\item
+\begin{equation}
+\mathcal{L}_{feat}=||f(\hat{p})-f(p)||_2^2
+\end{equation}
+where $f$ : feature extraction function
+\item
+\begin{equation}
+\mathcal{L}_{loc}=||\hat{g}-g||_2^2
+\end{equation}
+where $g$ : center of the ground truth.</p>
+
+<p>\end{enumerate}</p>
+
+<h3 id="evaluation-of-tracking-performance">Evaluation of Tracking Performance</h3>
+
+<h4 id="iou">IoU</h4>
+
+<p>\begin{equation}
+IoU=\frac{B_{gt}\cap B_{pred}}{B_{gt}\cup B_{pred}}
+\end{equation}</p>
+
+<h2 id="reference">Reference</h2>
+
+<p>\bibliography{../../BibTex/mingzailao}{}
+\bibliographystyle{plain}</p>
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://mingzailao.github.io/posts/self-normalizing-neural-networks/" data-toggle="tooltip" data-placement="top" title="Self-Normalizing Neural Networks">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://mingzailao.github.io/posts/neural-style-transfor/" data-toggle="tooltip" data-placement="top" title="Neural Style Transfor">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.37.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Variational Approaches for Auto-Encoding Generative Adversarial Networks</title>
+  <meta property="og:title" content="Variational Approaches for Auto-Encoding Generative Adversarial Networks" />
+  <meta name="twitter:title" content="Variational Approaches for Auto-Encoding Generative Adversarial …" />
+  <meta name="description" content="Table of Contents  Overcoming Intractability in Generative Models  Latent Variable Models The Density Ratio Trick Variational Inference Synthetic Likelihoods Implicit Variational Distributions Likelihood Choice Hybrid Loss Function  Algorithm  Algorithm Architectures    
+Overcoming Intractability in Generative Models Latent Variable Models Latent variable models describe a stochastic process by which modeled data is assumed to be generated (and thereby a process by which synthetic data can be simulated from the model distribution).">
+  <meta property="og:description" content="Table of Contents  Overcoming Intractability in Generative Models  Latent Variable Models The Density Ratio Trick Variational Inference Synthetic Likelihoods Implicit Variational Distributions Likelihood Choice Hybrid Loss Function  Algorithm  Algorithm Architectures    
+Overcoming Intractability in Generative Models Latent Variable Models Latent variable models describe a stochastic process by which modeled data is assumed to be generated (and thereby a process by which synthetic data can be simulated from the model distribution).">
+  <meta name="twitter:description" content="Table of Contents  Overcoming Intractability in Generative Models  Latent Variable Models The Density Ratio Trick Variational Inference Synthetic Likelihoods Implicit Variational Distributions …">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://mingzailao.github.io/posts/variational-approaches-for-auto-encoding-generative-adversarial-networks/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="mingzaialo&#39;s blog" />
+
+  <meta name="generator" content="Hugo 0.37.1" />
+  <link rel="canonical" href="https://mingzailao.github.io/posts/variational-approaches-for-auto-encoding-generative-adversarial-networks/" />
+  <link rel="alternate" href="https://mingzailao.github.io/index.xml" type="application/rss+xml" title="mingzaialo&#39;s blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://mingzailao.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://mingzailao.github.io/css/syntax.css" /><link rel="stylesheet" href="https://mingzailao.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              <h1>Variational Approaches for Auto-Encoding Generative Adversarial Networks</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<div class="ox-hugo-toc toc">
+<div></div>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ul>
+<li><a href="#overcoming-intractability-in-generative-models">Overcoming Intractability in Generative Models</a>
+
+<ul>
+<li><a href="#latent-variable-models">Latent Variable Models</a></li>
+<li><a href="#the-density-ratio-trick">The Density Ratio Trick</a></li>
+<li><a href="#variational-inference">Variational Inference</a></li>
+<li><a href="#synthetic-likelihoods">Synthetic Likelihoods</a></li>
+<li><a href="#implicit-variational-distributions">Implicit Variational Distributions</a></li>
+<li><a href="#likelihood-choice">Likelihood Choice</a></li>
+<li><a href="#hybrid-loss-function">Hybrid Loss Function</a></li>
+</ul></li>
+<li><a href="#algorithm">Algorithm</a>
+
+<ul>
+<li><a href="#algorithm">Algorithm</a></li>
+<li><a href="#architectures">Architectures</a></li>
+</ul></li>
+</ul>
+
+<p></div>
+<!--endtoc--></p>
+
+<h2 id="overcoming-intractability-in-generative-models">Overcoming Intractability in Generative Models</h2>
+
+<h3 id="latent-variable-models">Latent Variable Models</h3>
+
+<p>Latent variable models describe a stochastic process by which modeled data is assumed to be generated (and thereby a process by which synthetic data can be simulated from the model distribution).</p>
+
+<h3 id="the-density-ratio-trick">The Density Ratio Trick</h3>
+
+<ul>
+<li>\(p^{*}(\mathbf{x})=p(\mathbf{x}|y=1)\) : true distribution</li>
+<li>\(p_{\theta}(\mathbf{x})=p(\mathbf{x}|y=0)\) : the model</li>
+</ul>
+
+<p>density ratio \(r_{\theta}(\mathbf{x})\):</p>
+
+<p>\begin{equation}
+\label{eq:1}
+r_{\theta}(\mathbf{x})=\frac{p^{*}(\mathbf{x})}{p_{\theta}(\mathbf{x})}=\frac{p(\mathbf{x}|y=1)}{p(\mathbf{x}|y=0)}=\frac{p(y=1|\mathbf{x})}{p(y=0|\mathbf{x})}  =\frac{D_{\phi}(\mathbf{x})}{1-D_{\phi}(\mathbf{x})}
+\end{equation}</p>
+
+<h3 id="variational-inference">Variational Inference</h3>
+
+<p>A second approach for dealing with intractable likelihoods is to approximate them.</p>
+
+<p>ELBO</p>
+
+<p>\begin{eqnarray}
+\label{eq:2}
+\log p_{\theta}(\mathbf{x})&amp;=&amp;\log \int p_{\theta}(\mathbf{x}|\mathbf{z})p(\mathbf{z})d\mathbf{z}\\<br />
+&amp;\ge&amp; \mathbb{E}_{q_{\eta}(\mathbf{z}|\mathbf{x})}[\log p_{\theta}(\mathbf{x}|\mathbf{z})]-KL[q_{\eta}(\mathbf{z}|\mathbf{x})||p(\mathbf{z})]
+\end{eqnarray}</p>
+
+<h3 id="synthetic-likelihoods">Synthetic Likelihoods</h3>
+
+<p>\begin{equation}
+\label{eq:3}
+\mathbb{E}_{q_{\boldsymbol{\eta}}(\mathbf{z}|\mathbf{x})}[\log p_{\boldsymbol{\theta}}(\mathbf{x}|\mathbf{z})]=\mathbb{E}_{q_{\eta}(\mathbf{z}|\mathbf{x})}[\log \frac{p_{\theta}(\mathbf{x}|\mathbf{z})}{p^{*}(\mathbf{x})}]+\mathbb{E}_{q_{\eta}(\mathbf{z}|\mathbf{x})}[\log p^{*}(\mathbf{x})]
+\end{equation}</p>
+
+<h3 id="implicit-variational-distributions">Implicit Variational Distributions</h3>
+
+<p>the majoy task in variational inference is the choice of the variational distribution \(q_{\eta}(\mathbf{z}|\mathbf{x})\)</p>
+
+<p>\begin{eqnarray}
+\label{eq:10}
+-KL[q_{\eta}(\mathbf{z}|\mathbf{x})||p(\mathbf{z})]&amp;=&amp;\mathbb{E}_{q_{\eta}(\mathbf{z}|\mathbf{x})}[\log \frac{p(\mathbf{z})}{q_{\eta}(\mathbf{z}|\mathbf{x})}]\\<br />
+&amp;\approx&amp; \mathbb{E}_{q_{\eta}(\mathbf{z}|\mathbf{x})}[\log \frac{\mathcal{C}_{\boldsymbol{\omega}}(\mathbf{z})}{1-\mathcal{}C_{\boldsymbol{\omega}}(\mathbf{z})}]
+\end{eqnarray}</p>
+
+<ul>
+<li>\(\mathcal{C}_{\omega}(\mathbf{z})\) : the latent classifier that discriminates between latent variable \(\mathbf{z}\) produced by an encoder network and variables sampled from a standard Gaussian distribution.</li>
+</ul>
+
+<h3 id="likelihood-choice">Likelihood Choice</h3>
+
+<p>The reconstruction term \(\mathbb{E}_{q_{\eta}}(\mathbf{z}|\mathbf{x})[\log p_{\boldsymbol{\theta}}(\mathbf{x}|\mathbf{z})]\)</p>
+
+<p>\begin{equation}
+\label{eq:12}
+\mathbb{E}_{q_{\eta}}[-\lambda||\mathbf{x}-\mathcal{G}(\mathbf{z})||_1]\ \ or\ \ \mathbb{E}_{q_{\eta}(\mathbf{z}|\mathbf{x})}[\log \frac{\mathcal{D}_{\phi}(\mathcal{G}_{\boldsymbol{\theta}}(\mathbf{z}))}{1-\mathcal{D}_{\phi}(\mathcal{G}_{\boldsymbol{\theta}}(\mathbf{z}))}]
+\end{equation}</p>
+
+<h3 id="hybrid-loss-function">Hybrid Loss Function</h3>
+
+<p>\begin{equation}
+\label{eq:13}
+\mathcal{L}_{\boldsymbol{\theta},\boldsymbol{\eta}}=\mathbb{E}_{q_{\eta}(\mathbf{z}|\mathbf{x})}[-\lambda||x-\mathcal{G}_{\boldsymbol{\theta}}(\mathbf{z})||_1+\log \frac{\mathcal{D}(\mathcal{G}(\mathbf{z}))}{1-\mathcal{D}_{\phi}(\mathcal{G}_{\boldsymbol{\theta}}(\mathbf{z}))}+\log \frac{\mathcal{C}_{\boldsymbol{\omega}}(\mathbf{z})}{1-\mathcal{C}_{\boldsymbol{\omega}}(\mathbf{z})}]
+\end{equation}</p>
+
+<h2 id="algorithm">Algorithm</h2>
+
+<h3 id="algorithm-1">Algorithm</h3>
+
+
+<link rel="stylesheet" href="/css/hugo-easy-gallery.css" />
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="../../blog/source/img/screenshot_2017-07-07_10-16-03.png" />
+    </div>
+    <a href="../../blog/source/img/screenshot_2017-07-07_10-16-03.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="architectures">Architectures</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="../../blog/source/img/screenshot_2017-07-07_10-17-39.png" />
+    </div>
+    <a href="../../blog/source/img/screenshot_2017-07-07_10-17-39.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://mingzailao.github.io/posts/video-tracking-using-learned-hierarchical-features/" data-toggle="tooltip" data-placement="top" title="Video Tracking Using Learned Hierarchical Features">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://mingzailao.github.io/posts/unsupervised-learning-using-generative-adversarial-training-and-clustering/" data-toggle="tooltip" data-placement="top" title="Unsupervised Learning Using Generative Adversarial Training And Clustering">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.37.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

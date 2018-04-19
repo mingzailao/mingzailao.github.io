@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mingzaialo&#39;s blog</title>
+    <link>https://mingzailao.github.io/prml/</link>
+    <description>Recent content on mingzaialo&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>© 2017 PPAP blog powered by Hugo</copyright>
+    
+	<atom:link href="https://mingzailao.github.io/prml/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Pattern Recogniton and Machine Learning 2</title>
+      <link>https://mingzailao.github.io/prml/pattern-recognition-and-machine-learning-2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/prml/pattern-recognition-and-machine-learning-2/</guid>
+      <description>  Table of Contents  Binary Variables  Bernoulli distribution Bernoulli distribution Binomial distribution The beta distribution    
+Binary Variables Bernoulli distribution \begin{equation} \label{eq:1} Bern(\mathbf{x}|\mu)=\mu^x(1-\mu)^{1-x} \end{equation}
+ \(E[\mathbf{x}]=\mu\) \(var[\mathbf{x}]=\mu(1-\mu)\)  Bernoulli distribution set \(\mathcal{D}={x_{1},\cdots,x_N}\)
+\begin{equation} \label{eq:2} p(\mathcal{D}|\mu)=\prod_{n=1}^Np(x_n|\mu)=\prod_{n=1}^N\mu^{x_n}(1-\mu)^{1-x_{n}} \end{equation}
+\begin{equation} \label{eq:3} \ln p(\mathcal{D}|\mu)=\sum_{n=1}^N{x_n\ln \mu+(1-x_n)\ln(1-\mu)} \end{equation}
+\begin{equation} \label{eq:4} \mu_{ML}=\frac{1}{N}\sum_{n=1}^Nx_n \end{equation}
+Binomial distribution \begin{equation} \label{eq:5} Bin(m|N,\mu)=C_m^N\mu^m(1-\mu)^{N-m} \end{equation}
+ \(E[m]=N\mu\) \(var[m]=N\mu(1-\mu)\)  The beta distribution </description>
+    </item>
+    
+    <item>
+      <title>Pattern Recogniton and Machine Learning(1)</title>
+      <link>https://mingzailao.github.io/prml/pattern-recognition-and-machine-learning-1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/prml/pattern-recognition-and-machine-learning-1/</guid>
+      <description>Table of Contents  Mathematical notation  Mathematical notation  An example  Polynomial Curve Fitting Polynomial Curve Fitting Polynomial Curve Fitting Polynomial Curve Fitting Polynomial Curve Fitting How to chose \(M\) Regularization My Notes: Regularization  Probability Theory(only some important concepts)  The Rules of Probability Probability densities Probability densities Multi-variable case Sum rule and product rule Expectations and covariances Expectations and covariances Expectations and covariances Expectations and covariances The Gaussian distribution The Gaussian distribution The Gaussian distribution Back to the example Back to example More Bayes Bayesian curve fitting Decision Theory Information Theory Information Theory Information Theory Information Theory Relative entropy and mutual information Relative entropy and mutual information Relative entropy and mutual information Relative entropy and mutual information</description>
+    </item>
+    
+  </channel>
+</rss>

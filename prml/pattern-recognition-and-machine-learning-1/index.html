@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Pattern Recogniton and Machine Learning(1)</title>
+  <meta property="og:title" content="Pattern Recogniton and Machine Learning(1)" />
+  <meta name="twitter:title" content="Pattern Recogniton and Machine Learning(1)" />
+  <meta name="description" content="Table of Contents  Mathematical notation  Mathematical notation  An example  Polynomial Curve Fitting Polynomial Curve Fitting Polynomial Curve Fitting Polynomial Curve Fitting Polynomial Curve Fitting How to chose \(M\) Regularization My Notes: Regularization  Probability Theory(only some important concepts)  The Rules of Probability Probability densities Probability densities Multi-variable case Sum rule and product rule Expectations and covariances Expectations and covariances Expectations and covariances Expectations and covariances The Gaussian distribution The Gaussian distribution The Gaussian distribution Back to the example Back to example More Bayes Bayesian curve fitting Decision Theory Information Theory Information Theory Information Theory Information Theory Relative entropy and mutual information Relative entropy and mutual information Relative entropy and mutual information Relative entropy and mutual information">
+  <meta property="og:description" content="Table of Contents  Mathematical notation  Mathematical notation  An example  Polynomial Curve Fitting Polynomial Curve Fitting Polynomial Curve Fitting Polynomial Curve Fitting Polynomial Curve Fitting How to chose \(M\) Regularization My Notes: Regularization  Probability Theory(only some important concepts)  The Rules of Probability Probability densities Probability densities Multi-variable case Sum rule and product rule Expectations and covariances Expectations and covariances Expectations and covariances Expectations and covariances The Gaussian distribution The Gaussian distribution The Gaussian distribution Back to the example Back to example More Bayes Bayesian curve fitting Decision Theory Information Theory Information Theory Information Theory Information Theory Relative entropy and mutual information Relative entropy and mutual information Relative entropy and mutual information Relative entropy and mutual information">
+  <meta name="twitter:description" content="Table of Contents  Mathematical notation  Mathematical notation  An example  Polynomial Curve Fitting Polynomial Curve Fitting Polynomial Curve Fitting Polynomial Curve Fitting Polynomial Curve …">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://mingzailao.github.io/prml/pattern-recognition-and-machine-learning-1/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="mingzaialo&#39;s blog" />
+
+  <meta name="generator" content="Hugo 0.37.1" />
+  <link rel="canonical" href="https://mingzailao.github.io/prml/pattern-recognition-and-machine-learning-1/" />
+  <link rel="alternate" href="https://mingzailao.github.io/index.xml" type="application/rss+xml" title="mingzaialo&#39;s blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://mingzailao.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://mingzailao.github.io/css/syntax.css" /><link rel="stylesheet" href="https://mingzailao.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="PRML-heading">
+              <h1>Pattern Recogniton and Machine Learning(1)</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<div class="ox-hugo-toc toc">
+<div></div>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ul>
+<li><a href="#mathematical-notation">Mathematical notation</a>
+
+<ul>
+<li><a href="#mathematical-notation">Mathematical notation</a></li>
+</ul></li>
+<li><a href="#an-example">An example</a>
+
+<ul>
+<li><a href="#polynomial-curve-fitting">Polynomial Curve Fitting</a></li>
+<li><a href="#polynomial-curve-fitting">Polynomial Curve Fitting</a></li>
+<li><a href="#polynomial-curve-fitting">Polynomial Curve Fitting</a></li>
+<li><a href="#polynomial-curve-fitting">Polynomial Curve Fitting</a></li>
+<li><a href="#polynomial-curve-fitting">Polynomial Curve Fitting</a></li>
+<li><a href="#how-to-chose--m">How to chose \(M\)</a></li>
+<li><a href="#regularization">Regularization</a></li>
+<li><a href="#my-notes">My Notes:</a></li>
+<li><a href="#regularization">Regularization</a></li>
+</ul></li>
+<li><a href="#probability-theory--only-some-important-concepts">Probability Theory(only some important concepts)</a>
+
+<ul>
+<li><a href="#the-rules-of-probability">The Rules of Probability</a></li>
+<li><a href="#probability-densities">Probability densities</a></li>
+<li><a href="#probability-densities">Probability densities</a></li>
+<li><a href="#multi-variable-case">Multi-variable case</a></li>
+<li><a href="#sum-rule-and-product-rule">Sum rule and product rule</a></li>
+<li><a href="#expectations-and-covariances">Expectations and covariances</a></li>
+<li><a href="#expectations-and-covariances">Expectations and covariances</a></li>
+<li><a href="#expectations-and-covariances">Expectations and covariances</a></li>
+<li><a href="#expectations-and-covariances">Expectations and covariances</a></li>
+<li><a href="#the-gaussian-distribution">The Gaussian distribution</a></li>
+<li><a href="#the-gaussian-distribution">The Gaussian distribution</a></li>
+<li><a href="#the-gaussian-distribution">The Gaussian distribution</a></li>
+<li><a href="#back-to-the-example">Back to the example</a></li>
+<li><a href="#back-to-example">Back to example</a></li>
+<li><a href="#more-bayes">More Bayes</a></li>
+<li><a href="#bayesian-curve-fitting">Bayesian curve fitting</a></li>
+<li><a href="#decision-theory">Decision Theory</a></li>
+<li><a href="#information-theory">Information Theory</a></li>
+<li><a href="#information-theory">Information Theory</a></li>
+<li><a href="#information-theory">Information Theory</a></li>
+<li><a href="#information-theory">Information Theory</a></li>
+<li><a href="#relative-entropy-and-mutual-information">Relative entropy and mutual information</a></li>
+<li><a href="#relative-entropy-and-mutual-information">Relative entropy and mutual information</a></li>
+<li><a href="#relative-entropy-and-mutual-information">Relative entropy and mutual information</a></li>
+<li><a href="#relative-entropy-and-mutual-information">Relative entropy and mutual information</a></li>
+</ul></li>
+</ul>
+
+<p></div>
+<!--endtoc--></p>
+
+<h2 id="mathematical-notation">Mathematical notation</h2>
+
+<h3 id="mathematical-notation-1">Mathematical notation</h3>
+
+<ol>
+<li>\(\mathbf{x}\) : vector(column vector)</li>
+<li>\(\mathbf{x}^T\) : row vector</li>
+<li>\(\mathbf{M}\) : Matrix</li>
+<li>\((\omega_{1},\omega_2,\cdots,\omega_{M})\) : row vector with \(M\) elements</li>
+<li>\(\mathbf{w}\) : \((\omega_1,\omega_2,\cdots,\omega_{M})^T\)</li>
+<li>\(\mathbf{I}_M\) : the \(M\times M\) identity matrix</li>
+<li>\(f[y]\) : \(y(x)\) in some function( this is a functional concept)</li>
+<li>\(g(x)=\mathem{O}(f(x))\) denotes that \(|f(x)/g(x)|\) is bounded as \(x\rightarrow     \infty\).(\(g(x)=3x^{2}+2\) then \(g(x)=\mathem{O}(x^2)\))</li>
+<li>\(\mathbb{E}_{x\sim \mathbf{x}}[f(x,y)]\) : the expection of a function \(f(x,y)\)     with respect to a random variable \(\mathbf{x}\)</li>
+</ol>
+
+<h2 id="an-example">An example</h2>
+
+<h3 id="polynomial-curve-fitting">Polynomial Curve Fitting</h3>
+
+<ul>
+<li><p>Discribe</p>
+
+<ol>
+<li>\(N\) observations of \(x\) : \(\mathbf{X}=(x_1,\cdots,x_N)^N\);</li>
+<li>\(N\) observations of \(y\) : \(\mathbf{Y}=(t_1,\cdots,t_N)^N\);</li>
+</ol>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/screenshot_2016-12-04_16-38-21.png" />
+    </div>
+    <a href="/ox-hugo/screenshot_2016-12-04_16-38-21.png" itemprop="contentUrl"></a>
+  </figure>
+</div></li>
+</ul>
+
+<h3 id="polynomial-curve-fitting-1">Polynomial Curve Fitting</h3>
+
+<ul>
+<li><p>Goal</p>
+
+<p>Polynomial function Space with parameters \(\mathbf{w}\):</p>
+
+<p>\begin{equation*}
+\label{eq:1}
+y(x,\mathbf{w})=\omega_0+\omega_1x+\cdots+\omega_Mx^M=\sum_{j=0}^M\omega_jx^j
+\end{equation*}</p>
+
+<p>Find a polynomial function \(y(x,\mathbf{w})\) to minimize:</p>
+
+<p>\begin{equation*}
+\label{eq:2}
+E(\mathbf{w})=\frac{1}{2}\sum_{n=1}^N{y(x_n,\mathbf{w})-t_n}^2
+\end{equation*}</p></li>
+</ul>
+
+<h3 id="polynomial-curve-fitting-2">Polynomial Curve Fitting</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/screenshot_2016-12-04_17-04-49.png" />
+    </div>
+    <a href="/ox-hugo/screenshot_2016-12-04_17-04-49.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="polynomial-curve-fitting-3">Polynomial Curve Fitting</h3>
+
+
+<link rel="stylesheet" href="/css/hugo-easy-gallery.css" />
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/screenshot_2016-12-04_20-40-49.png" />
+    </div>
+    <a href="/ox-hugo/screenshot_2016-12-04_20-40-49.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="polynomial-curve-fitting-4">Polynomial Curve Fitting</h3>
+
+<ul>
+<li><p>How to chose \(M\)</p>
+
+<p>For each choice of \(M\), we can then evaluate the residual value of
+\(E(\mathbf{w}^{*})\)
+given by the equation for the training data, and we can also evaluate
+\(E(\mathbf{w}^{*})\) for the training data, use RMS:</p>
+
+<p>\begin{equation*}
+\label{eq:3}
+E_{RMS}=\sqrt{2E(\mathbf{w}^{*})/N}
+\end{equation*}</p></li>
+</ul>
+
+<h3 id="how-to-chose--m">How to chose \(M\)</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/screenshot_2016-12-04_20-42-58.png" />
+    </div>
+    <a href="/ox-hugo/screenshot_2016-12-04_20-42-58.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="regularization">Regularization</h3>
+
+<ul>
+<li><p>Mathematical Equation</p>
+
+<p>\begin{equation*}
+\label{eq:4}
+\tilde{E}(\mathbf{w})=\frac{1}{2}\sum_{n=1}^{N}{y(x_n,\mathbf{w})-t_n}^2+\frac{\lambda}{2}||\mathbf{w}||_2^2
+\end{equation*}</p>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/screenshot_2016-12-04_20-51-00.png" />
+    </div>
+    <a href="/ox-hugo/screenshot_2016-12-04_20-51-00.png" itemprop="contentUrl"></a>
+  </figure>
+</div></li>
+</ul>
+
+<h3 id="my-notes">My Notes:</h3>
+
+<ol>
+<li>The equation (4) has close form</li>
+<li>In the statistics, called &ldquo;ridge regression&rdquo;</li>
+<li>In neural networks, called &ldquo;weight decay&rdquo;</li>
+</ol>
+
+<h3 id="regularization-1">Regularization</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/screenshot_2016-12-04_20-55-31.png" />
+    </div>
+    <a href="/ox-hugo/screenshot_2016-12-04_20-55-31.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h2 id="probability-theory--only-some-important-concepts">Probability Theory(only some important concepts)</h2>
+
+<h3 id="the-rules-of-probability">The Rules of Probability</h3>
+
+<ul>
+<li><p>Rules</p>
+
+<ol>
+<li>sum rule : \[p(X)=\sum_Y P(X,Y)\]</li>
+<li>product rule : \[P(X,Y)=P(Y|X)P(X)\]</li>
+</ol></li>
+
+<li><p>Bayes</p>
+
+<p>\begin{equation*}
+\label{eq:5}
+P(Y|X)=\frac{P(X|Y)P(Y)}{P(X)}
+\end{equation*}</p></li>
+</ul>
+
+<h3 id="probability-densities">Probability densities</h3>
+
+<ul>
+<li><p>Definition</p>
+
+<p>If the probability of a real-valued variable x falling in the interval
+\((x,x+\delta x)\) is given by \(p(x)\delta x\) for \(\delta x\rightarrow 0\)</p>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/screenshot_2016-12-04_21-06-09.png" />
+    </div>
+    <a href="/ox-hugo/screenshot_2016-12-04_21-06-09.png" itemprop="contentUrl"></a>
+  </figure>
+</div></li>
+</ul>
+
+<h3 id="probability-densities-1">Probability densities</h3>
+
+<ul>
+<li><p>Property</p>
+
+<ol>
+<li>\[P(x)\ge 0\]</li>
+<li>\[\int_{- \infty}^{\infty}p(x)dx=1\]</li>
+</ol></li>
+</ul>
+
+<h3 id="multi-variable-case">Multi-variable case</h3>
+
+<ul>
+<li><p>Property</p>
+
+<ol>
+<li>\[p(\mathbf{x})\ge 0\]</li>
+<li>\[\int p(\mathbf{x})d\mathbf{x}=1\]</li>
+</ol></li>
+</ul>
+
+<h3 id="sum-rule-and-product-rule">Sum rule and product rule</h3>
+
+<ol>
+<li>\[p(x)=\int p(x,y)dy\]</li>
+<li>\[p(x,y)=p(y|x)p(x)\]</li>
+</ol>
+
+<h3 id="expectations-and-covariances">Expectations and covariances</h3>
+
+<ul>
+<li><p>Expectation</p>
+
+<p>\begin{equation*}
+\label{eq:6}
+\mathbb{E}[f]=\sum_{x}p(x)f(x)
+\end{equation*}</p>
+
+<p>\begin{equation*}
+\label{eq:7}
+\mathbb{E}[f]=\int p(x)f(x)dx
+\end{equation*}</p></li>
+
+<li><p>Notes</p>
+
+<p>In practice, we can only get a finite number N of points drawn from the probability
+distribution or probability density, we can use :</p>
+
+<p>\begin{equation}
+\label{eq:8}
+\mathbb{E}[f]\approx\frac{1}{N}\sum_{n=1}^N f(x_n)
+\end{equation}</p></li>
+</ul>
+
+<h3 id="expectations-and-covariances-1">Expectations and covariances</h3>
+
+<ul>
+<li><p>Conditional expectation</p>
+
+<p>\begin{equation*}
+\label{eq:9}
+\mathbb{E}_{x}[f(x|y)]=\sum_x p(x|y)f(x)
+\end{equation*}</p>
+
+<p>\begin{equation*}
+\label{eq:10}
+\mathbb{E}_{x}[f(x|y)]=\int_{x}p(x|y)f(x)dx
+\end{equation*}</p></li>
+</ul>
+
+<h3 id="expectations-and-covariances-2">Expectations and covariances</h3>
+
+<ul>
+<li><p>Covariances</p>
+
+<p>\begin{equation*}
+\label{eq:11}
+var[f]=\mathbb{E}[f(x)^2]-\mathbb{E}[f(x)]^2
+\end{equation*}</p></li>
+
+<li><p>Notes</p>
+
+<p>In particular, we can consider the variance of the variable x itself,
+which is given by</p>
+
+<p>\begin{equation*}
+\label{eq:12}
+var[x]=\mathbb{E}[x^2]-\mathbb{E}_[x]^{2}
+\end{equation*}</p></li>
+</ul>
+
+<h3 id="expectations-and-covariances-3">Expectations and covariances</h3>
+
+<ul>
+<li><p>Covariance</p>
+
+<p>\begin{equation}
+\label{eq:13}
+cov[x,y]=\mathbb{E}_{x,y}[{x-\mathbb{E}[x]]}{y-\mathbb{E}[y]}=\mathbb{E}_{x,y}[xy]-\mathbb{E}[x]\mathbb{E}[y]
+\end{equation}</p></li>
+
+<li><p>Covariance matrix</p>
+
+<p>\begin{equation*}
+\label{eq:14}
+cov[\mathbf{x},\mathbf{y}]=\mathbb{E}_{\mathbf{x},\mathbf{y}}[\mathbf{x}\mathbf{y}^T]-\mathbb{E}[\mathbf{x}]\mathbb{E}[\mathbf{y}^T]
+\end{equation*}</p></li>
+
+<li><p>Notes</p>
+
+<ul>
+<li>\(cov[\mathbf{x}]=cov[\mathbf{x},\mathbf{x}]\)</li>
+</ul></li>
+
+<li><p>Question</p>
+
+<p>what \(cov[\mathbf{x}]=diag\) means?</p></li>
+</ul>
+
+<h3 id="the-gaussian-distribution">The Gaussian distribution</h3>
+
+<ul>
+<li><p>The Gaussian distribution</p>
+
+<p>\begin{equation*}
+\label{eq:15}
+\mathcal{N}(x|\mu,\sigma^2)=\frac{1}{(2\pi \sigma^2)}\exp {\frac{1}{2\sigma^2}(x-\mu)^2}
+\end{equation*}</p>
+
+<p>\begin{equation}
+\label{eq:17}
+\mathcal{N}(\mathbf{x}|\boldsymbol{\mu},\boldsymbol{\Sigma})=\frac{1}{(2\pi)^{D/2}}\frac{1}{|\boldsymbol{\Sigma}|^{<sup>1</sup>&frasl;<sub>2</sub>}}\exp {-\frac{1}{2}(\mathbf{x}-\boldsymbol{\mu})^T\boldsymbol{\Sigma}^{-1}(\mathbf{x}-\boldsymbol{\mu})}
+\end{equation}</p></li>
+</ul>
+
+<h3 id="the-gaussian-distribution-1">The Gaussian distribution</h3>
+
+<ul>
+<li><p>For a dataset</p>
+
+<p>for a dataset \(\mathbf{X}=(x_1,\cdots,x_N)^T\),</p>
+
+<p>\begin{equation*}
+\label{eq:18}
+p(\mathbf{X}|\mathbf{\mu},\Sigma)=\prod_{n=1}^N \mathbf{N}(x_n|\mu,\sigma^2)
+\end{equation*}</p></li>
+
+<li><p>The log-likelihood</p>
+
+<p>\begin{equation}
+\label{eq:19}
+\ln p(\mathbf{X}|\mu,\sigma^{2})=-\frac{1}{2\sigma^2}\sum_{n=1}^{N}(x_n-\mu)^2-\frac{N}{2}\ln \sigma^2-\frac{N}{2}\ln(2\pi)
+\end{equation}</p></li>
+</ul>
+
+<h3 id="the-gaussian-distribution-2">The Gaussian distribution</h3>
+
+<ul>
+<li><p>Maximizing with respect to \(\mu\) and \(\sigma^2\)</p>
+
+<p>\begin{equation*}
+\label{eq:20}
+\mu_{ML}=\frac{1}{N}\sum_{n=1}^Nx_n
+\end{equation*}</p>
+
+<p>\begin{equation*}
+\label{eq:21}
+\sigma^2_{ML}=\frac{1}{N}\sum_{n=1}^N(x_n-\mu_{ML})^2
+\end{equation*}</p>
+
+<p>and</p>
+
+<p>\begin{equation*}
+\label{eq:22}
+\mathbb{E}[\mu_{ML}]=\mu
+\end{equation*}</p>
+
+<p>\begin{equation*}
+\label{eq:23}
+\mathbb{E}[\sigma_{ML}^2]=(\frac{N-1}{N})\sigma^2
+\end{equation*}</p></li>
+</ul>
+
+<h3 id="back-to-the-example">Back to the example</h3>
+
+<ul>
+<li><p>Rethink</p>
+
+<p>Given \(x\), the corresponding value of \(t\) has a Gaussian distribution with a mean
+value \(y(x,\mathbf{w})\), thus:</p>
+
+<p>\begin{equation*}
+\label{eq:16}
+p(t|x,\mathbf{w},\beta)=\mathcal{N}(t|y(x;\mathbf{w}),\beta^{-1})
+\end{equation*}</p>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/screenshot_2016-12-05_11-29-36.png" />
+    </div>
+    <a href="/ox-hugo/screenshot_2016-12-05_11-29-36.png" itemprop="contentUrl"></a>
+  </figure>
+</div></li>
+</ul>
+
+<h3 id="back-to-example">Back to example</h3>
+
+<ul>
+<li><p>Rethink</p>
+
+<p>\begin{equation*}
+p(\mathbf{t}|\mathbf{X},\mathbf{w},\beta)=\prod_{n=1}^N\mathcal{N}(t_n|y(x_n,\mathbf{w}),\beta^{-1})
+\end{equation*}</p>
+
+<p>\begin{equation*}
+\label{eq:26}
+\ln p(\mathbf{t}|\mathbf{X},\mathbf{w},\beta)=-\frac{\beta}{2}\sum_{n=1}^N{y(x_n,\mathbf{w})-t_n}+\frac{N}{2}\ln \beta-\frac{N}{2}\ln (2\pi)
+\end{equation*}</p>
+
+<p>\begin{equation*}
+\label{eq:27}
+\frac{1}{\beta_{ML}}=\frac{1}{N}\sum_{n=1}^N{y(x_n,\mathbf{w})-t_n}^2
+\end{equation*}</p></li>
+</ul>
+
+<h3 id="more-bayes">More Bayes</h3>
+
+<ul>
+<li><p>Hyperparameters</p>
+
+<p>\begin{equation}
+\label{eq:28}
+p(\mathbf{w}|\alpha)=\mathcal{N}(\mathbf{w}|0,\alpha^{-1}\mathbf{I})=(\frac{\alpha}{2\pi})^{(M+1)/2}\exp {-\frac{\alpha}{2}\mathbf{w}^T\mathbf{w}}
+\end{equation}</p></li>
+
+<li><p>MAP</p>
+
+<p>\begin{equation*}
+\label{eq:30}
+p(\mathbf{w}|\mathbf{X},\mathbf{t},\alpha,\beta)\propto p(\mathbf{t}|\mathbf{X},\mathbf{w},\beta)p(\mathbf{w}|\alpha)
+\end{equation*}</p>
+
+<p>then, maximum of the posterior is given by the minimum of</p>
+
+<p>\begin{equation}
+\label{eq:24}
+\frac{\beta}{2}\sum_{n=1}^N{y(x_n,\mathbf{w})-t_n}^2+\frac{\alpha}{2}\mathbf{w}^T\mathbf{w}
+\end{equation}</p></li>
+</ul>
+
+<h3 id="bayesian-curve-fitting">Bayesian curve fitting</h3>
+
+<p>\begin{equation}
+\label{eq:25}
+p(t|x,\mathbf{x},\mathbf{t})=\mathcal{N}(t|m(x),s^2(x))
+\end{equation}</p>
+
+<p>where :</p>
+
+<p>\begin{eqnarray}
+\label{eq:32}
+m(x) &amp; = &amp; \beta\boldsymbol{\phi}(x)^T\mathbf{S}\sum_{n=1}^{N}\boldsymbol{\phi}(x_n)t_n\\<br />
+s^2(x)&amp;=&amp; \beta^{-1}+\boldsymbol{\phi}(x)^T\mathbf{S}\boldsymbol{\phi}(x)
+\end{eqnarray}</p>
+
+<p>where</p>
+
+<p>\begin{equation}
+\label{eq:33}
+\mathbf{S}^{-1}=\alpha I+ \beta\sum_{n=1}^N\boldsymbol{\phi}(x_n)\boldsymbol{\phi}(x_n)^T
+\end{equation}</p>
+
+<h3 id="decision-theory">Decision Theory</h3>
+
+<p>Given :</p>
+
+<ul>
+<li>image \(\mathbf{x}\)</li>
+</ul>
+
+<p>TODO :</p>
+
+<ul>
+<li>decide which of the two classes to assign to the image</li>
+</ul>
+
+<p>\begin{equation}
+\label{eq:34}
+p(\mathcal{C}_k|\mathbf{x})=\frac{p(\mathbf{x}|\mathcal{C}_k)p(\mathcal{C}_k)}
+{p(\mathbf{x})}
+\end{equation}</p>
+
+<ul>
+<li><p>Minimizing the misclassification rate</p>
+
+<p>\begin{align}
+\label{eq:36}
+p(mistake)&amp;=&amp;p(\mathbf{x}\in \mathcal{R}_1,\mathcal{C}_2)+p(\mathbf{x}\in \mathcal{R}_2,\mathcal{C}_1)\\<br />
+&amp;=&amp; \int_{\mathcal{R}_1}p(\mathbf{x},\mathcal{C}_2)d\mathbf{x}+\int_{\mathcal{R}_{2}}p(\mathbf{x},\mathcal{C}_1)
+\end{align}</p></li>
+</ul>
+
+<h3 id="information-theory">Information Theory</h3>
+
+<ul>
+<li><p>Entropy</p>
+
+<p>\begin{equation}
+\label{eq:37}
+H(P)=\mathbb{E}_{\mathbf{x}\sim P}[-log \mathbf{x}]
+\end{equation}</p></li>
+
+<li><p>Maximizing it with three constraints</p>
+
+<p>\begin{equation}
+\label{eq:40}
+\int_{-\infty}^{\infty}p(\mathbf{x})d\mathbf{x}=1
+\end{equation}</p>
+
+<p>\begin{equation}
+\label{eq:41}
+\int_{-\infty}^{\infty}\mathbf{x}p(\mathbf{x})d\mathbf{x}=\mu
+\end{equation}</p>
+
+<p>\begin{equation}
+\label{eq:42}
+\int_{-\infty}^{\infty}(\mathbf{x}-\mu)^2p(\mathbf{x})d\mathbf{x}=\sigma^2
+\end{equation}</p></li>
+</ul>
+
+<h3 id="information-theory-1">Information Theory</h3>
+
+<p>The constrained maximization can be performed using Lagrange multipliers so that we maximize the following functional with respect to \(p(\mathbf{x})\):</p>
+
+<p>\begin{align}
+\label{eq:45}
+-&amp;\int_{-\infty}^{\infty}p(\mathbf{x})\ln p(\mathbf{x})d\mathbf{x}+\lambda_1(\int_{-\infty}^{\infty}p(\mathbf{x})d\mathbf{x}-1)&amp;\\<br />
++&amp;\lambda_2(\int_{-\infty}^{\infty}\mathbf{x}p(\mathbf{x})d\mathbf{x}-\mu)+\lambda_3(\int_{-\infty}^{\infty}(\mathbf{x}-\mu)^2p(\mathbf{x})d\mathbf{x}-\sigma^{2})
+\end{align}</p>
+
+<p>Using the calculus of variations, we set the derivative of this functional to zero giving</p>
+
+<p>\begin{equation}
+\label{eq:46}
+p(\mathbf{x})=exp{-1+\lambda_1+\lambda_{2}\mathbf{x}+\lambda_{3}(\mathbf{x}-\mu)^2}
+\end{equation}</p>
+
+<h3 id="information-theory-2">Information Theory</h3>
+
+<p>The Lagrange multipliers can be found by back substitution of this result into the three constraint equations, leading finally to the result</p>
+
+<p>\begin{equation}
+\label{eq:47}
+p(\mathbf{x})=\frac{1}{(2\pi \sigma^2)^{<sup>1</sup>&frasl;<sub>2</sub>}}exp{-\frac{(\mathbf{x}-\mu)^2}{2\sigma^2}}
+\end{equation}</p>
+
+<ul>
+<li><p>The entropy if Gaussian</p>
+
+<p>\begin{equation}
+\label{eq:48}
+H[\mathbf{x}]=\frac{1}{2}{1+\ln (2\pi\sigma^2)}
+\end{equation}</p></li>
+</ul>
+
+<h3 id="information-theory-3">Information Theory</h3>
+
+<ul>
+<li><p>conditional entropy</p>
+
+<p>\begin{equation}
+\label{eq:49}
+H[\mathbf{y}|\mathbf{x}]=-\int\int p(\mathbf{y},\mathbf{x})\ln p(\mathbf{y}|\mathbf{x})d\mathbf{y}d\mathbf{x}
+\end{equation}</p>
+
+<p>the conditional entropy satisfies the relation</p>
+
+<p>\begin{equation}
+\label{eq:50}
+H[\mathbf{x},\mathbf{y}]=H[\mathbf{y}|\mathbf{x}]+H[\mathbf{x}]
+\end{equation}</p></li>
+</ul>
+
+<h3 id="relative-entropy-and-mutual-information">Relative entropy and mutual information</h3>
+
+<ul>
+<li><p>Relative entropy or KL-divergence(Kullback-Leibler divergence)</p>
+
+<p>\begin{equation}
+\label{eq:29}
+KL(p||q)=\int_{\mathcal{X}}p(\mathbf{x})\ln\frac{p(\mathbf{x})}{q(\mathbf{x})}d\mathbf{x}
+\end{equation}</p>
+
+<p>\begin{eqnarray*}
+\label{eq:35}
+KL(p||q)&amp;=&amp;\int_{\mathcal{X}} p(\mathbf{x})(-\ln \frac{q(\mathbf{x})}{p(\mathbf{x})})\\<br />
+&amp;\ge&amp;-\ln \int_{\mathcal{X}}q(\mathbf{x})d\mathbf{x}\\<br />
+&amp;=&amp;0
+\end{eqnarray*}</p></li>
+</ul>
+
+<h3 id="relative-entropy-and-mutual-information-1">Relative entropy and mutual information</h3>
+
+<p>for a unknown distribution \(p(\mathbf{x})\), approximating this distribution using some parametric distribution \(q(\mathbf{x}|\boldsymbol{\theta})\)</p>
+
+<p>\begin{equation}
+\label{eq:38}
+KL_{\boldsymbol{\theta}}(p||q)\approx \sum_{n=1}^N{-\ln q(\mathbf{x}_n|\boldsymbol{\theta})+\ln p(\mathbf{x}_n)}
+\end{equation}</p>
+
+<ul>
+<li>\(arg\min_{\boldsymbol{\theta}} KL_{\boldsymbol{\theta}}(p||q)\Leftrightarrow arg\max_{\boldsymbol{\theta}}likelihood\)</li>
+</ul>
+
+<h3 id="relative-entropy-and-mutual-information-2">Relative entropy and mutual information</h3>
+
+<p>Now consider the joint distribution between two sets of variables \(\mathbf{x},\mathbf{y}\) given by \(p(\mathbf{x},\mathbf{y})\), If the sets of variables are independen, then their joint distribution will factorize into the product of their marginals
+ \[p(\mathbf{x},\mathbf{y})=p(\mathbf{x})p(\mathbf{y})\]
+If the variables are not independent,we can gain some idea of whether they are ‘close’ to being indepen- dent by considering the Kullback-Leibler divergence between the joint distribution and the product of the marginals, called <strong>mutual information</strong>, given by</p>
+
+<p>\begin{equation}
+\label{eq:39}
+I[\mathbf{x},\mathbf{y}]=KL(p(\mathbf{x},\mathbf{y})||p(\mathbf{x})p(\mathbf{y}))
+\end{equation}</p>
+
+<h3 id="relative-entropy-and-mutual-information-3">Relative entropy and mutual information</h3>
+
+<p>\begin{eqnarray}
+\label{eq:43}
+I[\mathbf{x},\mathbf{y}] &amp; = &amp; H[\mathbf{x}]-H[\mathbf{x}|\mathbf{y}]\\<br />
+I[\mathbf{x},\mathbf{y}]&amp;  = &amp;H[\mathbf{y}]-H[\mathbf{y}|\mathbf{x}]
+\end{eqnarray}</p>
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+          
+            <li class="next">
+              <a href="https://mingzailao.github.io/prml/pattern-recognition-and-machine-learning-2/" data-toggle="tooltip" data-placement="top" title="Pattern Recogniton and Machine Learning 2">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.37.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

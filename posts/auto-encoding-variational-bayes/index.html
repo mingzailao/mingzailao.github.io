@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Auto-Encoding Variational Bayes</title>
+  <meta property="og:title" content="Auto-Encoding Variational Bayes" />
+  <meta name="twitter:title" content="Auto-Encoding Variational Bayes" />
+  <meta name="description" content="Variational Inference Variational Inference Notations  latent variables : \(\mathbf{z}=z_{1:m}\) obseevations : \(\mathbf{x}=x_{1:n}\)  Joint density \begin{eqnarray*} p(\mathbf{z},\mathbf{x})&amp; =&amp; p(\mathbf{z})p(\mathbf{x}|\mathbf{z})\\
+\end{eqnarray*}
+Variational Inference Notes \begin{eqnarray*} p(\mathbf{x}|\mathbf{z})&amp; =&amp; \frac{p(\mathbf{z},\mathbf{x})}{p(\mathbf{z})}\\
+\end{eqnarray*}
+\begin{eqnarray*} p(\mathbf{z}|\mathbf{x})&amp; =&amp; \frac{p(\mathbf{z},\mathbf{x})}{p(\mathbf{x})}\\
+\end{eqnarray*}
+\begin{eqnarray*} p(\mathbf{x})&amp; =&amp; \int p(\mathbf{z},\mathbf{x})d\mathbf{z}\\
+\end{eqnarray*}
+Variational Inference One example Bayesian mixture of unit-variance univariate Gaussians.
+\begin{eqnarray*} \mu_k\sim \mathcal{N}(0,\sigma^2) &amp; k=1,\cdots,K\\
+c_i\sim Categorical(1/K,\cdots,1/K)&amp; i=1,\cdots n\\
+x_i|c_i,\mathbf{\mu}\sim \mathcal{N}(c_i^T\mu,1)&amp; i=1,\cdots,n \end{eqnarray*}
+Variational Inference One example For a sample of size \(n\), the joint density of latent and observed variables is:">
+  <meta property="og:description" content="Variational Inference Variational Inference Notations  latent variables : \(\mathbf{z}=z_{1:m}\) obseevations : \(\mathbf{x}=x_{1:n}\)  Joint density \begin{eqnarray*} p(\mathbf{z},\mathbf{x})&amp; =&amp; p(\mathbf{z})p(\mathbf{x}|\mathbf{z})\\
+\end{eqnarray*}
+Variational Inference Notes \begin{eqnarray*} p(\mathbf{x}|\mathbf{z})&amp; =&amp; \frac{p(\mathbf{z},\mathbf{x})}{p(\mathbf{z})}\\
+\end{eqnarray*}
+\begin{eqnarray*} p(\mathbf{z}|\mathbf{x})&amp; =&amp; \frac{p(\mathbf{z},\mathbf{x})}{p(\mathbf{x})}\\
+\end{eqnarray*}
+\begin{eqnarray*} p(\mathbf{x})&amp; =&amp; \int p(\mathbf{z},\mathbf{x})d\mathbf{z}\\
+\end{eqnarray*}
+Variational Inference One example Bayesian mixture of unit-variance univariate Gaussians.
+\begin{eqnarray*} \mu_k\sim \mathcal{N}(0,\sigma^2) &amp; k=1,\cdots,K\\
+c_i\sim Categorical(1/K,\cdots,1/K)&amp; i=1,\cdots n\\
+x_i|c_i,\mathbf{\mu}\sim \mathcal{N}(c_i^T\mu,1)&amp; i=1,\cdots,n \end{eqnarray*}
+Variational Inference One example For a sample of size \(n\), the joint density of latent and observed variables is:">
+  <meta name="twitter:description" content="Variational Inference Variational Inference Notations  latent variables : \(\mathbf{z}=z_{1:m}\) obseevations : \(\mathbf{x}=x_{1:n}\)  Joint density \begin{eqnarray*} p(\mathbf{z},\mathbf{x})&amp; …">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://mingzailao.github.io/posts/auto-encoding-variational-bayes/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="mingzaialo&#39;s blog" />
+
+  <meta name="generator" content="Hugo 0.37.1" />
+  <link rel="canonical" href="https://mingzailao.github.io/posts/auto-encoding-variational-bayes/" />
+  <link rel="alternate" href="https://mingzailao.github.io/index.xml" type="application/rss+xml" title="mingzaialo&#39;s blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://mingzailao.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://mingzailao.github.io/css/syntax.css" /><link rel="stylesheet" href="https://mingzailao.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              <h1>Auto-Encoding Variational Bayes</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h2 id="variational-inference">Variational Inference</h2>
+
+<h3 id="variational-inference-1">Variational Inference</h3>
+
+<h4 id="notations">Notations</h4>
+
+<ol>
+<li>latent variables : \(\mathbf{z}=z_{1:m}\)</li>
+<li>obseevations : \(\mathbf{x}=x_{1:n}\)</li>
+</ol>
+
+<h4 id="joint-density">Joint density</h4>
+
+<p>\begin{eqnarray*}
+p(\mathbf{z},\mathbf{x})&amp; =&amp; p(\mathbf{z})p(\mathbf{x}|\mathbf{z})\\<br />
+\end{eqnarray*}</p>
+
+<h3 id="variational-inference-2">Variational Inference</h3>
+
+<h4 id="notes">Notes</h4>
+
+<p>\begin{eqnarray*}
+p(\mathbf{x}|\mathbf{z})&amp; =&amp; \frac{p(\mathbf{z},\mathbf{x})}{p(\mathbf{z})}\\<br />
+\end{eqnarray*}</p>
+
+<p>\begin{eqnarray*}
+p(\mathbf{z}|\mathbf{x})&amp; =&amp; \frac{p(\mathbf{z},\mathbf{x})}{p(\mathbf{x})}\\<br />
+\end{eqnarray*}</p>
+
+<p>\begin{eqnarray*}
+p(\mathbf{x})&amp; =&amp; \int p(\mathbf{z},\mathbf{x})d\mathbf{z}\\<br />
+\end{eqnarray*}</p>
+
+<h3 id="variational-inference-3">Variational Inference</h3>
+
+<h4 id="one-example">One example</h4>
+
+<p>Bayesian mixture of unit-variance univariate Gaussians.</p>
+
+<p>\begin{eqnarray*}
+\mu_k\sim \mathcal{N}(0,\sigma^2)  &amp; k=1,\cdots,K\\<br />
+c_i\sim Categorical(1/K,\cdots,1/K)&amp; i=1,\cdots n\\<br />
+x_i|c_i,\mathbf{\mu}\sim \mathcal{N}(c_i^T\mu,1)&amp; i=1,\cdots,n
+\end{eqnarray*}</p>
+
+<h3 id="variational-inference-4">Variational Inference</h3>
+
+<h4 id="one-example-1">One example</h4>
+
+<p>For a sample of size \(n\), the joint density of latent and observed variables is:</p>
+
+<p>\begin{eqnarray*}
+p(\mathbf{\mu},\mathbf{c},\mathbf{x})&amp;=&amp;p(\mathbf{\mu})\prod_{i=1}^np(c_i)p(x_i|c_i,\mathbf{\mu}) \\<br />
+\end{eqnarray*}</p>
+
+<p>then, the evidence is</p>
+
+<p>\begin{eqnarray*}
+p(\mathbf{x})&amp; =&amp; \int p(\mathbf{\mu})\prod_{i=1}^n\sum_{c_i}p(c_i)p(x_i|c_i,\mathbf{\mu})d\mathbf{\mu}\\<br />
+&amp;=&amp; \sum_{\mathbf{c}}p(\mathbf{c})\int p(\mathbf{\mu})\prod_{i=1}^np(x_i|c_i,\mathbf{\mu})d\mathbf{\mu}
+\end{eqnarray*}</p>
+
+<h3 id="variational-inference-5">Variational Inference</h3>
+
+<h4 id="notes-1">Notes</h4>
+
+<ol>
+<li>assume that \(\mathcal{Z}\) : a set of densities over the latent variables.</li>
+
+<li><p>what we want :</p>
+
+<p>\begin{eqnarray*}
+ q^{*}(\mathbf{z})&amp;=&amp;arg\min_{q(\mathbf{z})\in \mathcal{Z}}KL(q(\mathbf{z})|p(\mathbf{z}|\mathbf{x})) \\<br />
+ \end{eqnarray*}</p></li>
+
+<li><p>Variational inference thus turns the inference problem into an optimization problem.</p></li>
+</ol>
+
+<h3 id="variational-inference-6">Variational Inference</h3>
+
+<h4 id="recall-kl">recall KL</h4>
+
+<p>\begin{eqnarray*}
+KL(q(\mathbf{z})||p(\mathbf{z}|\mathbf{x}))&amp; =&amp;\mathbb{E}_{q(\mathbf{z})}[\log q(\mathbf{z})]-\mathbb{E}_{q(\mathbf{z})}[\log p(\mathbf{z}|\mathbf{x})] \\<br />
+&amp;=&amp;\mathbb{E}_{q(\mathbf{z})}[\log q(\mathbf{z})]-\mathbb{E}_{q(\mathbf{z})}[\log \frac{p(\mathbf{z},\mathbf{x})}{p(\mathbf{x})}]\\<br />
+&amp;=&amp;\mathbb{E}_{q(\mathbf{z})}[\log q(\mathbf{z})]-\mathbb{E}_{q(\mathbf{z})}[\log p(\mathbf{z},\mathbf{x})]+\log p(\mathbf{x})
+\end{eqnarray*}</p>
+
+<h3 id="variational-inference-7">Variational Inference</h3>
+
+<h4 id="define-evidence-lower-bound--elbo">Define evidence lower bound(ELBO)</h4>
+
+<p>\begin{eqnarray*}
+ELBO(q(\mathbf{z}))&amp;= &amp;\mathbb{E}_{q(\mathbf{z})}[\log p(\mathbf{z},\mathbf{x})]-\mathbb{E}_{q(\mathbf{z})}[\log q(\mathbf{z})] \\<br />
+\end{eqnarray*}</p>
+
+<p>then \(\max ELBO(q(\mathbf{z}))\Leftrightarrow \min KL(q(\mathbf{z})|p(\mathbf{z}|\mathbf{x}))\)</p>
+
+<p>Another form of \(ELBO\):</p>
+
+<p>\begin{eqnarray*}
+ELBO(q(\mathbf{z}))&amp; =&amp; \mathbb{E}_{q(\mathbf{z})}[\log p(\mathbf{x}|\mathbf{z})]-KL(q(\mathbf{z})||p(\mathbf{z}))\\<br />
+\end{eqnarray*}</p>
+
+<h2 id="auto-encoding-variational-bayes">Auto-Encoding Variational Bayes</h2>
+
+<h3 id="auto-encoding-variational-bayes-1">Auto-Encoding Variational Bayes</h3>
+
+
+<link rel="stylesheet" href="/css/hugo-easy-gallery.css" />
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/screenshot_2016-12-11_13-29-18.png" />
+    </div>
+    <a href="/ox-hugo/screenshot_2016-12-11_13-29-18.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="auto-encoding-variational-bayes-2">Auto-Encoding Variational Bayes</h3>
+
+<h4 id="define--q-mathbf-z-mathbf-x-i----use-the-information-of--mathbf-x-i">Define \(q(\mathbf{z}|\mathbf{x}^{(i)})\) use the information of \(\mathbf{x}^{(i)}\)</h4>
+
+<p>Given dataset \({\mathbf{x}^{(i)}}_{i=1}^N\),then :</p>
+
+<p>\begin{eqnarray*}
+\log p_{\theta}(\mathbf{x}^{(i)})&amp; =&amp; KL(q_{\phi}(\mathbf{z}|\mathbf{x}^{(i)})||p_{\theta}(\mathbf{z}|\mathbf{x}^{(i)}))+ELBO(q_{\phi}(\mathbf{z}|\mathbf{x}^{(i)}))\\<br />
+\end{eqnarray*}</p>
+
+<h4 id="elbo">ELBO</h4>
+
+<p>\begin{eqnarray*}
+ELBO(q_{\phi}(\mathbf{z}|\mathbf{x}^{(i)}))&amp; =&amp; \mathbb{E}_{q_{\phi}(\mathbf{z}|\mathbf{x}^{(i)})}[\log p_{\theta}(\mathbf{x}^{(i)}|\mathbf{z})]\\<br />
+&amp;-&amp;KL(q_{\phi}(\mathbf{z}|\mathbf{x}^{(i)})||p_{\theta}(\mathbf{z})) \\<br />
+&amp;=&amp;\mathbb{E}_{q_{\phi}(\mathbf{z}|\mathbf{x}^{(i)})}[-\log q_{\phi}(\mathbf{z}|\mathbf{x}^{(i)})+\log p_{\theta}(\mathbf{x},\mathbf{z})]
+\end{eqnarray*}</p>
+
+<h3 id="auto-encoding-variational-bayes-3">Auto-Encoding Variational Bayes</h3>
+
+<h4 id="the-usual--naive--monte-carlo-gradient-estimator">The usual (naive) Monte Carlo gradient estimator</h4>
+
+<p>\begin{eqnarray*}
+\nabla_{\phi}\mathbb{E}_{q_{\phi}(\mathbf{z})}[f(\mathbf{z})]&amp;= &amp;\mathbb{E}_{q_{\phi}(\mathbf{z})}[f(\mathbf{z})\nabla_{q_{\phi}(\mathbf{z})}\log q_{\phi}(\mathbf{z})] \\<br />
+&amp;\approx&amp;\frac{1}{L}\sum_{l=1}^L f(\mathbf{z})\nabla_{q_{\phi}(\mathbf{z}^{(l)})}\log q_{\phi}(\mathbf{z}^{(l)})
+\end{eqnarray*}</p>
+
+<p>where \(\mathbf{z}^{(l)}\sim q_{\phi}(\mathbf{z}|\mathbf{x}^{(i)})\)</p>
+
+<h3 id="auto-encoding-variational-bayes-4">Auto-Encoding Variational Bayes</h3>
+
+<h4 id="chose--q-mathbf-phi--mathbf-z-mathbf-x">Chose \(q_{\mathbf{\phi}}(\mathbf{z}|\mathbf{x})\):</h4>
+
+<p>\begin{eqnarray*}
+\tilde{\mathbf{z}}\sim g_{\mathbf{\phi}}(\mathbf{\epsilon},\mathbf{x})&amp; with&amp; \mathbf{\epsilon}\sim p(\mathbf{\epsilon})\\<br />
+\end{eqnarray*}</p>
+
+<h4 id="use-monte-carlo-estimates-of-expectations">Use Monte Carlo estimates of expectations</h4>
+
+<p>\begin{eqnarray*}
+\mathbb{E}_{q_{\phi}(\mathbf{z}|\mathbf{x}^{(i)})}[f(\mathbf{z})]&amp; =&amp; \mathbb{E}_{p(\mathbf{\epsilon})}[f(g_{\phi}(\mathbf{\epsilon},\mathbf{x}^{(i)}))]\\<br />
+&amp;\approx&amp;\frac{1}{L}\sum_{l=1}^L f(g_{\mathbf{\phi}}(\mathbf{\epsilon}^{(l)},\mathbf{x}^{(i)})) \ \ \ where \ \mathbf{\epsilon}^{(l)}\sim p(\mathbf{\epsilon})
+\end{eqnarray*}</p>
+
+<h3 id="auto-encoding-variational-bayes-5">Auto-Encoding Variational Bayes</h3>
+
+<h4 id="apply-the-technique-to-the-variational-lower-bound">Apply the technique to the variational lower bound</h4>
+
+<p>Get generic Stochastic Gradient Variational Bayes (SGVB) estimator
+ \(\tilde{\mathcal{L}}^A (\mathbf{\theta},\mathbf{\phi};\mathbf{x}^{(i)})\approx \mathcal{L}(\mathbf{\theta},\mathbf{\phi};\mathbf{x}^{(i)})\):</p>
+
+<p>\begin{eqnarray*}
+\tilde{\mathcal{L}}^{A}(\mathbf{\theta},\mathbf{\phi};\mathbf{x}^{(i)})&amp; =&amp; \frac{1}{L}\sum_{l=1}^{L}\log p_{\mathbf{\theta}}(\mathbf{x}^{(i)},\mathbf{z}^{(i,l)})\\<br />
+&amp;-&amp;\log q_{\mathbf{\phi}}(\mathbf{z}^{(i,l)}|\mathbf{x}^{(i)})
+\end{eqnarray*}</p>
+
+<p>where \(\mathbf{z}^{i,l}= g_{\mathbf{\phi}}(\mathbf{\epsilon}_{i,l},\mathbf{x}^{(i)})\), and \(\mathbf{\epsilon}^{(i,l)}\sim p(\mathbf{\epsilon})\)  for \(\forall \ i,l\)</p>
+
+<h3 id="auto-encoding-variational-bayes-6">Auto-Encoding Variational Bayes</h3>
+
+<h4 id="anther">Anther</h4>
+
+<p>\begin{eqnarray*}
+\tilde{\mathcal{L}}^{(B)}(\mathbf{\theta},\mathbf{\phi};\mathbf{x}^{(i)})&amp; =&amp; -KL(q_{\phi}(\mathbf{z}|\mathbf{x}^{(i)})||p_{\theta}(\mathbf{z}))+\frac{1}{L}\sum_{l=1}^L(\log p_{\theta}(\mathbf{x}^{(i)}|\mathbf{z}^{(i,l)}))\\<br />
+\end{eqnarray*}</p>
+
+<p>where \(\mathbf{z}^{i,l}= g_{\mathbf{\phi}}(\mathbf{\epsilon}_{i,l},\mathbf{x}^{(i)})\), and \(\mathbf{\epsilon}^{(i,l)}\sim p(\mathbf{\epsilon})\)  for \(\forall \ i,l\)</p>
+
+<h4 id="batch-version">Batch version</h4>
+
+<p>\begin{eqnarray*}
+\tilde{\mathcal{L}}(\theta,\phi;\mathbf{X})\approx \tilde{\mathcal{L}}^{M}(\theta,\phi;\mathbf{X}^M) &amp; =&amp; \frac{N}{M}\sum_{i=1}^M \tilde{\mathcal{L}}^{M}(\theta,\phi;\mathbf{x}^{(i)})\\<br />
+\end{eqnarray*}</p>
+
+<h3 id="auto-encoding-variational-bayes-7">Auto-Encoding Variational Bayes</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/screenshot_2016-12-11_15-56-21.png" />
+    </div>
+    <a href="/ox-hugo/screenshot_2016-12-11_15-56-21.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h2 id="example-variational-auto-encoder">Example: Variational Auto-Encoder</h2>
+
+<h3 id="example-variational-auto-encoder-1">Example : Variational Auto-Encoder</h3>
+
+<h4 id="idea">Idea:</h4>
+
+<p>Use a neural network for the probabilistic encoder \(q_{\phi}(\mathbf{z}|\mathbf{x})\) the approximation to the posterior of the generative model \(p_{\theta}(\mathbf{x},\mathbf{z})\), and where the parameters \(\theta\) and \(\phi\) are optimized jointly with the AEVB algorithm.</p>
+
+<h3 id="example-variational-auto-encoder-2">Example : Variational Auto-Encoder</h3>
+
+<h4 id="set--p-theta--mathbf-z">Set \(p_{\theta}(\mathbf{z})\):</h4>
+
+<p>\begin{eqnarray*}
+p_{\theta}(\mathbf{z})&amp; =&amp; \mathcal{N}(\mathbf{z};0,\mathbf{I})\\<br />
+\end{eqnarray*}</p>
+
+<h4 id="notes-2">Notes</h4>
+
+<ul>
+<li>In this case, the prior lacks parameters.</li>
+</ul>
+
+<h3 id="example-variational-auto-encoder-3">Example : Variational Auto-Encoder</h3>
+
+<h4 id="set--p-theta--mathbf-x-mathbf-z">Set \(p_{\theta}(\mathbf{x}|\mathbf{z})\):</h4>
+
+<ol>
+<li>Multivariate Gaussian (in case of real-valued data)</li>
+<li>Bernoulli (in case of binary data)</li>
+</ol>
+
+<p>Both parameters of the distributions are computed from \(\mathbf{z}\) with a MLP(a fully-connected neural network with a single hidden layer)</p>
+
+<h3 id="example-variational-auto-encoder-4">Example : Variational Auto-Encoder</h3>
+
+<h4 id="set--q-phi--mathbf-z-mathbf-x">Set \(q_{\phi}(\mathbf{z}|\mathbf{x})\)</h4>
+
+<p>\begin{eqnarray*}
+\log q_{\phi}(\mathbf{z}|\mathbf{x}^{(i)})&amp;= &amp; \log \mathcal{N}(\mathbf{z};\mu^{(i)},(\sigma^{(i)})^2\mathbf{I})\\<br />
+\end{eqnarray*}</p>
+
+<p>where the \(\mu^{(i)}\) and \(\sigma^{(i)}\) are the output of the encoding MLP</p>
+
+<h3 id="example-variational-auto-encoder-5">Example : Variational Auto-Encoder</h3>
+
+<h4 id="do-it-in-practice">DO IT IN PRACTICE</h4>
+
+<p>\begin{eqnarray*}
+\mathbf{z}^{(i,l)}&amp;=&amp;g_{\phi}(\mathbf{x}^{(i)},\mathbf{\epsilon}^{(l)}) \\<br />
+&amp;=&amp;\mu^{(i)}+\sigma^{(i)}\odot \mathbf{\epsilon}^{(l)}
+\end{eqnarray*}</p>
+
+<p>where \(\mathbf{\epsilon}^{(l)} \sim \mathcal{N}(\mathbf{0},\mathbf{I})\)</p>
+
+<ol>
+<li>In this model both both \(p_{\theta}(\mathbf{z})\) (the prior) and \(q_{\phi}(\mathbf{z}|\mathbf{x})\) are Gaussian;</li>
+</ol>
+
+<h3 id="example-variational-auto-encoder-6">Example : Variational Auto-Encoder</h3>
+
+<h4 id="solution-of--klq-phi--mathbf-z--p-theta--mathbf-z----gaussian-case">Solution of \(-KL(q_{\phi}(\mathbf{z})||p_{\theta}(\mathbf{z}))\), Gaussian case</h4>
+
+<p>\(p_{\theta}(\mathbf{z})=\mathcal{N}(\mathbf{z};\mathbf{0},\mathbf{I})\), and \(q_{\phi}(\mathbf{z})=\mathcal{N}(\mathbf{z};\mu,\sigma^{2}\mathbf{I})\)</p>
+
+<p>\begin{eqnarray*}
+-KL(q_{\phi}(\mathbf{z})||p_{\theta}(\mathbf{z}))&amp; = &amp; \frac{1}{2}\sum_{j=1}^{J}(1+\log ((\sigma_j)^2)-(\mu_j)^2-(\sigma_j)^2)\\<br />
+\end{eqnarray*}</p>
+
+<h3 id="example-variational-auto-encoder-7">Example : Variational Auto-Encoder</h3>
+
+<h4 id="the-resulting-estimator-for-this-model-and-datapoint--mathbf-x-i">The resulting estimator for this model and datapoint \(\mathbf{x}^{(i)}\)</h4>
+
+<p>\begin{eqnarray*}
+\mathcal{L}(\theta,\phi;\mathbf{x}^{(i)})&amp;\approx &amp;\frac{1}{2}\sum_{j=1}^{J}(1+\log ((\sigma_j^{(i)})^2)-(\mu_j^{(i)})^2-(\sigma_j^{(i)})^2) \\<br />
+&amp;+&amp;\frac{1}{L}\sum_{l=1}^L\log p_{\theta}(\mathbf{x}^{(i)}|\mathbf{z}^{(i,l)})
+\end{eqnarray*}</p>
+
+<p>where \(\mathbf{z}^{(i,l)}=\mu^{(i)}+\sigma^{(i)}\odot \mathbf{\epsilon}^{(l)}\), and  \(\mathbf{\epsilon}^{(l)}\sim \mathcal{N}(\mathbf{0},\mathbf{I})\)</p>
+
+<ul>
+<li>the decoding term \(p_{\theta}(\mathbf{x}^{(i)}|\mathbf{z}^{(i,l)})\)  is a Bernoulli or Gaussian MLP, depending on the type of data we are modelling.</li>
+</ul>
+
+<h3 id="example-variational-auto-encoder-8">Example : Variational Auto-Encoder</h3>
+
+<h4 id="mlp-s-as-probabilistic-encoders-and-decoders">MLP’s as probabilistic encoders and decoders</h4>
+
+<ol>
+<li>encoder : MLP with Gaussian output;</li>
+<li>decoder : MLPs with either Gaussian or Bernoulli outputs, depending on the type of data.</li>
+</ol>
+
+<h3 id="example-variational-auto-encoder-9">Example : Variational Auto-Encoder</h3>
+
+<h4 id="bernoulli-mlp-as-decoder">Bernoulli MLP as decoder</h4>
+
+<ul>
+<li>Recall Bernoulli :  \(p^k (1-p)^{1-k}\)</li>
+</ul>
+
+<p>\begin{eqnarray*}
+\log p(\mathbf{x}|\mathbf{z})&amp; =&amp; \sum_{i=1}^Dx_i \log y_i+(1-x_i)\cdot \log (1-y_i)
+\end{eqnarray*}</p>
+
+<p>where</p>
+
+<p>\begin{eqnarray*}
+\mathbf{y}&amp; =&amp; f_{\sigma}(\mathbf{W}_2\tanh (\mathbf{W}_1\mathbf{z}+\mathbf{b}_1)+\mathbf{b}_{2})
+\end{eqnarray*}</p>
+
+<h3 id="example-variational-auto-encoder-10">Example : Variational Auto-Encoder</h3>
+
+<h4 id="gaussian-mlp-as-decoder">Gaussian MLP as decoder</h4>
+
+<p>\begin{eqnarray*}
+\log p(\mathbf{x}|\mathbf{z})&amp; =&amp; \log \mathcal{N}(\mathbf{x};\mu,\sigma^2\mathbf{I})\\<br />
+\end{eqnarray*}</p>
+
+<p>where</p>
+
+<p>\begin{eqnarray*}
+\mu&amp; =&amp; \mathbf{W}_4\mathbf{h}+\mathbf{b}_4\\<br />
+\log \mathbf{\sigma}^2&amp;=&amp;\mathbf{W}_{5}\mathbf{h}+\mathbf{b}_{5}\\<br />
+\mathbf{h}&amp;=&amp;\tanh(\mathbf{W}_{3}\mathbf{z}+b_{3})
+\end{eqnarray*}</p>
+
+<h3 id="example-variational-auto-encoder-11">Example : Variational Auto-Encoder</h3>
+
+<h4 id="gaussian-mlp-as-encoder">Gaussian MLP as encoder</h4>
+
+<p>\begin{eqnarray*}
+\log p(\mathbf{z}|\mathbf{x})&amp; =&amp; \log \mathcal{N}(\mathbf{z};\mu,\sigma^2\mathbf{I})\\<br />
+\end{eqnarray*}</p>
+
+<p>where</p>
+
+<p>\begin{eqnarray*}
+\mu&amp; =&amp; \mathbf{W}_7\mathbf{h}+\mathbf{b}_7\\<br />
+\log \mathbf{\sigma}^2&amp;=&amp;\mathbf{W}_{8}\mathbf{h}+\mathbf{b}_{8}\\<br />
+\mathbf{h}&amp;=&amp;\tanh(\mathbf{W}_{6}\mathbf{z}+b_{6})
+\end{eqnarray*}</p>
+
+<h2 id="code">Code</h2>
+
+<h3 id="code-1">Code</h3>
+
+<ul>
+<li><a href="https://112.74.187.151:10001/notebooks/proj/keras/examples/VAE.ipynb">Code</a></li>
+<li><a href="https://112.74.187.151:10001/notebooks/proj/keras/examples/ConvVAE.ipynb">Code</a></li>
+</ul>
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://mingzailao.github.io/posts/autoencoding-beyond-pixels-using-a-learned-similarity-metric/" data-toggle="tooltip" data-placement="top" title="Autoencoding beyond pixels using a learned similarity metric">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://mingzailao.github.io/posts/adversarially-learned-inference/" data-toggle="tooltip" data-placement="top" title="Adversarially Learned Inference">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.37.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Batch Normalization</title>
+  <meta property="og:title" content="Batch Normalization" />
+  <meta name="twitter:title" content="Batch Normalization" />
+  <meta name="description" content="Introduction SGD Introduction SGD optimize function \begin{equation} \label{eq:1} \Theta=arg\min_{\Theta}\frac{1}{N}\sum_{i=1}^Nl(x_i,\Theta) \end{equation}
+ \(x_{1&hellip;N}\) : the training set \(l(\cdot)\) : loss function \(\Theta\) : the parameters.  with SGD, the training proceeds in steps,and at each step we consider a minibatch \(x_{1&hellip;m}\) of size \(m\).
+SGD workflow How SGD works The mini-batch is used to approximate the gradient of the loss function with respect to the parameters, by computing
+\begin{equation} \label{eq:2} \frac{1}{m}\sum_{i=1}^m\frac{\partial l(x_i,\Theta)}{\partial \theta} \end{equation}">
+  <meta property="og:description" content="Introduction SGD Introduction SGD optimize function \begin{equation} \label{eq:1} \Theta=arg\min_{\Theta}\frac{1}{N}\sum_{i=1}^Nl(x_i,\Theta) \end{equation}
+ \(x_{1&hellip;N}\) : the training set \(l(\cdot)\) : loss function \(\Theta\) : the parameters.  with SGD, the training proceeds in steps,and at each step we consider a minibatch \(x_{1&hellip;m}\) of size \(m\).
+SGD workflow How SGD works The mini-batch is used to approximate the gradient of the loss function with respect to the parameters, by computing
+\begin{equation} \label{eq:2} \frac{1}{m}\sum_{i=1}^m\frac{\partial l(x_i,\Theta)}{\partial \theta} \end{equation}">
+  <meta name="twitter:description" content="Introduction SGD Introduction SGD optimize function \begin{equation} \label{eq:1} \Theta=arg\min_{\Theta}\frac{1}{N}\sum_{i=1}^Nl(x_i,\Theta) \end{equation}
+ \(x_{1&hellip;N}\) : the training set …">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://mingzailao.github.io/posts/batch-normalization/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="mingzaialo&#39;s blog" />
+
+  <meta name="generator" content="Hugo 0.37.1" />
+  <link rel="canonical" href="https://mingzailao.github.io/posts/batch-normalization/" />
+  <link rel="alternate" href="https://mingzailao.github.io/index.xml" type="application/rss+xml" title="mingzaialo&#39;s blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://mingzailao.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://mingzailao.github.io/css/syntax.css" /><link rel="stylesheet" href="https://mingzailao.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              <h1>Batch Normalization</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h2 id="introduction">Introduction</h2>
+
+<h3 id="sgd-introduction">SGD Introduction</h3>
+
+<h4 id="sgd-optimize-function">SGD optimize function</h4>
+
+<p>\begin{equation}
+\label{eq:1}
+\Theta=arg\min_{\Theta}\frac{1}{N}\sum_{i=1}^Nl(x_i,\Theta)
+\end{equation}</p>
+
+<ul>
+<li>\(x_{1&hellip;N}\) : the training set</li>
+<li>\(l(\cdot)\) : loss function</li>
+<li>\(\Theta\) : the parameters.</li>
+</ul>
+
+<p>with SGD, the training proceeds in steps,and at each step we consider a minibatch
+\(x_{1&hellip;m}\) of size \(m\).</p>
+
+<h3 id="sgd-workflow">SGD workflow</h3>
+
+<h4 id="how-sgd-works">How SGD works</h4>
+
+<p>The mini-batch is used to approximate the gradient of the loss function with respect
+to the parameters, by computing</p>
+
+<p>\begin{equation}
+\label{eq:2}
+\frac{1}{m}\sum_{i=1}^m\frac{\partial l(x_i,\Theta)}{\partial \theta}
+\end{equation}</p>
+
+<h3 id="fixed-distribution-of-inputs">Fixed distribution of inputs</h3>
+
+<h4 id="positive-consequences">Positive consequences</h4>
+
+<p>Consider a layer with a sigmoid activation function
+\[z=g(Wu+b)\]
+where
+\[g(x)=\frac{1}{1+exp(-x)}\]
+As \(|x|\) increases, \(g&rsquo;(x)\) tends to zero.</p>
+
+<h3 id="fixed-distribution-of-inputs-1">Fixed distribution of inputs</h3>
+
+<h4 id="positive-cinsequences">Positive cinsequences</h4>
+
+<p>This means that for all dimensions of \(x=Wu+b\) except those with small absolute values, the gradient flowing down to u will vanish and the model will train slowly.
+If, however, we could ensure that the distribution of nonlinearity inputs remains more stable as the network trains, then the optimizer would be less likely to get stuck in the saturated regime, and the training would accelerate.</p>
+
+<h2 id="towards-reducing-internal-covariate-shift">Towards Reducing Internal Covariate Shift</h2>
+
+<h3 id="internal-covariate-shift">Internal Covariate Shift</h3>
+
+<h4 id="definition">Definition</h4>
+
+<p>The change in the distribution of network activations due to the change in network parameters during training.</p>
+
+<h4 id="the-way-to-reducing-the-internal-convariate-shift">The way to reducing the Internal Convariate Shift</h4>
+
+<p>By fixing the distribution of the layer inputs x as the training progresses, we expect to improve the training speed.</p>
+
+<h4 id="example">Example</h4>
+
+<p>Whiting</p>
+
+<h2 id="normalization-via-mini-batch-statistics">Normalization via Mini-Batch Statistics</h2>
+
+<h3 id="normalization-via-mini-batch-statistics-1">Normalization via Mini-Batch Statistics</h3>
+
+<h4 id="from--x--to--hat-x">From \(x\) to \(\hat{x}\)</h4>
+
+<p>For a layer with $d$-dimensional input \(x=(x^{(1)},x^{(2)},\cdots,x^{(d)})\),we will normalize each dimension</p>
+
+<p>\begin{equation}
+\label{eq:6}
+\hat{x}^{(k)}=\frac{x^{(k)}-E[x^{(k)}]}{\sqrt{Var[x^{(k)}]}}
+\end{equation}</p>
+
+<h4 id="notes">Notes</h4>
+
+<p>Simply normalizing each input of a layer may change what the layer can represent.</p>
+
+<h3 id="normalization-via-mini-batch-statistics-2">Normalization via Mini-Batch Statistics</h3>
+
+<h4 id="from--hat-x--to--y">From \(\hat{x}\) to \(y\)</h4>
+
+<p>To address the problem above, we make sure that the transformation inserted in the network can represent the identity transform.</p>
+
+<p>\begin{equation}
+\label{eq:7}
+y^{(k)}=\gamma^{(k)}\hat{x}^{(k)}+\beta^{(k)}
+\end{equation}</p>
+
+<ul>
+<li>\(\gamma^{(k)}=\sqrt{Var[x^{(k)}]}\)</li>
+<li>\(\beta^{(k)}=E[x^{(k)}]\)</li>
+</ul>
+
+<h3 id="normalization-via-mini-batch-statistics-3">Normalization via Mini-Batch Statistics</h3>
+
+<h4 id="algorithm">Algorithm</h4>
+
+<ul>
+<li>Input :Values of \(x\) over a mini-batch: \(\mathcal{B}={x_{1..m}}\); Parameters to be learned: \(\gamma,\beta\)</li>
+<li>Output :\({y_i=BN_{\gamma,\beta}(x_i)}\)</li>
+<li>\(\mu_{\mathcal{B}}\leftarrow\frac{1}{m}\sum_{i=1}^mx_i\)</li>
+<li>\(\sigma_{\mathcal{B}}^2\leftarrow\frac{1}{m}\sum_{i=1}^m(x_i-\mu_{\mathcal{B}})^2\)</li>
+<li>\(\hat{x}_i\leftarrow\frac{x_i-\mu_{\mathcal{B}}}{\sqrt{\sigma_{\mathcal{B}}^2+\epsilon}}\)</li>
+<li>\(y_i\leftarrow\gamma \hat{x}_i+\beta\equiv BN_{\gamma,\beta}(x_i)\)</li>
+</ul>
+
+<p>The BN transform can be added to a network to manipulate any activation.</p>
+
+<h3 id="normalization-via-mini-batch-statistics-4">Normalization via Mini-Batch Statistics</h3>
+
+<h4 id="bp">BP</h4>
+
+<p>\begin{equation}
+\begin{array}{rcl}
+\frac{\partiall}{\partial \hat{x}_{i}}&amp;=&amp;\frac{\partial l}{\partial y_{i}}\cdot \gamma\\<br />
+\frac{\partial l}{\partial \sigma_{\mathcal{B}}^2}&amp;=&amp;\sum_{i=1}^m\frac{\partial l }{\partial \hat{x}_i}\cdot (x_i-\mu_{\mathcal{B}})\cdot(-\frac{1}{2})(\sigma_{\mathcal{B}}^2+\epsilon)^{-<sup>3</sup>&frasl;<sub>2</sub>}\\<br />
+\frac{\partial l}{\partial \mu_{\mathcal{B}}}&amp;=&amp;\sum_{i=1}^m\frac{\partiall}{\partial \hat{x}_i}\frac{-1}{\sqrt{\sigma_{\mathcal{B}}^2+\epsilon}}+\frac{\partial l}{\partial \sigma_{\mathcal{B}}^2}\frac{\sum_{i=1}^m-2(x_i-\mu_{\mathcal{B}})}{m}\\<br />
+\frac{\partiall}{\partial x_i}&amp;=&amp;\frac{\partiall}{\partial \hat{x}_i}\cdot \frac{1}{\sqrt{\sigma_{\mathcal{B}}^2+\epsilon}}+\frac{\partiall}{\partial \sigma_{\mathcal{B}}^2}\cdot \frac{2(x_i-\mu_{\mathcal{B}})}{m}+\frac{\partiall}{\partial\mu_{\mathcal{B}}}\cdot\frac{1}{m}\\<br />
+\frac{\partiall}{\partial\gamma}&amp;=&amp;\sum_{i=1}^m\frac{\partiall}{\partial y_i}\cdot \hat{x}_i\\<br />
+\frac{\partiall}{\partial\beta}&amp;=&amp;\sum_{i=1}^m\frac{\partiall}{\partial y_i}\\<br />
+\end{array}
+\end{equation}</p>
+
+<h3 id="training-and-inference-with-batch-normalized-networks">Training and Inference with Batch- Normalized Networks</h3>
+
+<h4 id="algorithm-1">Algorithm</h4>
+
+<ul>
+<li>Input : Network \(N\) with trainable parameters \(\Theta\); subset of activations \({x^{(k)}}_{k=1}^K\)</li>
+
+<li><p>Output : Batch-normalized network for inference, \(N_{BN}^{inf}\)</p></li>
+
+<li><p>\(N_{BN}^{tr}\leftarrow N\)</p></li>
+
+<li><p>for k=1&hellip;K do:</p>
+
+<ol>
+<li>Add transformation \(y^{(k)}=BN_{\gamma^{(k)},\beta^{(k)}}(x^{(k)})\) to \(N_{BN}^{tr}\)</li>
+<li>Modify each layer in \(N_{BN}^{tr}\) with input \(x^{(k)}\) to take \(y^{(k)}\) instead</li>
+</ol></li>
+
+<li><p>Train \(N_{BN}^{tr}\) to optimize the parameters \(\Theta\cup {\gamma^{(k)},\beta^{(k)}}_{k=1}^K\)</p></li>
+</ul>
+
+<h3 id="training-and-inference-with-batch-normalized-networks-1">Training and Inference with Batch- Normalized Networks</h3>
+
+<h4 id="algorithm-2">Algorithm</h4>
+
+<ol>
+<li>\(N_{BN}^{inf}\leftarrow N_{BN}^{tr}\)</li>
+<li>For k=1&hellip;K do
+
+<ol>
+<li>For clarity, \(x\equiv x^{(k)}\),\(\gamma\equiv \gamma^{(k)}\), \(\mu_{\mathcal{B}}\equiv \mu_{\mathcal{B}}^{(k)}\) etc.</li>
+<li>Process multiple training mini-batches \(\mathcal{B}\), each of size \(m\), and average over them:\[E[x]\leftarrow E_{\mathcal{B}}[\mu_{\mathcal{B}}]\] \[Var[x]\leftarrow \frac{m}{m-1}E_{\mathcal{B}}[\sigma_{\mathcal{B}}^2]\]</li>
+<li>In \(N_{BN}^{inf}\), replace the transform \(y=BN_{\gamma,\beta}(x)\) with \(y=\frac{\gamma}{\sqrt{Var[x]+\epsilon}}\cdot x+(\beta-\frac{\gamma E[x]}{\sqrt{Var[x]+\epsilon}})\)</li>
+</ol></li>
+</ol>
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://mingzailao.github.io/posts/c-rnn-gan-continuous-recurrent-neural-networks-with-adversarial-training/" data-toggle="tooltip" data-placement="top" title="C-RNN-GAN: Continuous recurrent neural networks with adversarial training">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://mingzailao.github.io/posts/autoencoding-beyond-pixels-using-a-learned-similarity-metric/" data-toggle="tooltip" data-placement="top" title="Autoencoding beyond pixels using a learned similarity metric">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.37.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

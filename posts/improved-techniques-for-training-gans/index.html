@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Improved Techniques for Training GANs</title>
+  <meta property="og:title" content="Improved Techniques for Training GANs" />
+  <meta name="twitter:title" content="Improved Techniques for Training GANs" />
+  <meta name="description" content="Table of Contents  Tricks  Feature Matching Minibatch discrimination Minibatch discrimination Minibatch discrimination Historical averaging One-sided label smoothing BN  Reference   
+Tricks Feature Matching  Notations
+ \(f(\mathbf{x})\) : activations on an intermediate layer of the discriminator;  New objective for the generator
+\begin{equation} \label{eq:1} ||\mathbb{E}_{\mathbf{x}\sim P_{data}(\mathbf{x})}[f(\mathbf{x})]-\mathbb{E}_{\mathbf{z}\sim P_z(\mathbf{z})}[f(G(\mathbf{z}))]||^{2} \end{equation}
+As with regular GAN training, the objective has a fixed point where \(G\) exactly matches the distribution of training data.">
+  <meta property="og:description" content="Table of Contents  Tricks  Feature Matching Minibatch discrimination Minibatch discrimination Minibatch discrimination Historical averaging One-sided label smoothing BN  Reference   
+Tricks Feature Matching  Notations
+ \(f(\mathbf{x})\) : activations on an intermediate layer of the discriminator;  New objective for the generator
+\begin{equation} \label{eq:1} ||\mathbb{E}_{\mathbf{x}\sim P_{data}(\mathbf{x})}[f(\mathbf{x})]-\mathbb{E}_{\mathbf{z}\sim P_z(\mathbf{z})}[f(G(\mathbf{z}))]||^{2} \end{equation}
+As with regular GAN training, the objective has a fixed point where \(G\) exactly matches the distribution of training data.">
+  <meta name="twitter:description" content="Table of Contents  Tricks  Feature Matching Minibatch discrimination Minibatch discrimination Minibatch discrimination Historical averaging One-sided label smoothing BN  Reference   
+Tricks Feature …">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://mingzailao.github.io/posts/improved-techniques-for-training-gans/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="mingzaialo&#39;s blog" />
+
+  <meta name="generator" content="Hugo 0.37.1" />
+  <link rel="canonical" href="https://mingzailao.github.io/posts/improved-techniques-for-training-gans/" />
+  <link rel="alternate" href="https://mingzailao.github.io/index.xml" type="application/rss+xml" title="mingzaialo&#39;s blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://mingzailao.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://mingzailao.github.io/css/syntax.css" /><link rel="stylesheet" href="https://mingzailao.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              <h1>Improved Techniques for Training GANs</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<div class="ox-hugo-toc toc">
+<div></div>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ul>
+<li><a href="#tricks">Tricks</a>
+
+<ul>
+<li><a href="#feature-matching">Feature Matching</a></li>
+<li><a href="#minibatch-discrimination">Minibatch discrimination</a></li>
+<li><a href="#minibatch-discrimination">Minibatch discrimination</a></li>
+<li><a href="#minibatch-discrimination">Minibatch discrimination</a></li>
+<li><a href="#historical-averaging">Historical averaging</a></li>
+<li><a href="#one-sided-label-smoothing">One-sided label smoothing</a></li>
+<li><a href="#bn">BN</a></li>
+</ul></li>
+<li><a href="#reference">Reference</a></li>
+</ul>
+
+<p></div>
+<!--endtoc--></p>
+
+<h2 id="tricks">Tricks</h2>
+
+<h3 id="feature-matching">Feature Matching</h3>
+
+<ul>
+<li><p>Notations</p>
+
+<ul>
+<li>\(f(\mathbf{x})\) : activations on an intermediate layer of the discriminator;</li>
+</ul></li>
+
+<li><p>New objective for the generator</p>
+
+<p>\begin{equation}
+\label{eq:1}
+||\mathbb{E}_{\mathbf{x}\sim P_{data}(\mathbf{x})}[f(\mathbf{x})]-\mathbb{E}_{\mathbf{z}\sim P_z(\mathbf{z})}[f(G(\mathbf{z}))]||^{2}
+\end{equation}</p>
+
+<p>As with regular GAN training, the objective has a fixed point where \(G\) exactly matches the distribution of training data. We have no guarantee of reaching this fixed point in practice, but our empirical results indicate that feature matching is indeed effective in situations where regular GAN becomes unstable.</p></li>
+</ul>
+
+<h3 id="minibatch-discrimination">Minibatch discrimination</h3>
+
+<ul>
+<li><p>Keys</p>
+
+<p>Any discriminator model that looks at multiple examples in combination, rather than in isolation.(we can use BN also).</p></li>
+
+<li><p>Aim to identify generator samples that are particularly close together</p>
+
+<ul>
+<li>Let \(f(\mathbf{x}_i)\in \mathbb{R}^{A}\) denote a vector of features for input \(\mathbf{x}_i\)</li>
+<li>Multiply the vector \(f(\mathbf{x}_i)\) by a tensor \(T\in \mathbb{A\times B\times C}\) which results in a matrix \(M_i\in \mathbb{R}^{B\times C}\)</li>
+<li>Compute the \(L_1\) distance between the rows of the resulting matrix \(M_i\) across samples \(i\in {1,2,\cdots,n}\) and apply a negative exponential \(c_b(\mathbf{x}_i,\mathbf{x}_j)=\exp(-||M_{i,b}-M_{j,b}||L_1)\in \mathbb{R}\)</li>
+</ul></li>
+</ul>
+
+<h3 id="minibatch-discrimination-1">Minibatch discrimination</h3>
+
+<ul>
+<li><p>Aim to identify generator samples that are particularly close together</p>
+
+<p>The output \(o(x_{i})\) for this minibatch layer for a sample \(x_{i}\) is then
+defined as the sum of the \(c_b(\mathbf{x}_i,\mathbf{x}_j)\)’s to all other samples:</p>
+
+<p>\begin{equation}
+\label{eq:3}
+o(\mathbf{x}_i)_b=\sum_{j=1}^nc_b(\mathbf{x}_i,\mathbf{x}_j)\in \mathbb{R}
+\end{equation}</p>
+
+<p>\begin{equation}
+\label{eq:4}
+o(\mathbf{x}_i)=[o(\mathbf{x}_i)_1,o(\mathbf{x}_i)_{2},\cdots, o(\mathbf{x}_i)_B]\in \mathbb{R}^B
+\end{equation}</p>
+
+<p>\begin{equation}
+\label{eq:5}
+o(\mathbf{X})\in \mathbb{R}^{n\times B}
+\end{equation}</p></li>
+</ul>
+
+<h3 id="minibatch-discrimination-2">Minibatch discrimination</h3>
+
+<ul>
+<li><p>Aim to identify generator sample that are particularly close together</p>
+
+<ul>
+<li>Next, we concatenate the output \(o(\mathbf{x}_i)\) of the minibatch layer with the intermediate features \(f(\mathbf{x}_i)\) that were its input, and we feed the result into the next layer of the discriminator.</li>
+</ul></li>
+</ul>
+
+<h3 id="historical-averaging">Historical averaging</h3>
+
+<ul>
+<li><p>Historical averaging</p>
+
+<p>When applying this technique, we modify each player’s cost to include a term \(||\mathbf{\theta}-\frac{1}{t}\sum_{i=1}^t\mathbf{\theta}[i]||^2\), where \(\mathbf{\theta}_i\) is the value of the parameters at past time \(i\).</p></li>
+</ul>
+
+<h3 id="one-sided-label-smoothing">One-sided label smoothing</h3>
+
+<ul>
+<li><p>One-sided label smoothing</p>
+
+<p>Label smoothing, a technique from the 1980s recently independently re-discovered by Szegedy et.al <sup id="617e4a1be9eef8610fd48a5f505e7c30"><a href="#szegedy15:rethin_incep_archit_comput_vision" title="@incollection{szegedy15:rethin_incep_archit_comput_vision,
+  author       = {Christian Szegedy AND Vincent Vanhoucke AND Sergey Ioffe AND
+                  Jonathon Shlens AND Zbigniew Wojna},
+  title        = {{Rethinking the Inception Architecture for Computer Vision}},
+  year         = 2015,
+  archiveprefix= {arXiv},
+  eprint       = {1512.00567v3},
+  primaryclass = {cs.CV}
+}">szegedy15:rethin_incep_archit_comput_vision</a></sup> replaces the 0 and 1 targets for a classifier with smoothed values, like .9 or .1</p>
+
+<p>Replacing positive classification targets with \(\alpha\) and negative targets with \(\beta\), the optimal discriminator becomes \(D(\mathbf{x})=\frac{\alpha P_{data}(\mathbf{x})+\beta P_{model}(\mathbf{x})}{P_{data}(\mathbf{x})+P_{model}(\mathbf{x})}\)</p></li>
+</ul>
+
+<h3 id="bn">BN</h3>
+
+<p>Pass</p>
+
+<h2 id="reference">Reference</h2>
+
+<p>\bibliographystyle{unsrtnat}</p>
+
+<h1 id="bibliography">Bibliography</h1>
+
+<p><a id="szegedy15:rethin_incep_archit_comput_vision"></a>[szegedy15:rethin_incep_archit_comput_vision] @incollection{szegedy15:rethin_incep_archit_comput_vision,
+  author       = {Christian Szegedy AND Vincent Vanhoucke AND Sergey Ioffe AND
+                  Jonathon Shlens AND Zbigniew Wojna},
+  title        = {{Rethinking the Inception Architecture for Computer Vision}},
+  year         = 2015,
+  archiveprefix= {arXiv},
+  eprint       = {1512.00567v3},
+  primaryclass = {cs.CV}
+} <a href="#617e4a1be9eef8610fd48a5f505e7c30">↩</a></p>
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://mingzailao.github.io/posts/improving-generative-adversarial-networks-with-denoising-feature-matching/" data-toggle="tooltip" data-placement="top" title="Improving Generative Adversarial Networks with Denoising Feature Matching">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://mingzailao.github.io/posts/hierarchical-variational-models/" data-toggle="tooltip" data-placement="top" title="Hierarchical Variational Models">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.37.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Self-Normalizing Neural Networks</title>
+  <meta property="og:title" content="Self-Normalizing Neural Networks" />
+  <meta name="twitter:title" content="Self-Normalizing Neural Networks" />
+  <meta name="description" content="Table of Contents  Self-normalizing Neural Networks  Definition Constructing Self-Normalizing Neural Networks Constructing Self-Normalizing Neural Networks Constructing Self-Normalizing Neural Networks Deriving the Mean and Variance Mapping Function Deriving the Mean and Variance Mapping Function Stable and Attracting Fixed Point (0, 1) for Normalized Weights    
+Self-normalizing Neural Networks Definition A neural network is self-normalizing if it possesses a mapping \(g : \Omega \rightarrow \Omega\) for each activation \(y\) that maps mean and variance from one layer to the next and has a stable and attracting fixed point depending on \((\omega,\tau)\) in \(\Omega\).">
+  <meta property="og:description" content="Table of Contents  Self-normalizing Neural Networks  Definition Constructing Self-Normalizing Neural Networks Constructing Self-Normalizing Neural Networks Constructing Self-Normalizing Neural Networks Deriving the Mean and Variance Mapping Function Deriving the Mean and Variance Mapping Function Stable and Attracting Fixed Point (0, 1) for Normalized Weights    
+Self-normalizing Neural Networks Definition A neural network is self-normalizing if it possesses a mapping \(g : \Omega \rightarrow \Omega\) for each activation \(y\) that maps mean and variance from one layer to the next and has a stable and attracting fixed point depending on \((\omega,\tau)\) in \(\Omega\).">
+  <meta name="twitter:description" content="Table of Contents  Self-normalizing Neural Networks  Definition Constructing Self-Normalizing Neural Networks Constructing Self-Normalizing Neural Networks Constructing Self-Normalizing Neural …">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://mingzailao.github.io/posts/self-normalizing-neural-networks/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="mingzaialo&#39;s blog" />
+
+  <meta name="generator" content="Hugo 0.37.1" />
+  <link rel="canonical" href="https://mingzailao.github.io/posts/self-normalizing-neural-networks/" />
+  <link rel="alternate" href="https://mingzailao.github.io/index.xml" type="application/rss+xml" title="mingzaialo&#39;s blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://mingzailao.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://mingzailao.github.io/css/syntax.css" /><link rel="stylesheet" href="https://mingzailao.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              <h1>Self-Normalizing Neural Networks</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<div class="ox-hugo-toc toc">
+<div></div>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ul>
+<li><a href="#self-normalizing-neural-networks">Self-normalizing Neural Networks</a>
+
+<ul>
+<li><a href="#definition">Definition</a></li>
+<li><a href="#constructing-self-normalizing-neural-networks">Constructing Self-Normalizing Neural Networks</a></li>
+<li><a href="#constructing-self-normalizing-neural-networks">Constructing Self-Normalizing Neural Networks</a></li>
+<li><a href="#constructing-self-normalizing-neural-networks">Constructing Self-Normalizing Neural Networks</a></li>
+<li><a href="#deriving-the-mean-and-variance-mapping-function">Deriving the Mean and Variance Mapping Function</a></li>
+<li><a href="#deriving-the-mean-and-variance-mapping-function">Deriving the Mean and Variance Mapping Function</a></li>
+<li><a href="#stable-and-attracting-fixed-point--0-1--for-normalized-weights">Stable and Attracting Fixed Point (0, 1) for Normalized Weights</a></li>
+</ul></li>
+</ul>
+
+<p></div>
+<!--endtoc--></p>
+
+<h2 id="self-normalizing-neural-networks">Self-normalizing Neural Networks</h2>
+
+<h3 id="definition">Definition</h3>
+
+<p>A neural network is self-normalizing if it possesses a mapping \(g : \Omega \rightarrow \Omega\) for each activation \(y\) that maps mean and variance from one layer to the next and has a stable and attracting fixed point depending on \((\omega,\tau)\) in \(\Omega\). Furthermore, the mean and the variance remain in the domain \(\Omega\), that is \(g(\Omega) \subset \Omega\), where \(\Omega ={(\mu, \nu) | \mu \in [\mu_{min}, \mu_{max}], \nu \in [\nu_{min}, \nu_{max}]}\). When iteratively applying the mapping \(g\), each point within \(\Omega\) converges to this fixed point.</p>
+
+<h3 id="constructing-self-normalizing-neural-networks">Constructing Self-Normalizing Neural Networks</h3>
+
+<ul>
+<li><p>Two design choices are available for the function g</p>
+
+<ul>
+<li>the activation function</li>
+<li>the initialization of the weights</li>
+</ul></li>
+</ul>
+
+<h3 id="constructing-self-normalizing-neural-networks-1">Constructing Self-Normalizing Neural Networks</h3>
+
+<ul>
+<li><p>scaled exponential linear units</p>
+
+<p>\begin{equation}
+selu(x) = \lambda\left{
+\begin{array}{ll}
+x&amp; if\ x&gt;0\\<br />
+\alpha e^x-\alpha&amp; if\ x\le 0
+\end{array}\right .
+\end{equation}</p></li>
+</ul>
+
+<h3 id="constructing-self-normalizing-neural-networks-2">Constructing Self-Normalizing Neural Networks</h3>
+
+<ol>
+<li><p>negative and positive values for controlling the mean</p></li>
+
+<li><p>saturation regions (derivatives approaching zero) to dampen the variance if it is too large in the lower layer</p></li>
+
+<li><p>a slope larger than one to increase the variance if it is too small in the lower layer</p></li>
+
+<li><p>a continuous curve</p></li>
+</ol>
+
+<p>The latter ensures a fixed point, where variance damping is equalized by variance increasing.
+For  weight initialization, we propose \(\omega \triangleq \sum_{i=1}^n w_{i}=0\) and \(\tau\triangleq \sum_{i=1}^n w_i^2=1\) for all units in the higher layer.</p>
+
+<h3 id="deriving-the-mean-and-variance-mapping-function">Deriving the Mean and Variance Mapping Function</h3>
+
+<p>\(z=\boldsymbol{w}^T\boldsymbol{x}\), then \(\mathbb{E}[z]=\sum_{i=1}^n w_i\mathbb{E}[x_i]=\mu\omega\), \(Var(z)=Var(\sum_{i=1}w_ix_i) = \nu \tau\)( \(x_i\) is independent)</p>
+
+<p>Notes</p>
+
+<p>\begin{eqnarray*}
+erf(x) &amp;= &amp;\frac{2}{\sqrt{\pi}}\int_{0}^{x}e^{-t^2}dt \\<br />
+erfc(x)&amp;=&amp;1-erf(x)
+\end{eqnarray*}</p>
+
+<h3 id="deriving-the-mean-and-variance-mapping-function-1">Deriving the Mean and Variance Mapping Function</h3>
+
+<p>\begin{eqnarray*}
+\tilde{\mu}(\mu,\omega,\nu,\tau) &amp;= &amp;\int_{-\infty}^{\infty}selu(z)p_{Gauss}(z;\mu\omega,\sqrt{\nu\tau})dz \\<br />
+\tilde{\nu}(\mu,\omega,\nu,\tau)&amp;=&amp;\int_{-\infty}^{\infty}selu(z)^{2}P_{Gauss}(z;\mu\omega,\sqrt{\nu\tau})dz-(\tilde{\mu})^{2}
+\end{eqnarray*}</p>
+
+
+<link rel="stylesheet" href="/css/hugo-easy-gallery.css" />
+<div class="box" style="max-width:800">
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/20170611_165136_19101ncC.png" />
+    </div>
+    <a href="/ox-hugo/20170611_165136_19101ncC.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="stable-and-attracting-fixed-point--0-1--for-normalized-weights">Stable and Attracting Fixed Point (0, 1) for Normalized Weights</h3>
+
+<p>the solution is</p>
+
+<ul>
+<li>\(\alpha_{01}\approx 1.6733\)</li>
+<li>\(\lambda_{01}\approx 1.0507\)</li>
+</ul>
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://mingzailao.github.io/posts/show-and-tell-a-neural-image-caption-generator/" data-toggle="tooltip" data-placement="top" title="Show and Tell: A Neural Image Caption Generator">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://mingzailao.github.io/posts/ratm-recurrent-attentive-tracking-model/" data-toggle="tooltip" data-placement="top" title="RATM: Recurrent Attentive Tracking Model">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.37.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

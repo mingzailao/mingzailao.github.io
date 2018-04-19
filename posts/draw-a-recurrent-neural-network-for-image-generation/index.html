@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>DRAW : A Reccurrent Neural Network for Image Generation</title>
+  <meta property="og:title" content="DRAW : A Reccurrent Neural Network for Image Generation" />
+  <meta name="twitter:title" content="DRAW : A Reccurrent Neural Network for Image Generation" />
+  <meta name="description" content="Table of Contents  Introduction  Introduction Introduction Introduction  The DRAW Network  The DRAW Network Network Architecture Network Architecture Network Architecture Network Architecture Network Architecture Network Architecture Network Architecture Network Architecture  Read and Write Operations  Read and Write Operations Reading and Writing Without Attention Selective Attention Model Selective Attention Model Selective Attention Model Reading and Writing With Attention  Next article  Next article  Reference">
+  <meta property="og:description" content="Table of Contents  Introduction  Introduction Introduction Introduction  The DRAW Network  The DRAW Network Network Architecture Network Architecture Network Architecture Network Architecture Network Architecture Network Architecture Network Architecture Network Architecture  Read and Write Operations  Read and Write Operations Reading and Writing Without Attention Selective Attention Model Selective Attention Model Selective Attention Model Reading and Writing With Attention  Next article  Next article  Reference">
+  <meta name="twitter:description" content="Table of Contents  Introduction  Introduction Introduction Introduction  The DRAW Network  The DRAW Network Network Architecture Network Architecture Network Architecture Network Architecture Network …">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://mingzailao.github.io/posts/draw-a-recurrent-neural-network-for-image-generation/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="mingzaialo&#39;s blog" />
+
+  <meta name="generator" content="Hugo 0.37.1" />
+  <link rel="canonical" href="https://mingzailao.github.io/posts/draw-a-recurrent-neural-network-for-image-generation/" />
+  <link rel="alternate" href="https://mingzailao.github.io/index.xml" type="application/rss+xml" title="mingzaialo&#39;s blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://mingzailao.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://mingzailao.github.io/css/syntax.css" /><link rel="stylesheet" href="https://mingzailao.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              <h1>DRAW : A Reccurrent Neural Network for Image Generation</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<div class="ox-hugo-toc toc">
+<div></div>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ul>
+<li><a href="#introduction">Introduction</a>
+
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#introduction">Introduction</a></li>
+</ul></li>
+<li><a href="#the-draw-network">The DRAW Network</a>
+
+<ul>
+<li><a href="#the-draw-network">The DRAW Network</a></li>
+<li><a href="#network-architecture">Network Architecture</a></li>
+<li><a href="#network-architecture">Network Architecture</a></li>
+<li><a href="#network-architecture">Network Architecture</a></li>
+<li><a href="#network-architecture">Network Architecture</a></li>
+<li><a href="#network-architecture">Network Architecture</a></li>
+<li><a href="#network-architecture">Network Architecture</a></li>
+<li><a href="#network-architecture">Network Architecture</a></li>
+<li><a href="#network-architecture">Network Architecture</a></li>
+</ul></li>
+<li><a href="#read-and-write-operations">Read and Write Operations</a>
+
+<ul>
+<li><a href="#read-and-write-operations">Read and Write Operations</a></li>
+<li><a href="#reading-and-writing-without-attention">Reading and Writing Without Attention</a></li>
+<li><a href="#selective-attention-model">Selective Attention Model</a></li>
+<li><a href="#selective-attention-model">Selective Attention Model</a></li>
+<li><a href="#selective-attention-model">Selective Attention Model</a></li>
+<li><a href="#reading-and-writing-with-attention">Reading and Writing With Attention</a></li>
+</ul></li>
+<li><a href="#next-article">Next article</a>
+
+<ul>
+<li><a href="#next-article">Next article</a></li>
+</ul></li>
+<li><a href="#reference">Reference</a></li>
+</ul>
+
+<p></div>
+<!--endtoc--></p>
+
+<h2 id="introduction">Introduction</h2>
+
+<h3 id="introduction-1">Introduction</h3>
+
+<ul>
+<li><p>Core</p>
+
+<p>The core of the DRAW architecture is a pair of recurrent neural networks:</p>
+
+<ul>
+<li>an encoder network that compresses the real images presented during training.</li>
+<li>a decoder that reconstitutes images after receiving codes.</li>
+</ul>
+
+<p>where the loss function is a variational upper bound on the log-likelihood of the data.</p></li>
+</ul>
+
+<h3 id="introduction-2">Introduction</h3>
+
+<ul>
+<li><p>Type</p>
+
+<p>It belongs to the family of variational auto-encoders(hybrid of deep learning and variational inference; generative model)</p></li>
+
+<li><p>Difference</p>
+
+<p>Rather than generating images in a single pass, it iteratively constructs scenes through an accumulation of modifications emitted by the decoder, each of which is observed by the encoder.</p></li>
+</ul>
+
+<h3 id="introduction-3">Introduction</h3>
+
+<ul>
+<li><p>Partial Glimpses</p>
+
+<p>An obvious correlate of generating images step by step is the ability to selectively attend to parts of the scene while ignoring others.</p></li>
+</ul>
+
+<h2 id="the-draw-network">The DRAW Network</h2>
+
+<h3 id="the-draw-network-1">The DRAW Network</h3>
+
+<p><a id="org7eed993"></a></p>
+
+
+<link rel="stylesheet" href="/css/hugo-easy-gallery.css" />
+<div class="box" style="max-width:500px">
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/Net.png" alt="Figure 1: The Structure of the Net(left Conventional Variational Auto-Encoder; right:DRAW Network)"/>
+    </div>
+      <figcaption>
+          <p>Figure 1: The Structure of the Net(left Conventional Variational Auto-Encoder; right:DRAW Network)</p>
+      </figcaption>
+    <a href="/ox-hugo/Net.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="network-architecture">Network Architecture</h3>
+
+<ul>
+<li><p>Notation</p>
+
+<ul>
+<li>\(RNN^{enc}\) : the function enacted by the encoder network at a single time-step.</li>
+<li>\(RNN^{dec}\) : the function enacted by the decoder network at a single time-step.</li>
+<li>\(h_t^{enc}\) : the encoder hidden vector at time \(t\).</li>
+<li>\(h_t^{dec}\) : the decoder hidden vector at time \(t\).</li>
+<li>\(b=W(a)\) : a linear weight matrix with bias from the vector a to the vector b.</li>
+</ul></li>
+</ul>
+
+<h3 id="network-architecture-1">Network Architecture</h3>
+
+<ul>
+<li><p>Feedforward</p>
+
+<p>For each image \(x\) presented to the network, \(c_0,h_0^{enc},h_0^{dec}\) are initialised to learned biases, then:</p>
+
+<p>\begin{eqnarray*}
+\label{eq:2}
+\hat{x}_t &amp; = &amp; x-\sigma(c_{t-1})\\<br />
+r_t&amp;=&amp;read(x_t,\hat{x}_t,h_{t-1}^{dec})\\<br />
+h_t^{enc}&amp;=&amp;RNN^{enc}(h_{t-1}^{enc},[r_t,h_{t-1}^{dec}])\\<br />
+z_t&amp;\sim&amp;Q(Z_t|h_t^{enc})\\<br />
+h_t^{dec}&amp;=&amp;RNN^{dec}(h_{t-1}^{dec},z_t)\\<br />
+c_t&amp;=&amp;c_{t-1}+write(h_t^{dec})
+\end{eqnarray*}</p></li>
+</ul>
+
+<h3 id="network-architecture-2">Network Architecture</h3>
+
+<ul>
+<li><p>Note 1</p>
+
+<p>For \(z_t\sim Q(Z_t|h_t^{enc})\), in this we use a diagonal Gaussian \(\mathcal{N}(Z_t|\mu_t,\sigma_t)\):</p>
+
+<p>\begin{eqnarray*}
+\label{eq:4}
+\mu_t &amp; =&amp;W(h_t^{enc}) \\<br />
+\sigma_t&amp;=&amp;exp(W(h_t^{enc}))
+\end{eqnarray*}</p></li>
+
+<li><p>Note 2</p>
+
+<p>For the read and write operation, we will explain it later.</p></li>
+</ul>
+
+<h3 id="network-architecture-3">Network Architecture</h3>
+
+<ul>
+<li><p>Tensor Shape</p>
+
+<hr />
+
+<table>
+<thead>
+<tr>
+<th>Tensor</th>
+<th>Shape</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>\(x\)</td>
+<td>(\(Batch\_size\),\(B*A\))</td>
+</tr>
+
+<tr>
+<td>\(\hat{x}\)</td>
+<td>(\(Batch\_size\),\(B*A\))</td>
+</tr>
+
+<tr>
+<td>\(r_t\)</td>
+<td>(\(Batch\_size\),\(2*N*N\))</td>
+</tr>
+
+<tr>
+<td>\(h_t^{enc}\)</td>
+<td>(\(Batch\_size\),\(enc\_size\))</td>
+</tr>
+
+<tr>
+<td>\(z_t\)</td>
+<td>(\(Batch\_size\),\(z\_size\))</td>
+</tr>
+
+<tr>
+<td>\(h_t^{dec}\)</td>
+<td>(\(Batch\_size\),\(dec\_size\))</td>
+</tr>
+
+<tr>
+<td>\(write(h_t^{dec})\)</td>
+<td>(\(Batch\_size\),\(B*A\))</td>
+</tr>
+</tbody>
+</table>
+
+<hr /></li>
+</ul>
+
+<h3 id="network-architecture-4">Network Architecture</h3>
+
+<ul>
+<li><p>Reconstruction Loss  \(\mathcal{L}^x\)</p>
+
+<p>The final canvas matrix \(c_T\) is used to parameterise a model \(D(X|c_T)\) of the input data.
+Like we chose Guassian for latent distribution, we chose Bernoulli distribution for reconstruction, the means of the Bernoulli distribution is \(\sigma(c_T)\).</p></li>
+
+<li><p>Reconstruction Loss  \(\mathcal{L}^x\)</p>
+
+<p>The reconstruction loss \(\mathcal{L}^x\) is defined as the negative log probability of \(x\) under \(D\):</p>
+
+<p>\begin{eqnarray*}
+\mathcal{L}^x &amp; =&amp; -log(D(x|c_T))\\<br />
+\end{eqnarray*}</p></li>
+</ul>
+
+<h3 id="network-architecture-5">Network Architecture</h3>
+
+<ul>
+<li><p>Latent Loss \(\mathcal{L}^z\)</p>
+
+<p>The latent loss \(\mathcal{L}^z\) for a sequence of latent distributions \(Q(Z_t|h_t^{enc})\) is defined as the summed KL-divergence of some latent prior \(P(Z_t)\) from \(Q(Z_t|h_t^{enc})\):</p>
+
+<p>\begin{equation*}
+\label{eq:5}
+\mathcal{L}^z=\sum_{t=1}^TKL(Q(Z_t|h_t^{enc})||P(Z_t))
+\end{equation*}</p>
+
+<p>Chose \(P(Z_t)\) : a standard Gaussian with mean zero and standard deviation one,</p>
+
+<p>\begin{eqnarray*}
+\mathcal{L}^z &amp; =&amp; \frac{1}{2}(\sum_{t=1}^T\mu_t^2+\sigma_t^2-\log\sigma_t^2)-\frac{T}{2}\\<br />
+\end{eqnarray*}</p></li>
+</ul>
+
+<h3 id="network-architecture-6">Network Architecture</h3>
+
+<ul>
+<li><p>Loss</p>
+
+<p>\begin{equation}
+\label{eq:8}
+\mathcal{L}=&lt;\mathcal{L}^x+\mathcal{L}^{z}&gt;_{z\sim Q}
+\end{equation}</p></li>
+</ul>
+
+<h3 id="network-architecture-7">Network Architecture</h3>
+
+<ul>
+<li><p>Stochastic Data Generation</p>
+
+<p>An image \(\tilde{x}\) can be generated by a DRAW network by iteratively picking latent
+samples \(\tilde{z}_t\) from the prior \(P\), then running the decoder to update the canvas
+matrix \(\tilde{c}_t\). After \(T\) repetitions of this process the generated image is a
+sample from \(D(X|\tilde{c}_T)\):</p>
+
+<p>\begin{eqnarray*}
+\tilde{z}_t &amp; \sim&amp; P(z_t)\\<br />
+\tilde{h}_t^{dec}&amp;=&amp;RNN^{dec}(\tilde{h}_{t-1}^{dec},\tilde{z}_t)\\<br />
+\tilde{c}_t&amp;=&amp;\tilde{c}_{t-1}+write(\tilde{h}_t^{dec})\\<br />
+\tilde{x}&amp;\sim&amp;D(X|\tilde{c}_T)
+\end{eqnarray*}</p></li>
+</ul>
+
+<h2 id="read-and-write-operations">Read and Write Operations</h2>
+
+<h3 id="read-and-write-operations-1">Read and Write Operations</h3>
+
+<ul>
+<li>Reading and Writing Without Attention</li>
+<li>Selective Attention Model</li>
+<li>Reading and Writing With Attention</li>
+</ul>
+
+<h3 id="reading-and-writing-without-attention">Reading and Writing Without Attention</h3>
+
+<ul>
+<li><p>Reading and Writing Function</p>
+
+<p>Without Partial Glimpses:</p>
+
+<p>\begin{eqnarray*}
+read(x,\hat{x}_t,h_{t-1}^{dec}) &amp; =&amp; [x,\hat{x}_t]\\<br />
+write(h_t^{dec})&amp;=&amp;W(h_t^{dec})
+\end{eqnarray*}</p></li>
+</ul>
+
+<h3 id="selective-attention-model">Selective Attention Model</h3>
+
+<ul>
+<li><p>Notations</p>
+
+<ul>
+<li>\((g_X,g_Y)\) : The grid centre.</li>
+<li>\(\delta\) : stride</li>
+<li>\(\mu_X^i,\mu_Y^j\) : mean location of the filter at row \(i\), column \(j\) in the patch</li>
+</ul>
+
+<p>\begin{eqnarray*}
+\mu_X^i &amp; =&amp; g_X+(i-N/2-0.5)\delta\\<br />
+\mu_Y^j&amp;=&amp;g_Y+(j-N/2-0.5)\delta
+\end{eqnarray*}</p>
+
+<ul>
+<li>\(\sigma^2\) : variance</li>
+<li>\(\gamma\) : a scalar intensity that multiplies the filter response</li>
+</ul></li>
+</ul>
+
+<h3 id="selective-attention-model-1">Selective Attention Model</h3>
+
+<ul>
+<li><p>Get Parameters</p>
+
+<p>Given an \(A\times B\) input image \(x\), all five attention parameters are dynamically
+determined at each time step via a linear transformation of the decoder output \(h^{dec}\):</p>
+
+<p>\begin{eqnarray*}
+(\tilde{g}_X,\tilde{g}_Y,log \sigma^2,log \tilde{\delta},log \gamma) &amp; =&amp; W(h^{dec})\\<br />
+g_X&amp;=&amp;\frac{A+1}{2}(\tilde{g}_X+1)\\<br />
+g_Y&amp;=&amp;\frac{B+1}{2}(\tilde{g}_Y+1)\\<br />
+\delta&amp;=&amp;\frac{max(A,B)-1}{N-1}\tilde{\delta}
+\end{eqnarray*}</p></li>
+</ul>
+
+<h3 id="selective-attention-model-2">Selective Attention Model</h3>
+
+<ul>
+<li><p>Get Filterbank</p>
+
+<p>The horizontal and vertical filterbank matrices \(F_X\) (tensor shape : \(N\times A\)) and \(F_Y\) (tensor shape : \(N\times B\)):</p>
+
+<p>\begin{eqnarray*}
+F_X[i,a] &amp; =&amp; \frac{1}{Z_X}exp(-\frac{(a-\mu_X^i)^2}{2\sigma^2})\\<br />
+F_Y[j,b]&amp;=&amp; \frac{1}{Z_Y}exp(-\frac{(b-\mu_Y^j)^2}{2\sigma^2})
+\end{eqnarray*}</p></li>
+</ul>
+
+<h3 id="reading-and-writing-with-attention">Reading and Writing With Attention</h3>
+
+<ul>
+<li><p>Reading and Writing Function</p>
+
+<p>\begin{equation*}
+read(x,\hat{x}_t,h_{t-1}^{dec}) = \gamma[F_YxF_X^T,F_Y\hat{x}_tF_x^T]
+\end{equation*}</p>
+
+<p>For the write operation, a distinct set of attention parameters \(\hat{\gamma}\), \(\hat{F}_X\), \(\hat{F}_Y\) are extracted from \(h_t^{dec}\), the order of transposition is reversed
+and the intensity is inverted:</p>
+
+<pre><code>                           \begin{eqnarray\*}
+</code></pre>
+
+<p>w_t &amp; =&amp; W(h_t^{dec})\\<br />
+write(h_t^{dec})&amp;=&amp;\frac{1}{\hat{\gamma}}\hat{F}_Y^Tw_t\hat{F}_X
+\end{eqnarray*}</p>
+
+<ul>
+<li>\(w_t\) : the \(N\times N\) writing patch emitted by \(h_t^{dec}\)</li>
+</ul></li>
+</ul>
+
+<h2 id="next-article">Next article</h2>
+
+<h3 id="next-article-1">Next article</h3>
+
+<ul>
+<li><p>About variational auto-encoder</p>
+
+<p>Auto-Encodeing Variational Bayes <sup id="fa0f866d788fe0f33835fab05c19403a"><a href="#2013arXiv1312.6114K" title="Kingma \&amp; Welling, {Auto-Encoding Variational Bayes}, {ArXiv e-prints}, v(), (2013).">2013arXiv1312.6114K</a></sup></p></li>
+</ul>
+
+<h2 id="reference">Reference</h2>
+
+<p>\bibliographystyle{unsrtnat}</p>
+
+<h1 id="bibliography">Bibliography</h1>
+
+<p><a id="2013arXiv1312.6114K"></a>[2013arXiv1312.6114K] Kingma &amp; Welling, {Auto-Encoding Variational Bayes}, <i>{ArXiv e-prints}</i>, <b>()</b>, (2013). <a href="">link</a>. <a href="http://dx.doi.org/">doi</a>. <a href="#fa0f866d788fe0f33835fab05c19403a">↩</a></p>
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://mingzailao.github.io/posts/deep-tracking-seeing-beyond-seeing-using-recurrent-neural-networks/" data-toggle="tooltip" data-placement="top" title="Deep Tracking : Seeing Beyond Seeing Using Recurrent Neural Networks">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://mingzailao.github.io/posts/learning-a-deep-compact-image-representation-for-visual-tracking-code/" data-toggle="tooltip" data-placement="top" title="Code : Learning a Deep Compact Representation for Visial Tracking">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.37.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

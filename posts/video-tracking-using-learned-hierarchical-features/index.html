@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Video Tracking Using Learned Hierarchical Features</title>
+  <meta property="og:title" content="Video Tracking Using Learned Hierarchical Features" />
+  <meta name="twitter:title" content="Video Tracking Using Learned Hierarchical Features" />
+  <meta name="description" content="Tracking System Overview TODO  ASLSA(adaptive structural local sparse appearance model) Tracking System Overview Briefly Introduction of the Tracking System Suppose we have an observation set of target \(x_{1:t}={x_1,\cdots,x_t}\) , a corresponding feature representation set \(z_{1:t}={z_1,\cdots,z_t}\), the target state \(y_t\) can be calculated by:
+\begin{equation} \label{eq:1} y_t=arg\max_{y_t^i} p(y_t^i|z_{1:t}) \end{equation}
+where \(y_t^i\) denotes the \(i^{th}\) sample in the \(t^{th}\) frame.
+Tracking System Overview Briefly Introduction of the Tracking System The posterior probability \(p(y_t|z_{1:t})\) can be inferred by the Bayes’ theorem as follows:">
+  <meta property="og:description" content="Tracking System Overview TODO  ASLSA(adaptive structural local sparse appearance model) Tracking System Overview Briefly Introduction of the Tracking System Suppose we have an observation set of target \(x_{1:t}={x_1,\cdots,x_t}\) , a corresponding feature representation set \(z_{1:t}={z_1,\cdots,z_t}\), the target state \(y_t\) can be calculated by:
+\begin{equation} \label{eq:1} y_t=arg\max_{y_t^i} p(y_t^i|z_{1:t}) \end{equation}
+where \(y_t^i\) denotes the \(i^{th}\) sample in the \(t^{th}\) frame.
+Tracking System Overview Briefly Introduction of the Tracking System The posterior probability \(p(y_t|z_{1:t})\) can be inferred by the Bayes’ theorem as follows:">
+  <meta name="twitter:description" content="Tracking System Overview TODO  ASLSA(adaptive structural local sparse appearance model) Tracking System Overview Briefly Introduction of the Tracking System Suppose we have an observation set of …">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://mingzailao.github.io/posts/video-tracking-using-learned-hierarchical-features/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="mingzaialo&#39;s blog" />
+
+  <meta name="generator" content="Hugo 0.37.1" />
+  <link rel="canonical" href="https://mingzailao.github.io/posts/video-tracking-using-learned-hierarchical-features/" />
+  <link rel="alternate" href="https://mingzailao.github.io/index.xml" type="application/rss+xml" title="mingzaialo&#39;s blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://mingzailao.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://mingzailao.github.io/css/syntax.css" /><link rel="stylesheet" href="https://mingzailao.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              <h1>Video Tracking Using Learned Hierarchical Features</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h2 id="tracking-system-overview">Tracking System Overview</h2>
+
+<h3 id="aslsa--adaptive-structural-local-sparse-appearance-model"><span class="todo TODO_">TODO </span> ASLSA(adaptive structural local sparse appearance model)</h3>
+
+<h3 id="tracking-system-overview-1">Tracking System Overview</h3>
+
+<h4 id="briefly-introduction-of-the-tracking-system">Briefly Introduction of  the Tracking System</h4>
+
+<p>Suppose we have an observation set of target \(x_{1:t}={x_1,\cdots,x_t}\) , a corresponding
+feature representation set \(z_{1:t}={z_1,\cdots,z_t}\), the target state \(y_t\) can be
+calculated by:</p>
+
+<p>\begin{equation}
+\label{eq:1}
+y_t=arg\max_{y_t^i} p(y_t^i|z_{1:t})
+\end{equation}</p>
+
+<p>where \(y_t^i\) denotes the \(i^{th}\) sample in the \(t^{th}\) frame.</p>
+
+<h3 id="tracking-system-overview-2">Tracking System Overview</h3>
+
+<h4 id="briefly-introduction-of-the-tracking-system-1">Briefly Introduction of  the Tracking System</h4>
+
+<p>The posterior probability \(p(y_t|z_{1:t})\) can be inferred by the Bayes’ theorem as follows:</p>
+
+<p>\begin{equation}
+\label{eq:2}
+p(y_t|z_{1:t})\propto p(z_t|y_t)\int p(y_t|y_{t-1})p(y_{t-1}|z_{1:t-1})
+\end{equation}</p>
+
+<p>where \(z_{1:t}\) denotes the feature representation, \(p(y_t|y_{t-1})\) denotes the motion model
+and \(p(z_t|y_t)\) denotes the appearance model.</p>
+
+<h3 id="tracking-system-overview-3">Tracking System Overview</h3>
+
+<h4 id="briefly-introduction-of-the-tracking-system-2">Briefly Introduction of  the Tracking System</h4>
+
+<p>The representations \(z_{1:t}\) can simply use raw pixel values. <sup id="76008570628db031ba8084d83e2ddd6a"><a href="#jia2012visual" title="Jia, Lu \&amp; Yang, Visual tracking via adaptive structural local sparse appearance model, 1822--1829, in in: {Computer vision and pattern recognition (CVPR), 2012 IEEE Conference on}, edited by (2012)">jia2012visual</a></sup>
+In there , we use the learned hierarchical features from raw pixels for tracking.</p>
+
+<h2 id="learning-features-for-video-tracking">Learning Features for Video Tracking</h2>
+
+<h3 id="learning-features-for-video-tracking-1">Learning Features for Video Tracking</h3>
+
+<h4 id="offline-learning">Offline Learning</h4>
+
+<ul>
+<li>Adopt the approach proposed in <sup id="52131ee83a730c9afe9091ede263b55d"><a href="#zou2012deep" title="Zou, Zhu, Yu \&amp; Ng, Deep learning of invariant features via simulated fixations in video, 3212--3220, in in: {Advances in neural information processing systems}, edited by (2012)">zou2012deep</a></sup>  to learn features From a auxiliary dataset.</li>
+<li>We further use a domain adaptation method to adapt pre-learned features according to specific target objects.</li>
+</ul>
+
+<h3 id="learning-features-for-video-tracking-2">Learning Features for Video Tracking</h3>
+
+<h4 id="algorithm">Algorithm</h4>
+
+<ul>
+<li>Input: the previous tracking state \(y_{t-1}\), the existing feature learning parameter \(\hat{\Theta}\) and the exemplar library.</li>
+<li>Apply the affine transformation on \(y_{t-1}\) to obtain a number of tracking states \(y_t^i\) and the corresponding candidate image patches \(x_t^i\).</li>
+<li>Extract feature representations \(z_t^i\) from the candidate image patches \(x_t^i\) under the existing feature learning parameter \(\hat{\Theta}\).</li>
+</ul>
+
+<h3 id="learning-features-for-video-tracking-3">Learning Features for video Tracking</h3>
+
+<h4 id="algorithm-1">Algorithm</h4>
+
+<ul>
+<li>Calculate the posterior probability \(p(y_{t}|z_{1:t})\) according to Equation (<a href="#eq:3">eq:3</a>).</li>
+<li>Predict the tracking state by \(y_{t} = arg\max_{y_{t}^{i}}p(y_t^i|z_{1:t})\).</li>
+<li>Update the feature learning parameter and the exemplar library every \(M\) frames.</li>
+<li>Output: the predicted tracking state \(y_t\), the up-to-date feature learning parameter \(\Theta\) and the up-to-date exemplar library.</li>
+</ul>
+
+<h3 id="pre-learning-generic-features-from-auxiliary-videos">Pre-Learning Generic Features from Auxiliary Videos</h3>
+
+<h4 id="deep-learning-model">Deep Learning model</h4>
+
+<p><a id="org7ca43ef"></a></p>
+
+
+<link rel="stylesheet" href="/css/hugo-easy-gallery.css" />
+<div class="box" style="max-width:500px">
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/Nets.png" alt="Figure 1: The Structure of the Network"/>
+    </div>
+      <figcaption>
+          <p>Figure 1: The Structure of the Network</p>
+      </figcaption>
+    <a href="/ox-hugo/Nets.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="pre-learning-generic-features-from-auxiliary-videos-1">Pre-Learning Generic Features from Auxiliary Videos</h3>
+
+<h4 id="input">Input</h4>
+
+<p>Offline training patch \(x_i\) from the $i$-th frame,</p>
+
+<h4 id="corresponding-learned-feature">Corresponding Learned Feature</h4>
+
+<p>\[z_i=\sqrt{H(Wx_i)^2}\]</p>
+
+<ul>
+<li>\(H\) : pooling matrix.</li>
+<li>\((Wx_i)^2\) : elementwise square on the output of the linear network layer.</li>
+</ul>
+
+<h3 id="pre-training-generic-features-from-auxiliary-videos">Pre-training Generic Features from Auxiliary videos</h3>
+
+<h4 id="how-to-compute-the-parameter--w">How to compute the parameter \(W\):</h4>
+
+<p>The feature transformation matrix \(W\) is learned by solving the following unconstrained
+minimization problem:</p>
+
+<p>\begin{equation}
+\label{eq:3}
+\min_W\lambda\sum_{i=1}^{N-1}||z_i-z_{i-1}||_1+\sum_{i=1}^N||x_i-W^TWx_i||_2^2
+\end{equation}</p>
+
+<ul>
+<li>\(z_{i+1}\) denotes the learned feature from the $(i+1)$-th frame.</li>
+<li>\(N\) is the total length of all video sequences in the auxiliary data.</li>
+</ul>
+
+<h3 id="pre-training-generic-features-from-auxiliary-videos-1">Pre-training Generic Features from Auxiliary videos</h3>
+
+<h4 id="apply-the--w-l-1--to-the--32-times-32--patches">Apply the \(W^{L_1}\) to the \(32\times 32\) patches</h4>
+
+<p>The input of the first layer is the raw pixel values of smaller patches \((16 \times 16)\).</p>
+
+<ul>
+<li>We can learn the feature transformation matrix \(W^{L_1}\) for the first layer by Equation (<a href="#eq:3">eq:3</a>).</li>
+<li>Then, we apply \(W^{L_1}\) to convolve with the larger patches (\(32\times 32\)).</li>
+</ul>
+
+<p>The larger patch is divided into a number of sub-patches (\(16\times 16\))
+We use \(W^{L_1}\) to conduct feature mapping for each sub-patch and concatenate features of all the sub-patches to represent the larger patch.</p>
+
+<ul>
+<li>Next, PCA whitening is applied to the concatenated feature vector.</li>
+</ul>
+
+<h3 id="pre-training-generic-features-from-auxiliary-videos-2">Pre-Training Generic Features from Auxiliary videos</h3>
+
+<h4 id="finally">Finally</h4>
+
+<ul>
+<li>Using the whitened feature vector of the larger patch as the input to the second layer and learn the feature transformation matrix \(W^{L_2}\) for the second layer.</li>
+<li>We concatenate features from two layers as our generic features.</li>
+</ul>
+
+<h3 id="domain-adaption-module">Domain Adaption Module</h3>
+
+<h4 id="the-adapted-feature">The Adapted Feature</h4>
+
+<p>\[z_i^{adp}=\sqrt{H(Wx_i^{obj})^2}\]</p>
+
+<ul>
+<li>\(x_i^{obj}\) : the object image patch in the $i$-th frame of the training data for adaptation.</li>
+<li>\(W\) : feature transformation matrix to be learned.</li>
+</ul>
+
+<h3 id="domain-adaption-module-1">Domain Adaption Module</h3>
+
+<h4 id="adding-regularization-term">Adding Regularization Term</h4>
+
+<p>\begin{eqnarray}
+\label{eq:11}
+W_{adp} &amp; = &amp; arg\min_W\lambda\sum_{i=1}^{N-1}||z_i^{adp}-z_{i+1}^{adp}||_1 \nonumber\\<br />
+ &amp;+ &amp;\gamma\sum_{i=1}^N||Wx_i^{obj}-W_{old}x_i^{obj}||_2^{2} \\<br />
+&amp;+&amp;\sum_{i=1}^N||x_i^{obj}-W^TWx_i^{obj}||_2^2\nonumber
+\end{eqnarray}</p>
+
+<ul>
+<li>\(W_{old}\) : the pre-learned feature transformation matrix.</li>
+</ul>
+
+<h3 id="domain-adaption-module-2">Domain Adaption Module</h3>
+
+<h4 id="analysis">Analysis</h4>
+
+<p>The second term refers to the adaptation module and aims to make the adapted feature close to the old one for the sake of preserving the pre-learned features’ robustness to complicated motion transformations.</p>
+
+<h3 id="optimization-and-online-learning">Optimization and Online Learning</h3>
+
+<h4 id="notes">Notes</h4>
+
+<p>Denotes the objective function of the adaptation module as \(f(X;\Theta,\hat{\Theta})\)</p>
+
+<ul>
+<li>\(X\) : a number of training images of object regions for the adaptation.</li>
+<li>\(\Theta={w_{ij}|i,j=1,\cdots,N}\) :the parameter set representing all entries in the transformation matrix \(W\).</li>
+<li>\(\hat{\Theta}\) : \(W_{old}\).</li>
+</ul>
+
+<h4 id="optimizier">Optimizier</h4>
+
+<p>L-BFGS</p>
+
+<h3 id="optimization-and-online-learning-1">Optimization and Online Learning</h3>
+
+<h4 id="bfgs"><span class="todo TODO_">TODO </span> BFGS</h4>
+
+<p>The Quasi-Newton methods, such as BFGS algorithm,
+need to update the approximate Hessian matrix \(B_k\) at the $i$-th
+iteration to calculate the search direction \(p_k = −B_k^{-1}\nabla f_k\),
+where \(\nabla f_k\) is the derivative of the objective function \(f\) w.r.t. \(\Theta_k\) at the $k$-th iteration.</p>
+
+<h4 id="l-bgfs"><span class="todo TODO_">TODO </span> L-BGFS</h4>
+
+<h2 id="reference">Reference</h2>
+
+<p>\bibliographystyle{unsrtnat}</p>
+
+<h1 id="bibliography">Bibliography</h1>
+
+<p><a id="jia2012visual"></a>[jia2012visual] Jia, Lu &amp; Yang, Visual tracking via adaptive structural local sparse appearance model, 1822&ndash;1829, in in: {Computer vision and pattern recognition (CVPR), 2012 IEEE Conference on}, edited by (2012) <a href="#76008570628db031ba8084d83e2ddd6a">↩</a></p>
+
+<p><a id="zou2012deep"></a>[zou2012deep] Zou, Zhu, Yu &amp; Ng, Deep learning of invariant features via simulated fixations in video, 3212&ndash;3220, in in: {Advances in neural information processing systems}, edited by (2012) <a href="#52131ee83a730c9afe9091ede263b55d">↩</a></p>
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://mingzailao.github.io/posts/word-embedding/" data-toggle="tooltip" data-placement="top" title="Word Embedding">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://mingzailao.github.io/posts/variational-approaches-for-auto-encoding-generative-adversarial-networks/" data-toggle="tooltip" data-placement="top" title="Variational Approaches for Auto-Encoding Generative Adversarial Networks">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.37.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

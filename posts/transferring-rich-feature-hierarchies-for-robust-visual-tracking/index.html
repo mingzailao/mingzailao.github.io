@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Transferring Rich Feature Hierarchies for Robust Visual Tracking</title>
+  <meta property="og:title" content="Transferring Rich Feature Hierarchies for Robust Visual Tracking" />
+  <meta name="twitter:title" content="Transferring Rich Feature Hierarchies for Robust Visual Tracking" />
+  <meta name="description" content="Introduction Introduction Goal Given this single (labeled) instance, the goal is to track the movement of the object in an online manner.
+The Contributions To alleviate the overfitting and drifting problems during online tracking, we pre-train the CNN to distinguish objects from non-objects instead of simply reconstructing the input or performing categorical classification on large-scale datasets with object-level annotations.
+Introduction The Contributions The output of the CNN is a pixel-wise map to indicate the probability that each pixel in the input image belongs to the bounding box of an object.">
+  <meta property="og:description" content="Introduction Introduction Goal Given this single (labeled) instance, the goal is to track the movement of the object in an online manner.
+The Contributions To alleviate the overfitting and drifting problems during online tracking, we pre-train the CNN to distinguish objects from non-objects instead of simply reconstructing the input or performing categorical classification on large-scale datasets with object-level annotations.
+Introduction The Contributions The output of the CNN is a pixel-wise map to indicate the probability that each pixel in the input image belongs to the bounding box of an object.">
+  <meta name="twitter:description" content="Introduction Introduction Goal Given this single (labeled) instance, the goal is to track the movement of the object in an online manner.
+The Contributions To alleviate the overfitting and drifting …">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://mingzailao.github.io/posts/transferring-rich-feature-hierarchies-for-robust-visual-tracking/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="mingzaialo&#39;s blog" />
+
+  <meta name="generator" content="Hugo 0.37.1" />
+  <link rel="canonical" href="https://mingzailao.github.io/posts/transferring-rich-feature-hierarchies-for-robust-visual-tracking/" />
+  <link rel="alternate" href="https://mingzailao.github.io/index.xml" type="application/rss+xml" title="mingzaialo&#39;s blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://mingzailao.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://mingzailao.github.io/css/syntax.css" /><link rel="stylesheet" href="https://mingzailao.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              <h1>Transferring Rich Feature Hierarchies for Robust Visual Tracking</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h2 id="introduction">Introduction</h2>
+
+<h3 id="introduction-1">Introduction</h3>
+
+<h4 id="goal">Goal</h4>
+
+<p>Given this single (labeled) instance, the goal is to track the movement of the object in an online manner.</p>
+
+<h4 id="the-contributions">The Contributions</h4>
+
+<p>To alleviate the overfitting and drifting problems during online tracking, we pre-train the CNN to distinguish objects from non-objects instead of simply reconstructing the input or performing categorical classification on large-scale datasets with object-level annotations.</p>
+
+<h3 id="introduction-2">Introduction</h3>
+
+<h4 id="the-contributions-1">The Contributions</h4>
+
+<p>The output of the CNN is a pixel-wise map to indicate the probability that each pixel in the input image belongs to the bounding box of an object. The key advantages of the pixel-wise output are its induced structured loss and computational scalability.
+We evaluate our proposed method on an open benchmark as well as a challenging non-rigid object tracking dataset and obtain very remarkable results. In particular, we improve the area under curve (AUC) metric of the overlap rate curve from 0.529 to 0.602 for the open benchmark.</p>
+
+<h2 id="the-tracker--so-dlt-structured-output-deep-learning-tracker">The Tracker(SO-DLT: structured output deep learning tracker)</h2>
+
+<h3 id="overview">Overview</h3>
+
+<h4 id="two-stages">Two Stages</h4>
+
+<ul>
+<li>offline pre-training stage</li>
+<li>online fine-tuning and tracking stage</li>
+</ul>
+
+<h4 id="pre-training-stage">Pre-training Stage</h4>
+
+<p>We train a CNN to learn generic object features for distinguishing objects from non-objects.</p>
+
+<h4 id="tracking-stage">Tracking Stage</h4>
+
+<p>Fine-tuning the parameters so that CNN can adapt to the target.</p>
+
+<h3 id="overview-1">Overview</h3>
+
+<h4 id="for-robustness">For Robustness</h4>
+
+<p>Running two CNNs concurrently during online tracking to account for possible mistakes caused by model update.</p>
+
+<h3 id="objectness-pre-training">Objectness Pre-training</h3>
+
+<p><a id="orgca2eb4f"></a></p>
+
+
+<link rel="stylesheet" href="/css/hugo-easy-gallery.css" />
+<div class="box" style="max-width:500px">
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/Nets.png" alt="Figure 1: The Structure of the Net"/>
+    </div>
+      <figcaption>
+          <p>Figure 1: The Structure of the Net</p>
+      </figcaption>
+    <a href="/ox-hugo/Nets.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="objectness-pre-training-1">Objectness Pre-training</h3>
+
+<h4 id="difference-between-the-tracking-model-cnn-and-the-classification-cnn">Difference between the tracking model CNN and the classification CNN</h4>
+
+<p>The output of the CNN is a \(50 \times 50\) probability map rather than a single number. Each output pixel corresponds to a
+\(2\times 2\) region in the original input,with its value representing the probability that the corresponding input region belongs to an object.</p>
+
+<h3 id="objectness-pre-training-2">Objectness Pre-training</h3>
+
+<h4 id="mathematically-loss-function">Mathematically Loss Function</h4>
+
+<p>\begin{equation}
+\label{eq:1}
+\min_{p_{ij}}\sum_{i=1}^{50}\sum_{j=1}^{50}-(1-t_{ij})\log (1-p_{ij})-t_{ij}\log (p_{ij})
+\end{equation}</p>
+
+<ul>
+<li>\(p_{ij}\) : prediction of \((i, j)\) position.</li>
+<li>\(t_{ij}\) : binary variable denotes the ground truth of \((i,j)\) position.</li>
+</ul>
+
+<h3 id="online-tracking">Online Tracking</h3>
+
+<h4 id="before">Before</h4>
+
+<p>Fine-tuning the network using the annotation in the first frame.</p>
+
+<h3 id="online-tracking-1">Online Tracking</h3>
+
+<h4 id="basic-online-tracking-pipeline">Basic online tracking pipeline</h4>
+
+<p>Two CNNs which use different model update strategie.</p>
+
+<p>After fine-tuning using the annotation in the first frame, we crop some image patches from each new frame based on the estimation of the previous frame.</p>
+
+<ul>
+<li>Input : the estimation of the previou frame</li>
+<li>Output : some image patched from each new frame</li>
+</ul>
+
+<p>CNN forward out : probability map for each of the image patches.</p>
+
+<p>The final estimation is then determined by searching for a proper bounding box</p>
+
+<h3 id="bounding-box-determination">Bounding Box Determination</h3>
+
+<h4 id="the-first-step-of-the-tracker-when-a-new-frame-comes">The first step of the tracker when a new frame comes</h4>
+
+<p>Determine the best location and scale of the target.</p>
+
+<ul>
+<li>specify the possible regions that may contain the target and feed the regions into the CNN.</li>
+<li>decide the most probable location of the bounding box based on the probability map.</li>
+</ul>
+
+<h3 id="bounding-box-determination-1">Bounding Box Determination</h3>
+
+<h4 id="search-mechanism">Search Mechanism</h4>
+
+<p>Using too small search regions makes it easy to lose track of a target under fast motion, but using too large search regions may include salient distractors in the background.</p>
+
+<p>\begin{enumerate}
+\item First, all the cropped regions are centered at the estimation of the previous frame.
+\item Then, we start searching with the smallest scale.
+\begin{enumerate}
+\item If the sum over the output probability map is below a
+threshold, then we proceed to the next larger scale.
+\item If we cannot find the object in all scales, we report that
+the target is missing.
+\end{enumerate}</p>
+
+<p>\end{enumerate}</p>
+
+<h3 id="bounding-box-determination-2">Bounding Box Determination</h3>
+
+<h4 id="generating-bounding-box">Generating Bounding Box</h4>
+
+<p>After we have selected the best scale, we need to generate the final bounding box for the current frame.</p>
+
+<ul>
+<li>determine the center of the bounding box.</li>
+<li>estimate its scale change with respect to the previous frame.</li>
+</ul>
+
+<h3 id="bounding-box-determination-3">Bounding Box Determination</h3>
+
+<h4 id="how-to-determine-the-center-of-the-bounding-box-a-density-based-method">How to determine the center of the bounding box : a density based method</h4>
+
+<ul>
+<li>First we set a threshold \(\tau_1\) for the corresponding probability map and finds a bounding box with all probability values inside above the threshold.</li>
+<li>Next, the bounding box location under the current scale is estimated by taking an average over the different values of \(\tau_1\).</li>
+</ul>
+
+<h3 id="bounding-box-determination-4">Bounding Box Determination</h3>
+
+<h4 id="how-to-find-a-proper-scale-after-we-get-the-center-of-the-bounding-box">How to find a proper scale after we get the center of the bounding box</h4>
+
+<p>Let \(P\) denote the output probability map and \(p_{ij}\) the \((i,j)\) th element in \(P\), the score of the bounding box for top-left corner \((x, y)\), width \(w\) and height \(h\):</p>
+
+<p>\begin{equation}
+\label{eq:2}
+c=\sum_{i=x}^{x+w-1}\sum_{j=y}^{y+h-1}(p_{ij}-\epsilon)\cdot w\cdot h
+\end{equation}</p>
+
+<p>where balance the scale of the bounding box. we also repeat with several \(\epsilon\) values and average their results for robust estimation.</p>
+
+<h3 id="differentially-paced-fine-tuning">Differentially-paced Fine-tuning</h3>
+
+<h4 id="key-using-two-cnns-during-online-tracking">Key :using two CNNs during online tracking</h4>
+
+<ul>
+<li>CNN_S account for short-term appearance.</li>
+<li>CNN_L account for long-term appearance.</li>
+</ul>
+
+<h4 id="first">First</h4>
+
+<p>CNN_S and CNN_L are fine-tuned in the first frame of a video.</p>
+
+<h4 id="afterwords">Afterwords</h4>
+
+<p>CNN_L is tuned conservatively while CNN_S is tuned aggressively.</p>
+
+<h4 id="final">Final</h4>
+
+<p>The final estimation is then determined by the more confident one.</p>
+
+<h3 id="differentially-paced-fine-tuning-1">Differentially-paced Fine-tuning</h3>
+
+<h4 id="notes-for-determined-the-cnns-or-cnnl">Notes for determined the CNNS or CNNL</h4>
+
+<p>There exist more advanced model update methods, the simple
+scheme works quite well in practice.</p>
+
+<h4 id="details">Details</h4>
+
+<p>CNN_S is updated when there exists a negative example such
+that</p>
+
+<p>\begin{equation}
+\label{eq:3}
+\sum_{i=1}^{50}\sum_{j=1}^{50}p_{ij}&gt;\tau_2
+\end{equation}</p>
+
+<h3 id="differentially-paced-fine-tuning-2">Differentially-paced Fine-tuning</h3>
+
+<h4 id="details-1">Details</h4>
+
+<p>CNN_L is updated if :</p>
+
+<p>\begin{equation}
+\label{eq:4}
+\sum_{i=x}^{x+w-1}\sum_{j=y}^{y+h-1}p_{ij}&gt;\tau_3\cdot w\cdot h
+\end{equation}</p>
+
+<p>where \((x,y,w,h)\) denotes the output target bounding box in the current frame.</p>
+
+<h3 id="differentially-paced-fine-tuning-3">Differentially-paced Fine-tuning</h3>
+
+<h4 id="details-2">Details</h4>
+
+<p>In each update, we need to collect both positive and negative examples.</p>
+
+<ul>
+<li>For positive examples, we sample them in four scales based on the estimation of the previous frame, Random translation is also introduced to eliminate the learning bias to the center location.</li>
+<li>For negative examples, we crop eight non-overlapping bounding boxes around the target in different directions in two scales</li>
+</ul>
+
+<h2 id="experiments">Experiments</h2>
+
+<h3 id="implementation-details">Implementation Details</h3>
+
+<h4 id="for-a-pre-training-of-cnn">For a Pre-training of CNN</h4>
+
+<ul>
+<li>Start with a learning rate of \(10^{−7}\) with momentum \(0.9\) and decrease the learning rate once every \(5\) epochs. We train for about \(15\) epochs in total.</li>
+<li>To alleviate overfitting, a weight decay of \(5\times 10^{-4}\) is used for each layer and the first fully connected layer is regularized with a dropout rate of \(0.5\).</li>
+</ul>
+
+<h3 id="implementation-details-1">Implementation Details</h3>
+
+<h4 id="for-fine-tuning">For Fine-tuning</h4>
+
+<ul>
+<li>we use a larger learning rate of \(2\times 10^{-7}\) with a smaller momentum of \(0.5\).</li>
+<li>For the first frame, we fine-tune each CNN for \(20\) iterations.</li>
+<li>For subsequent frames, we only fine-tune for one iteration.</li>
+</ul>
+
+<h3 id="implementation-details-2">Implementation Details</h3>
+
+<h4 id="others">Others</h4>
+
+<ul>
+<li>\(\tau_1\) ranges from 0.1 to 0.7 with a step size 0.05.</li>
+<li>\(\tau_2\) (the threshold of sum of confidence for negative examples) :100.</li>
+<li>\(\tau_3\) (the threshold for CNNL) :0.8</li>
+<li>\(\epsilon\) (the normalized constant for searching proper scales) range from 0.55 to 0.6 with a step size of 0.025.</li>
+</ul>
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://mingzailao.github.io/posts/tutorial-deep-reinforcement-learning/" data-toggle="tooltip" data-placement="top" title="Tutorial: Deep Reinforcement Learning">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://mingzailao.github.io/posts/towards-principled-methods-for-training-generative-adversarial-networks/" data-toggle="tooltip" data-placement="top" title="Towards Principled Methods for Training Generative Adversarial Networks">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.37.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

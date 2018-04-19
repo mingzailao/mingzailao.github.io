@@ -3,15 +3,57 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://mingzailao.github.io/</loc>
+    <loc>https://mingzailao.github.io/posts/introduction-to-nlp-and-deep-learning/</loc>
+    <lastmod>2017-05-17T00:00:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/todo/semi-supervised-learning-with-ladder-networks/</loc>
+    <lastmod>2016-12-07T00:00:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/generative-adversarial-parallelization/</loc>
+    <lastmod>2016-11-22T00:00:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/infogan-interpretable-representation-learning-by-information-maximizing-generative-adversarial-nets/</loc>
+    <lastmod>2016-11-21T00:00:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/notes-for-cnn/</loc>
+    <lastmod>2016-11-20T00:00:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/todo/notes-for-cnn/</loc>
+    <lastmod>2016-11-20T00:00:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/unsupervised-representation-learning-with-deep-convolutional-generative-adversarial-networks/</loc>
+    <lastmod>2016-11-04T00:00:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/visualizing-and-understanding-recurrent-networks/</loc>
+    <lastmod>2016-10-11T00:00:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/prml/</loc>
   </url>
   
   <url>
     <loc>https://mingzailao.github.io/posts/</loc>
+    <lastmod>2017-05-17T00:00:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mingzailao.github.io/posts/f-gan-training-generative-neural-samplers-using-variational-divergence-minimization/</loc>
+    <loc>https://mingzailao.github.io/todo/</loc>
+    <lastmod>2016-12-07T00:00:00+08:00</lastmod>
   </url>
   
   <url>
@@ -27,13 +69,238 @@
   </url>
   
   <url>
+    <loc>https://mingzailao.github.io/posts/adversarial-neural-machine-translation/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/adversarially-learned-inference/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/todo/an-architecture-for-deep-hierarchical-generative-models/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/todo/attention-is-all-you-need/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/auto-encoding-variational-bayes/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/autoencoding-beyond-pixels-using-a-learned-similarity-metric/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/batch-normalization/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/c-rnn-gan-continuous-recurrent-neural-networks-with-adversarial-training/</loc>
+  </url>
+  
+  <url>
     <loc>https://mingzailao.github.io/categories/</loc>
     <priority>0</priority>
   </url>
   
   <url>
+    <loc>https://mingzailao.github.io/posts/cmake-tutorial/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/learning-a-deep-compact-image-representation-for-visual-tracking-code/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/draw-a-recurrent-neural-network-for-image-generation/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/todo/lecture-1/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/todo/deep-reinforcement-learning-based-image-captioning-with-embedding-reward/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/deep-tracking-seeing-beyond-seeing-using-recurrent-neural-networks/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/todo/deep-visual-semantic-alignments-for-generating-image-descriptions/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/directed-gms-bayesian-networks/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/energy-based-generative-adversarial-networks/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/first-step-toward-model-free-anonymous-object-tracking-with-recurrent-neural-networks/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/gan-and-vae-from-an-optimal-transport-point-of-view/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/generative-adversarial-nets/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/generative-adversarial-networks-as-variational-training-of-energy-based-models/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/git-tutorial/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/glove-global-vectors-for-word-representation/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/hierarchical-variational-models/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/improved-techniques-for-training-gans/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/improving-generative-adversarial-networks-with-denoising-feature-matching/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/introduction/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/todo/knowing-when-to-look-adaptive-attention-via-a-visual-sentinel-for-image-captioning/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/layer-normalization/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/learning-to-generate-with-memory/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/learning-to-refine-object-segments/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/lightrnn-memory-and-computation-efficient-recurrent-neural-networks/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/todo/maxout-networks/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/mobilenets-efficient-convolutional-neural-networks-for-mobile-vision-applications/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/neural-style-transfor/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/todo/optimal-transport/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/prml/pattern-recognition-and-machine-learning-2/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/prml/pattern-recognition-and-machine-learning-1/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/todo/predicting-deeper-into-the-future-of-semantic-segmentation/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/ratm-recurrent-attentive-tracking-model/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/todo/sca-cnn-spatial-and-channel-wise-attention-in-convolutional-networks-for-image-captioning/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/self-normalizing-neural-networks/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/show-and-tell-a-neural-image-caption-generator/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/show-attend-and-tell-neural-image-caption-generation-with-visual-attention/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/shufflenet-an-extremely-efficient-convolutional-neural-network-for-mobile-devices/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/</loc>
+    <lastmod>2017-05-17T00:00:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/todo/skeleton-key-image-captioning-by-skeleton-attribute-decomposition/</loc>
+  </url>
+  
+  <url>
     <loc>https://mingzailao.github.io/tags/</loc>
     <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/towards-principled-methods-for-training-generative-adversarial-networks/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/transferring-rich-feature-hierarchies-for-robust-visual-tracking/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/tutorial-deep-reinforcement-learning/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/unsupervised-learning-using-generative-adversarial-training-and-clustering/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/variational-approaches-for-auto-encoding-generative-adversarial-networks/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/video-tracking-using-learned-hierarchical-features/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/word-embedding/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/b-gan-unified-framework-of-generative-adversarial-networks/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mingzailao.github.io/posts/f-gan-training-generative-neural-samplers-using-variational-divergence-minimization/</loc>
   </url>
   
 </urlset>

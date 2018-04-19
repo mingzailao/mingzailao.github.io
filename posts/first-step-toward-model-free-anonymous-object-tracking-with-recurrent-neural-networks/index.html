@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>First Step Toward Model-free, Anonymous Object Tracking with Recurrent Neural Networks</title>
+  <meta property="og:title" content="First Step Toward Model-free, Anonymous Object Tracking with Recurrent Neural Networks" />
+  <meta name="twitter:title" content="First Step Toward Model-free, Anonymous Object Tracking with Recurrent …" />
+  <meta name="description" content="Table of Contents  Introduction  Introduction  Background  Filtering-based Visual Object Tracking Filtering-based Visual Object Tracking Filtering-based Visual Object Tracking Tracking-by-Detection Tracking-by-Detection  Visual Object Tracking with Deep Neural Networks  Visual Object Tracking with Deep Neural Networks Visual Object Tracking with Deep Neural Networks Model Description Model Description Model Descripteion Model Description Model Description Preprocessing Input Frame xt Preprocessing Input Frame \(x_t\)  Training  Training Training Training Training Training Characteristics Data Generation Data Generation Data Generation Data Generation Evaluate Model by Two Dataset Novel Test Digit Classes Generalization to Longer Video Sequence  Models and Training  Models and Training Network Architectures Network Architectures Training Details  Result and Analysis  Result and Analysis  Code Analysis  Data Generation">
+  <meta property="og:description" content="Table of Contents  Introduction  Introduction  Background  Filtering-based Visual Object Tracking Filtering-based Visual Object Tracking Filtering-based Visual Object Tracking Tracking-by-Detection Tracking-by-Detection  Visual Object Tracking with Deep Neural Networks  Visual Object Tracking with Deep Neural Networks Visual Object Tracking with Deep Neural Networks Model Description Model Description Model Descripteion Model Description Model Description Preprocessing Input Frame xt Preprocessing Input Frame \(x_t\)  Training  Training Training Training Training Training Characteristics Data Generation Data Generation Data Generation Data Generation Evaluate Model by Two Dataset Novel Test Digit Classes Generalization to Longer Video Sequence  Models and Training  Models and Training Network Architectures Network Architectures Training Details  Result and Analysis  Result and Analysis  Code Analysis  Data Generation">
+  <meta name="twitter:description" content="Table of Contents  Introduction  Introduction  Background  Filtering-based Visual Object Tracking Filtering-based Visual Object Tracking Filtering-based Visual Object Tracking Tracking-by-Detection …">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://mingzailao.github.io/posts/first-step-toward-model-free-anonymous-object-tracking-with-recurrent-neural-networks/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="mingzaialo&#39;s blog" />
+
+  <meta name="generator" content="Hugo 0.37.1" />
+  <link rel="canonical" href="https://mingzailao.github.io/posts/first-step-toward-model-free-anonymous-object-tracking-with-recurrent-neural-networks/" />
+  <link rel="alternate" href="https://mingzailao.github.io/index.xml" type="application/rss+xml" title="mingzaialo&#39;s blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://mingzailao.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://mingzailao.github.io/css/syntax.css" /><link rel="stylesheet" href="https://mingzailao.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              <h1>First Step Toward Model-free, Anonymous Object Tracking with Recurrent Neural Networks</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<div class="ox-hugo-toc toc">
+<div></div>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ul>
+<li><a href="#introduction">Introduction</a>
+
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+</ul></li>
+<li><a href="#background">Background</a>
+
+<ul>
+<li><a href="#filtering-based-visual-object-tracking">Filtering-based Visual Object Tracking</a></li>
+<li><a href="#filtering-based-visual-object-tracking">Filtering-based Visual Object Tracking</a></li>
+<li><a href="#filtering-based-visual-object-tracking">Filtering-based Visual Object Tracking</a></li>
+<li><a href="#tracking-by-detection">Tracking-by-Detection</a></li>
+<li><a href="#tracking-by-detection">Tracking-by-Detection</a></li>
+</ul></li>
+<li><a href="#visual-object-tracking-with-deep-neural-networks">Visual Object Tracking with Deep Neural Networks</a>
+
+<ul>
+<li><a href="#visual-object-tracking-with-deep-neural-networks">Visual Object Tracking with Deep Neural Networks</a></li>
+<li><a href="#visual-object-tracking-with-deep-neural-networks">Visual Object Tracking with Deep Neural Networks</a></li>
+<li><a href="#model-description">Model Description</a></li>
+<li><a href="#model-description">Model Description</a></li>
+<li><a href="#model-descripteion">Model Descripteion</a></li>
+<li><a href="#model-description">Model Description</a></li>
+<li><a href="#model-description">Model Description</a></li>
+<li><a href="#preprocessing-input-frame-xt">Preprocessing Input Frame xt</a></li>
+<li><a href="#preprocessing-input-frame--x-t">Preprocessing Input Frame \(x_t\)</a></li>
+</ul></li>
+<li><a href="#training">Training</a>
+
+<ul>
+<li><a href="#training">Training</a></li>
+<li><a href="#training">Training</a></li>
+<li><a href="#training">Training</a></li>
+<li><a href="#training">Training</a></li>
+<li><a href="#training">Training</a></li>
+<li><a href="#characteristics">Characteristics</a></li>
+<li><a href="#data-generation">Data Generation</a></li>
+<li><a href="#data-generation">Data Generation</a></li>
+<li><a href="#data-generation">Data Generation</a></li>
+<li><a href="#data-generation">Data Generation</a></li>
+<li><a href="#evaluate-model-by-two-dataset">Evaluate Model by Two Dataset</a></li>
+<li><a href="#novel-test-digit-classes">Novel Test Digit Classes</a></li>
+<li><a href="#generalization-to-longer-video-sequence">Generalization to Longer Video Sequence</a></li>
+</ul></li>
+<li><a href="#models-and-training">Models and Training</a>
+
+<ul>
+<li><a href="#models-and-training">Models and Training</a></li>
+<li><a href="#network-architectures">Network Architectures</a></li>
+<li><a href="#network-architectures">Network Architectures</a></li>
+<li><a href="#training-details">Training Details</a></li>
+</ul></li>
+<li><a href="#result-and-analysis">Result and Analysis</a>
+
+<ul>
+<li><a href="#result-and-analysis">Result and Analysis</a></li>
+</ul></li>
+<li><a href="#code-analysis">Code Analysis</a>
+
+<ul>
+<li><a href="#data-generation">Data Generation</a></li>
+</ul></li>
+</ul>
+
+<p></div>
+<!--endtoc--></p>
+
+<h2 id="introduction">Introduction</h2>
+
+<h3 id="introduction-1">Introduction</h3>
+
+<ul>
+<li><p>Goal</p>
+
+<p>Build a model that can track an anonymous object in an image sequence</p></li>
+
+<li><p>Key</p>
+
+<ul>
+<li>Integrates convolutional network with recurrent network.</li>
+<li>Deploys attention at multiple representation layers.</li>
+</ul></li>
+</ul>
+
+<h2 id="background">Background</h2>
+
+<h3 id="filtering-based-visual-object-tracking">Filtering-based Visual Object Tracking</h3>
+
+<ul>
+<li><p>Filtering-based Visual Object Tracking</p>
+
+<p>In filtering-based object tracking, it is natural to establish a probabilistic graphical model, or often referred to as a state-space model, by defining</p>
+
+<ol>
+<li>Observationmodel: \[p(\phi(x_t)|z_t)\]</li>
+<li>Transition model: \[p(z_t|z_{t-1})\]</li>
+</ol>
+
+<p>where \(\phi(x_t)\) and \(z_t\) are the observation and the latent state at time \(t\).</p></li>
+</ul>
+
+<h3 id="filtering-based-visual-object-tracking-1">Filtering-based Visual Object Tracking</h3>
+
+<ul>
+<li><p>Kalman filter</p>
+
+<p>Kalman filter assume that both the observation and transition models are Gaussian distributions such that</p>
+
+<p>\begin{equation*}
+\label{eq:2}
+\phi(x_t)|z_t\sim \mathcal{N}(W_xz_t,C_x),z_t|z_{t-1}\sim\mathcal{N}(W_zz_{t-1},C_z)
+\end{equation*}</p>
+
+<p>where \(\mathcal{N}(\mu,C)\) is a Guassian distribution with its mean \(\mu\) and convariance matrix \(C\). once the model is defined, the goal is to infer the following posterior distribution:</p>
+
+<p>\begin{equation}
+\label{eq:3}
+p(z_t|\phi(x_1),\phi(x_2),\cdots,\phi(x_t))
+\end{equation}</p></li>
+</ul>
+
+<h3 id="filtering-based-visual-object-tracking-2">Filtering-based Visual Object Tracking</h3>
+
+<ul>
+<li><p>Kalman filter</p>
+
+<p>In other words, we are try to find the distribution over the potential object location in the $t$-th video frame given the detected objects(represented by the feature vectors) up to the $(t-1)$-th frame.</p></li>
+</ul>
+
+<h3 id="tracking-by-detection">Tracking-by-Detection</h3>
+
+<ul>
+<li><p>Key</p>
+
+<p>It is a discriminative model that directly approximates the posterior distrobution over the underlying location/state of the object in Eq. (<a href="#eq:3">eq:3</a>)
+Limitations</p>
+
+<ul>
+<li>drifting</li>
+<li>occlusion</li>
+</ul></li>
+</ul>
+
+<h3 id="tracking-by-detection-1">Tracking-by-Detection</h3>
+
+<ul>
+<li><p>Reason</p>
+
+<p>Assuming Markov property over the poterior distribution in Eq. (<a href="#eq:3">eq:3</a>), meaning</p>
+
+<p>\begin{equation}
+\label{eq:4}
+p(z_t|\phi(x_1),\phi(x_2),\cdots,\phi(x_t))\approx p(x_t|\phi(x_t-1))
+\end{equation}</p>
+
+<p>Because the tracking model considers only two consecutive frame(or more precisely concentrates heavily on a latest pair of consecutive frames only), it is not possible for the model to adjust dor accumulated error over many subsequent frames.</p></li>
+</ul>
+
+<h2 id="visual-object-tracking-with-deep-neural-networks">Visual Object Tracking with Deep Neural Networks</h2>
+
+<h3 id="visual-object-tracking-with-deep-neural-networks-1">Visual Object Tracking with Deep Neural Networks</h3>
+
+<ul>
+<li><p>Aim</p>
+
+<p>Building a system that avoids the limitations of the conventional visual tracking systems.</p></li>
+
+<li><p>Nets</p>
+
+<p>Deep Recurrent Network</p>
+
+<ul>
+<li>input : raw video frames of pixel intensities.</li>
+<li>output: coordinates of a bounding box of an object being tracked for each frame.</li>
+</ul></li>
+</ul>
+
+<h3 id="visual-object-tracking-with-deep-neural-networks-2">Visual Object Tracking with Deep Neural Networks</h3>
+
+<ul>
+<li><p>Mathematic</p>
+
+<p>The proposed model factorizes the full tracking probability into:</p>
+
+<p>\begin{equation}
+\label{eq:5}
+p(z_1,z_2,\cdots,z_t|x_1,x_2,\cdots,x_t)=\prod_{t=1}^Tp(z_t|z_{&lt;t},x_{\le t})
+\end{equation}</p>
+
+<p>where \(z_t\) and \(x_t\) are the location of the object and on input frame, respectively, at time t.</p></li>
+</ul>
+
+<h3 id="model-description">Model Description</h3>
+
+<ul>
+<li><p>Technological Process</p>
+
+<p>At each time step \(t\), an input frame \(x_t\) is first processed by a convolutional network,</p>
+
+<p>\begin{equation}
+\label{eq:6}
+\phi(x_t)=conv_{\theta_c}(m(x_t,\tilde{z}_{t-1}))
+\end{equation}</p>
+
+<ul>
+<li>\(conv_{\theta_c}\) : a convolutional network with its paramaters \(\theta_c\).</li>
+<li>\(m(\cdot,cdot)\) : a preprocessing routine for the raw frame.</li>
+<li>\(\tilde{z}_{t-1}\) : the predicted location of an object from the previous frame \(x_{t−1}\).</li>
+</ul></li>
+</ul>
+
+<h3 id="model-description-1">Model Description</h3>
+
+<ul>
+<li><p>Technological Process</p>
+
+<p>This feature vector of the input frame is fed into a recurrent
+neural network. The recurrent neural network updates its
+internal memory vector \(h_t\) based on the previous memory
+vector \(h_{t-1}\) , previous location of an object \(\tilde{z}_{t-1}\) and the current
+frame \(\phi(x_t)\):</p>
+
+<p>\begin{equation}
+\label{eq:7}
+h_t=rec_{\theta_c}(h_{t-1},\tilde{z}_{t-1},\phi(x_t))
+\end{equation}</p>
+
+<ul>
+<li>\(rec_{\theta_c}\) : a recurrent activation function such as gated recurrent units, LSTM units or a simple sigmoid function, parametrized with paramaters \(\theta_r\) .</li>
+</ul></li>
+</ul>
+
+<h3 id="model-descripteion">Model Descripteion</h3>
+
+<ul>
+<li><p>Technological Process</p>
+
+<p>This formulation lets the recurrent neural network to summarize the history of predicted locations \(z_{&lt;t}\) and input frames \(x_{\le t}\) up to time step \(t\).</p></li>
+</ul>
+
+<h3 id="model-description-2">Model Description</h3>
+
+<ul>
+<li><p>Technological Process</p>
+
+<p>With the new updated memory state \(h_t\), the recurrent neural network computes the predictive distribution over the object’s location(See Eq. (<a href="#eq:3">eq:3</a>)).</p>
+
+<p>\begin{equation}
+\label{eq:8}
+p(z_t|z_{&lt;t},x_{\le t})=out_{\theta_{o}}(h_t)
+\end{equation}</p>
+
+<ul>
+<li>\(\theta_o\): a set of paramaters defining the output neural network.</li>
+</ul>
+
+<p>We take the mean of this predictive distribution as a predicted location \(\tilde{z}_t\) at time \(t\).</p>
+
+<p>\begin{equation}
+\label{eq:9}
+\tilde{z}_t=\mathbb{E}[z|z_{&lt;t},x_{\le t}]
+\end{equation}</p></li>
+</ul>
+
+<h3 id="model-description-3">Model Description</h3>
+
+<ul>
+<li><p>Preprocessing Input Frame \(x_t\)</p>
+
+<p>This part explain the method that got \(m(x_t ,\tilde{z}_{t-1})\) in Eq. (<a href="#eq:6">eq:6</a>)
+The most obvious and straightforward choice is to simply have an identity function:
+In this case, we use an identity function to preprocess each input frame \(x_t\):</p>
+
+<p>\begin{equation}
+\label{eq:10}
+m(x_t,\tilde{z}_{t-1})=x_t
+\end{equation}</p></li>
+
+<li><p>One Possible Choice : attentive weight scheme</p>
+
+<p>Weighting each pixel of the raw frame \(x_t\) such that a region surrounding the predicted location of an object in the previous frame is given higher weights.</p></li>
+</ul>
+
+<h3 id="preprocessing-input-frame-xt">Preprocessing Input Frame xt</h3>
+
+<ul>
+<li><p>The Recurrent Network Outputs</p>
+
+<ol>
+<li>\((x_0 , y_0)\) : top-left corner.</li>
+<li>\((x_1, y_1)\) : bottom-right corner.</li>
+<li>\(s\) : log-scale .</li>
+<li>\(r\) : log-ratio between the stride and the image size.</li>
+<li>\(a\): log-amplitude.</li>
+</ol></li>
+</ul>
+
+<h3 id="preprocessing-input-frame--x-t">Preprocessing Input Frame \(x_t\)</h3>
+
+<ul>
+<li><p>The weights of each pixel</p>
+
+<p>Given these outputs, we weight each pixel using a mixture of NN Guassians. Each Guassian \((i,j)\) is centered at</p>
+
+<p>\begin{equation}
+\label{eq:11}
+(\frac{x_0+x_1}{2}+(i-\frac{N}{2}-0.5)\exp( r)K,\frac{y_0+y_1}{2}+(j-\frac{N}{2}-0.5)\exp( r)K)
+\end{equation}</p>
+
+<p>and has the standard deviation of \(\exp(s)K\) , \(K\) corresponds to the width or height
+of a frame. These Gaussians are used to form a mask \(G(z_{t-1})\) which is used as</p>
+
+<p>\begin{equation}
+\label{eq:12}
+m(x_t,z_{t-1})=x_t\cdot G(z_{t-1})
+\end{equation}</p></li>
+</ul>
+
+<h2 id="training">Training</h2>
+
+<h3 id="training-1">Training</h3>
+
+<ul>
+<li><p>Optimizier</p>
+
+<p>Stochastic gradient descent (SGD)</p></li>
+
+<li><p>Steps</p>
+
+<ul>
+<li>Select a random background image from a large set of image.</li>
+<li>Randomly choose a shape of an object from a predefined set of generic shapes.</li>
+<li>Create a sequence of frames by randomly moving the selected object with cluttered background and foreground.</li>
+<li>(Optional) Add various types of noise, including motion and scale change of both object and clutters.</li>
+</ul></li>
+</ul>
+
+<h3 id="training-2">Training</h3>
+
+<ul>
+<li><p>Training examples</p>
+
+<p>a pair of a video clip, which contains a randomly chosen background and a moving shape, and a sequence of ground-truth locations i.e. \(((x_1, z_1^*),\cdots , (x_T,z_T^{*}))\).</p></li>
+
+<li><p>Log-likelihood</p>
+
+<p>\begin{equation}
+\label{eq:13}
+\mathcal{L}(\theta_c,\theta_r,\theta_o)=\frac{1}{N}\sum_{n=1}^N\sum_{t=k+1}^T\log p(z_t^n=z_t^{*,n}|z_{&lt;t}^{*,n},x_{\le t}^n)
+\end{equation}</p></li>
+</ul>
+
+<h3 id="training-3">Training</h3>
+
+<ul>
+<li><p>Another training criterion is possible</p>
+
+<p>If our prediction \(\tilde{z}_t\) as each step \(t\) is a differentiable function,
+we let the model freely track an object given a training video sequence and maximize the log-probability of the ground-truth location only at the last frame</p>
+
+<p>\begin{equation}
+\label{eq:14}
+\mathcal{L}(\theta_c,\theta_r,\theta_o)=\frac{1}{N}\sum_{n=1}^N\log p(z_T^n=z_T^{*,n}|\tilde{z}_{&lt;T}^{n},x_{\le T}^n)
+\end{equation}</p>
+
+<p>For preliminary experiments, using this strategy.</p></li>
+</ul>
+
+<h3 id="training-4">Training</h3>
+
+<ul>
+<li><p>A small problem for the strategy</p>
+
+<p>There is no guarantee that any intermediate prediction made by the model correspond to the correct object location.</p></li>
+
+<li><p>Solution: adding the auxiliary cost</p>
+
+<p>\begin{equation}
+\label{eq:15}
+\mathcal{L}(\theta_c,\theta_r,\theta_o)=\frac{1}{N}\sum_{n=1}^N\sum_{t=k+1}^T\log p(z_t^n=z_t^{*,n}|z_{&lt;t}^{*,n},x_{\le t}^n)
+\end{equation}</p></li>
+</ul>
+
+<h3 id="training-5">Training</h3>
+
+<ul>
+<li><p>Predicting the \(\tilde{z}_t\)</p>
+
+<p>In that course, the model predict two points \(z_t=[x_0, y_0, x_1, y_1]\) in the input frame.
+We use a Gaussian distribution with an fixed, identity covariance matrix,
+whose mean is computed from \(h_t\), In order to reduce variance,
+we do not sample from this distribution, but simply take the mean as the prediction:</p>
+
+<p>\begin{equation}
+\label{eq:16}
+\tilde{z}_t=\mathbb{E}[z_t|\tilde{z}_{&lt;T},x_{\le T}]
+\end{equation}</p></li>
+</ul>
+
+<h3 id="characteristics">Characteristics</h3>
+
+<ul>
+<li><p>First</p>
+
+<p>The proposed model is trained end-to-end, including object representation extraction, object detection and object tracking.</p></li>
+
+<li><p>Second</p>
+
+<p>The proposed model works with anonymous objects by design.</p></li>
+
+<li><p>Third</p>
+
+<p>Training is done fully off-line.</p></li>
+</ul>
+
+<h3 id="data-generation">Data Generation</h3>
+
+<ul>
+<li><p>Source</p>
+
+<p>All the datasets are based on the cluttered MNIST(<a href="https://github.com/deepmind/mnist-cluttered">https://github.com/deepmind/mnist-cluttered</a>).</p>
+
+<p>Each video sequence used for training consists of 20 frames, and each frame
+is \(100\times 100\) large.</p>
+
+<p>The cluttered MNIST was chosen as a basis of generating further datasets,
+as one of the most important criterion we aim to check with the proposed approach is the
+robustness to noise.</p></li>
+</ul>
+
+<h3 id="data-generation-1">Data Generation</h3>
+
+<ul>
+<li><p>Noise</p>
+
+<p>In order to make sure that these clutters acts as both background noise and as objects hindering the sight of the models, we put some clutters in a background layer and the others in a foreground layer (overshadowing the target object.) Furthermore, the clutters move rather than stay in the initial positions to make it more realistic.</p></li>
+</ul>
+
+<h3 id="data-generation-2">Data Generation</h3>
+
+<ul>
+<li><p>Object Moving</p>
+
+<p>The target has a random initial velocity \((v_{x_0} , v_{y_0})\) and position \((x_0,y_0)\), at each time frame, the position is changed by \((\delta x_t,\delta y_t) = (kv_{x,t−1},kv{y,t−1})\).</p>
+
+<ul>
+<li>\(k\) : hyper-parameter (0.1 in our experiments) correlated to the frame rate.</li>
+<li>\((\delta v_{x,t},\delta v_{y,t}) \sim \mathcal{N}(0,v&rsquo;I)\) where \(v&rsquo;=0.1\)</li>
+</ul></li>
+</ul>
+
+<h3 id="data-generation-3">Data Generation</h3>
+
+<ul>
+<li><p>Other Transformations</p>
+
+<p>For example, at each time step, the target changes its scale by
+a random factor \(f = p\exp(\tilde{f})\), where \(\tilde{f} \sim  U(−0.5,0.5)\) and
+\(p=0.1\) controls the magnitude of scale change.</p></li>
+</ul>
+
+<h3 id="evaluate-model-by-two-dataset">Evaluate Model by Two Dataset</h3>
+
+<p>We evaluate our model on two different cases</p>
+
+<ul>
+<li><p>MNIST-Single-Same</p>
+
+<p>There is only a single digit moving around in each video sequence.</p></li>
+
+<li><p>MNIST-Multi-Same</p>
+
+<p>Contains frames of which each contains more than one digits. More specifically, we generate each video sequence such that there are two digits simultaneously moving around.</p></li>
+</ul>
+
+<h3 id="novel-test-digit-classes">Novel Test Digit Classes</h3>
+
+<ul>
+<li><p>Test Datasets</p>
+
+<p>As our goal is to build an anonymous object tracking system. We evaluate a trained model with sequences containing objects that do not appear during training time.
+More specifically, we test the models on two sets of sequences containing one or two MNIST-2 digits, where one MNIST-2 digit is created by randomly overlapping two randomly selected normal MNIST digits on top of each other. We call these datasets MNIST-Single-Diff and MNIST-Multi-Diff, respectively.</p></li>
+</ul>
+
+<h3 id="generalization-to-longer-video-sequence">Generalization to Longer Video Sequence</h3>
+
+<p>-</p>
+
+<pre><code>In all the cases, we evaluate a trained model on test sequences that are longer than the training sequences.
+
+-   some recent findings suggest that on certain tasks recurrent neural networks fail to generalize to longer test sequences.
+
+We vary the lengths of test sequences among \\{20, 40, 80, 160\\}, while all the models are trained with 20-frame-long training sequences.
+</code></pre>
+
+<h2 id="models-and-training">Models and Training</h2>
+
+<h3 id="models-and-training-1">Models and Training</h3>
+
+<ul>
+<li><p>Train and Test</p>
+
+<p>MNIST-{Single,Multi}-{Same,Diff}</p></li>
+
+<li><p>5 models:</p>
+
+<ul>
+<li>RecTracker-ID(with no weight matrix,The tracker has a full, unadjusted view of the whole frame)</li>
+<li>RecTracker-Att-1(N=1)</li>
+<li>RecTracker-Att-3(N=3)</li>
+<li>ConvTracker</li>
+<li>KerCorrTracker</li>
+</ul></li>
+</ul>
+
+<h3 id="network-architectures">Network Architectures</h3>
+
+<ul>
+<li><p>Convolutional Network</p>
+
+<ul>
+<li>Using a single convolutional layer with \(3210 \times 10\) filters. These filters are applied with stride 5 to the input frame.</li>
+<li>Do not use any pooling.</li>
+<li>This convolutional layer is immediately followed by an element-wise tanh.</li>
+<li>In the case of ConvTracker, a fully-connected layer with 200 tanh units follows the convolutional layer.</li>
+</ul></li>
+
+<li><p>Notes</p>
+
+<p>This fully-connected layer also receives as the input the
+predicted locations of the four preceding frames.</p></li>
+</ul>
+
+<h3 id="network-architectures-1">Network Architectures</h3>
+
+<ul>
+<li><p>Recurrent Network</p>
+
+<p>Using 200 gated recurrent units to build a recurrent network,
+At each time step, the activation of the convolutional layer
+and the predicted object location \(\tilde{z}_{t-1}\) in the previous frame
+are fed into the recurrent network.</p></li>
+</ul>
+
+<h3 id="training-details">Training Details</h3>
+
+<ul>
+<li><p>Epoch</p>
+
+<p>50 or until the training cost stops improving</p></li>
+
+<li><p>Training samples</p>
+
+<p>Using a training set of 3,200,000 randomly-generated examples</p></li>
+
+<li><p>Optimizier</p>
+
+<p>RMSProp</p></li>
+
+<li><p>minibatches</p>
+
+<p>32</p></li>
+</ul>
+
+<h2 id="result-and-analysis">Result and Analysis</h2>
+
+<h3 id="result-and-analysis-1">Result and Analysis</h3>
+
+<ul>
+<li><p>Evaluation metric</p>
+
+<p>Intersection-over-union (IOU)</p>
+
+<p>\begin{equation}
+\label{eq:17}
+IOU(z_t^{*},\tilde{z}_t)=\frac{|M^{*}\cap\tilde{M}|}{|M^{*}\cup\tilde{M}||}
+\end{equation}</p>
+
+<p>Where \(m^{*}\) and \(\tilde{M}\) are binary masks whose pixels inside a bounding box (either ground-truth \(^{*}\) or predicted \(^{~}\)) are 1 and otherwise 0.
+A higher IOU implies better tracking quality, and it is bounded between 0 and 1.
+For each video sequence, we compute the average IOU across all the frames.</p></li>
+</ul>
+
+<h2 id="code-analysis">Code Analysis</h2>
+
+<h3 id="data-generation-4">Data Generation</h3>
+
+<ul>
+<li><p>BouncingMNIST</p>
+
+<p>all the code are in BouncingMNIST class.</p>
+
+<ul>
+<li>GetBatch(self,verbose=False, count=1): this function can get a random batch of the data with shape : (batch_size,num_channels,img_col,img_row)</li>
+</ul></li>
+</ul>
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://mingzailao.github.io/posts/gan-and-vae-from-an-optimal-transport-point-of-view/" data-toggle="tooltip" data-placement="top" title="GAN and VAE from an Optimal Transport Point of View">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://mingzailao.github.io/posts/energy-based-generative-adversarial-networks/" data-toggle="tooltip" data-placement="top" title="Energy-Based Generative Adversarial Networks">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.37.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

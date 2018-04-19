@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Visualizing and Understanding Recurrent Networks</title>
+  <meta property="og:title" content="Visualizing and Understanding Recurrent Networks" />
+  <meta name="twitter:title" content="Visualizing and Understanding Recurrent Networks" />
+  <meta name="description" content="Table of Contents  EXPERIMENTAL SETUP  RECURRENT NEURAL NETWORK MODELS RECURRENT NEURAL NETWORK MODELS RECURRENT NEURAL NETWORK MODELS CHARACTER-LEVEL LANGUAGE MODELING CHARACTER-LEVEL LANGUAGE MODELING  EXPERIMENTS  EXPERIMENTS DATASETS AND PROCESSING COMPARING RECURRENT NETWORKS COMPARING RECURRENT NETWORKS INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM UNDERSTANDING LONG-RANGE INTERACTIONS UNDERSTANDING LONG-RANGE INTERACTIONS UNDERSTANDING LONG-RANGE INTERACTIONS UNDERSTANDING LONG-RANGE INTERACTIONS UNDERSTANDING LONG-RANGE INTERACTIONS UNDERSTANDING LONG-RANGE INTERACTIONS">
+  <meta property="og:description" content="Table of Contents  EXPERIMENTAL SETUP  RECURRENT NEURAL NETWORK MODELS RECURRENT NEURAL NETWORK MODELS RECURRENT NEURAL NETWORK MODELS CHARACTER-LEVEL LANGUAGE MODELING CHARACTER-LEVEL LANGUAGE MODELING  EXPERIMENTS  EXPERIMENTS DATASETS AND PROCESSING COMPARING RECURRENT NETWORKS COMPARING RECURRENT NETWORKS INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM INTERNAL MECHANISMS OF AN LSTM UNDERSTANDING LONG-RANGE INTERACTIONS UNDERSTANDING LONG-RANGE INTERACTIONS UNDERSTANDING LONG-RANGE INTERACTIONS UNDERSTANDING LONG-RANGE INTERACTIONS UNDERSTANDING LONG-RANGE INTERACTIONS UNDERSTANDING LONG-RANGE INTERACTIONS">
+  <meta name="twitter:description" content="Table of Contents  EXPERIMENTAL SETUP  RECURRENT NEURAL NETWORK MODELS RECURRENT NEURAL NETWORK MODELS RECURRENT NEURAL NETWORK MODELS CHARACTER-LEVEL LANGUAGE MODELING CHARACTER-LEVEL LANGUAGE …">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://mingzailao.github.io/posts/visualizing-and-understanding-recurrent-networks/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="mingzaialo&#39;s blog" />
+
+  <meta name="generator" content="Hugo 0.37.1" />
+  <link rel="canonical" href="https://mingzailao.github.io/posts/visualizing-and-understanding-recurrent-networks/" />
+  <link rel="alternate" href="https://mingzailao.github.io/index.xml" type="application/rss+xml" title="mingzaialo&#39;s blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://mingzailao.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://mingzailao.github.io/css/syntax.css" /><link rel="stylesheet" href="https://mingzailao.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              <h1>Visualizing and Understanding Recurrent Networks</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<div class="ox-hugo-toc toc">
+<div></div>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ul>
+<li><a href="#experimental-setup">EXPERIMENTAL SETUP</a>
+
+<ul>
+<li><a href="#recurrent-neural-network-models">RECURRENT NEURAL NETWORK MODELS</a></li>
+<li><a href="#recurrent-neural-network-models">RECURRENT NEURAL NETWORK MODELS</a></li>
+<li><a href="#recurrent-neural-network-models">RECURRENT NEURAL NETWORK MODELS</a></li>
+<li><a href="#character-level-language-modeling">CHARACTER-LEVEL LANGUAGE MODELING</a></li>
+<li><a href="#character-level-language-modeling">CHARACTER-LEVEL LANGUAGE MODELING</a></li>
+</ul></li>
+<li><a href="#experiments">EXPERIMENTS</a>
+
+<ul>
+<li><a href="#experiments-datasets-and-processing">EXPERIMENTS DATASETS AND PROCESSING</a></li>
+<li><a href="#comparing-recurrent-networks">COMPARING RECURRENT NETWORKS</a></li>
+<li><a href="#comparing-recurrent-networks">COMPARING RECURRENT NETWORKS</a></li>
+<li><a href="#internal-mechanisms-of-an-lstm">INTERNAL MECHANISMS OF AN LSTM</a></li>
+<li><a href="#internal-mechanisms-of-an-lstm">INTERNAL MECHANISMS OF AN LSTM</a></li>
+<li><a href="#internal-mechanisms-of-an-lstm">INTERNAL MECHANISMS OF AN LSTM</a></li>
+<li><a href="#internal-mechanisms-of-an-lstm">INTERNAL MECHANISMS OF AN LSTM</a></li>
+<li><a href="#internal-mechanisms-of-an-lstm">INTERNAL MECHANISMS OF AN LSTM</a></li>
+<li><a href="#internal-mechanisms-of-an-lstm">INTERNAL MECHANISMS OF AN LSTM</a></li>
+<li><a href="#internal-mechanisms-of-an-lstm">INTERNAL MECHANISMS OF AN LSTM</a></li>
+<li><a href="#internal-mechanisms-of-an-lstm">INTERNAL MECHANISMS OF AN LSTM</a></li>
+<li><a href="#internal-mechanisms-of-an-lstm">INTERNAL MECHANISMS OF AN LSTM</a></li>
+<li><a href="#internal-mechanisms-of-an-lstm">INTERNAL MECHANISMS OF AN LSTM</a></li>
+<li><a href="#internal-mechanisms-of-an-lstm">INTERNAL MECHANISMS OF AN LSTM</a></li>
+<li><a href="#internal-mechanisms-of-an-lstm">INTERNAL MECHANISMS OF AN LSTM</a></li>
+<li><a href="#internal-mechanisms-of-an-lstm">INTERNAL MECHANISMS OF AN LSTM</a></li>
+<li><a href="#understanding-long-range-interactions">UNDERSTANDING LONG-RANGE INTERACTIONS</a></li>
+<li><a href="#understanding-long-range-interactions">UNDERSTANDING LONG-RANGE INTERACTIONS</a></li>
+<li><a href="#understanding-long-range-interactions">UNDERSTANDING LONG-RANGE INTERACTIONS</a></li>
+<li><a href="#understanding-long-range-interactions">UNDERSTANDING LONG-RANGE INTERACTIONS</a></li>
+<li><a href="#understanding-long-range-interactions">UNDERSTANDING LONG-RANGE INTERACTIONS</a></li>
+<li><a href="#understanding-long-range-interactions">UNDERSTANDING LONG-RANGE INTERACTIONS</a></li>
+</ul></li>
+</ul>
+
+<p></div>
+<!--endtoc--></p>
+
+<h2 id="experimental-setup">EXPERIMENTAL SETUP</h2>
+
+<h3 id="recurrent-neural-network-models">RECURRENT NEURAL NETWORK MODELS</h3>
+
+<ul>
+<li><p>Basic Setting</p>
+
+<ul>
+<li>\(h_t^0=x_t\)</li>
+<li>\({h_t^L}\) is used to predict an output vector \(y_t\)</li>
+<li>all \(h\in \mathbb{R}^n\)</li>
+</ul></li>
+
+<li><p>Vanilla Recurrent Neural Network (RNN)</p>
+
+<p>\begin{equation*}
+h_t^l=tanh W^l
+\left({
+\begin{array}{c}
+h_t^{l-1}\\<br />
+h_{t-1}^l
+\end{array}
+}
+\right)
+\end{equation*}</p></li>
+</ul>
+
+<h3 id="recurrent-neural-network-models-1">RECURRENT NEURAL NETWORK MODELS</h3>
+
+<ul>
+<li><p>Long Short-Term Memory (LSTM)</p>
+
+<p>\begin{equation*}
+\left({
+\begin{array}{c}
+i\\<br />
+f\\<br />
+o\\<br />
+g
+\end{array}</p>
+
+<h1 id="right">}\right)</h1>
+
+<p>\left({
+\begin{array}{c}
+sigm\\<br />
+sigm\\<br />
+sigm\\<br />
+tanh
+\end{array}
+}\right)
+W^l
+\left({
+\begin{array}{c}
+h_t^{l-1}\\<br />
+h_{t-1}^l
+\end{array}
+}\right)
+\end{equation*}</p>
+
+<p>\begin{eqnarray*}
+ c_t^l&amp;=&amp;f\odot c_{t-1}^{l}+i\odot g\\<br />
+ h_t^l&amp;=&amp;o\odot tanh(c_t^l)
+\end{eqnarray*}</p></li>
+</ul>
+
+<h3 id="recurrent-neural-network-models-2">RECURRENT NEURAL NETWORK MODELS</h3>
+
+<ul>
+<li><p>Gated Recurrent Unit (GRU)</p>
+
+<p>\begin{equation*}
+\left(
+{
+\begin{array}{c}
+r\\<br />
+c
+\end{array}
+}
+\right)=
+\left(
+{
+\begin{array}{c}
+sigm\\<br />
+sigm
+\end{array}
+}
+\right)
+W_r^l
+\left(
+{
+\begin{array}{c}
+h_t^{l-1}\\<br />
+h_{t-1}^l
+\end{array}
+}
+\right)
+\end{equation*}</p>
+
+<p>\begin{eqnarray*}
+\label{eq:4}
+\tilde{h}_t^l &amp; = &amp; tanh(W_x^lh_t^{l-1}+W_g^l(r\odot h_{t-1}^l))\\<br />
+h_t^l&amp;=&amp;(1-z)\odot h_{t-1}^l+z\odot \tilde{h}_t^l
+\end{eqnarray*}</p></li>
+</ul>
+
+<h3 id="character-level-language-modeling">CHARACTER-LEVEL LANGUAGE MODELING</h3>
+
+<ul>
+<li><p>SETUP</p>
+
+<ul>
+<li>Input : a sequence of characters;</li>
+<li>Output : the next character for each character in the sequence;</li>
+<li>Between \(h_t^{L}\to y\) : Softmax Classifier;</li>
+<li>Encoding : assuming a fixed vocabulary of K characters, we encode all characters with K-dimensional 1-of-K vectors(OneHot);</li>
+<li>Loss : cross-entropy loss;</li>
+</ul></li>
+</ul>
+
+<h3 id="character-level-language-modeling-1">CHARACTER-LEVEL LANGUAGE MODELING</h3>
+
+<ul>
+<li><p>OPTIMIZATION</p>
+
+<ul>
+<li>Initialization : uniformly in range \([-0.08,0.08]\);</li>
+<li>Batch size : 100;</li>
+<li>Optimizier : RMSProp;</li>
+<li>Timestep : 100;</li>
+<li>Epochs : 50;</li>
+<li>Learning rate decay : after 10 epochs with decay rate 0.95 after each additional epoch;</li>
+<li>Learning rate : \(2\times 10^{-3}\)</li>
+</ul></li>
+</ul>
+
+<h2 id="experiments">EXPERIMENTS</h2>
+
+<h3 id="experiments-datasets-and-processing">EXPERIMENTS DATASETS AND PROCESSING</h3>
+
+<ul>
+<li><p>Datasets</p>
+
+<ul>
+<li>War and Peace (WP);</li>
+<li>Linux Kernel (LK);</li>
+</ul></li>
+
+<li><p>Split the dataset</p>
+
+<ul>
+<li>80/10/10 for WP;</li>
+<li>90/5/5 for LK;</li>
+</ul></li>
+</ul>
+
+<h3 id="comparing-recurrent-networks">COMPARING RECURRENT NETWORKS</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/Pic1.png" />
+    </div>
+    <a href="/ox-hugo/Pic1.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="comparing-recurrent-networks-1">COMPARING RECURRENT NETWORKS</h3>
+
+<ul>
+<li><p>Analysis</p>
+
+<ul>
+<li>Depth of at least two is beneficial;</li>
+<li>The results are mixed between the LSTM and the GRU, but both significantly outperform the RNN;</li>
+</ul></li>
+</ul>
+
+<h3 id="internal-mechanisms-of-an-lstm">INTERNAL MECHANISMS OF AN LSTM</h3>
+
+<ul>
+<li><p>Interpretable, long-range LSTM cells</p>
+
+<ul>
+<li>In this experiment we verify that multiple interpretable cells do in fact exist in these networks.</li>
+<li>For instance, one cell is clearly acting as a line length counter, starting with a high value and then slowly decaying with each character until the next newline.</li>
+</ul></li>
+</ul>
+
+<h3 id="internal-mechanisms-of-an-lstm-1">INTERNAL MECHANISMS OF AN LSTM</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/1.png" />
+    </div>
+    <a href="/ox-hugo/1.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="internal-mechanisms-of-an-lstm-2">INTERNAL MECHANISMS OF AN LSTM</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/2.png" />
+    </div>
+    <a href="/ox-hugo/2.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="internal-mechanisms-of-an-lstm-3">INTERNAL MECHANISMS OF AN LSTM</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/3.png" />
+    </div>
+    <a href="/ox-hugo/3.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="internal-mechanisms-of-an-lstm-4">INTERNAL MECHANISMS OF AN LSTM</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/4.png" />
+    </div>
+    <a href="/ox-hugo/4.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="internal-mechanisms-of-an-lstm-5">INTERNAL MECHANISMS OF AN LSTM</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/5.png" />
+    </div>
+    <a href="/ox-hugo/5.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="internal-mechanisms-of-an-lstm-6">INTERNAL MECHANISMS OF AN LSTM</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/6.png" />
+    </div>
+    <a href="/ox-hugo/6.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="internal-mechanisms-of-an-lstm-7">INTERNAL MECHANISMS OF AN LSTM</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/7.png" />
+    </div>
+    <a href="/ox-hugo/7.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="internal-mechanisms-of-an-lstm-8">INTERNAL MECHANISMS OF AN LSTM</h3>
+
+<ul>
+<li><p>Gate activation statistics</p>
+
+<p>We were particularly interested in looking at the distributions of saturation regimes in the networks, where we define a
+gate to be left or right-saturated if its activation is less than 0.1 or more than 0.9, respectively, or unsaturated otherwise.
+We then compute the fraction of times that each LSTM gate spends left or right saturated.</p></li>
+</ul>
+
+<h3 id="internal-mechanisms-of-an-lstm-9">INTERNAL MECHANISMS OF AN LSTM</h3>
+
+<p>LSTM
+<img src="/ox-hugo/8.png" alt="" /></p>
+
+<h3 id="internal-mechanisms-of-an-lstm-10">INTERNAL MECHANISMS OF AN LSTM</h3>
+
+<p>GRU
+<img src="/ox-hugo/9.png" alt="" /></p>
+
+<h3 id="internal-mechanisms-of-an-lstm-11">INTERNAL MECHANISMS OF AN LSTM</h3>
+
+<ul>
+<li><p>Analysis</p>
+
+<ul>
+<li>For instance, the number of often right-saturated forget gates is particularly interesting, since this corresponds to cells that remember their values for very long time periods.</li>
+<li>The output gate statistics also reveal that there are no cells that get consistently revealed or blocked to the hidden state.</li>
+</ul></li>
+</ul>
+
+<h3 id="internal-mechanisms-of-an-lstm-12">INTERNAL MECHANISMS OF AN LSTM</h3>
+
+<ul>
+<li><p>Surprising finding(UNKNOWN)</p>
+
+<p>unlike the other two layers that contain gates with nearly binary regime of operation (frequently either left or right saturated), the activations in the first layer are much more diffuse(near the origin in our scatter plots).</p></li>
+</ul>
+
+<h3 id="understanding-long-range-interactions">UNDERSTANDING LONG-RANGE INTERACTIONS</h3>
+
+<ul>
+<li><p>SETUP</p>
+
+<p>Good performance of LSTMs is frequently attributed to their ability to store long-range information.
+In this section we test this hypothesis by comparing an LSTM with baseline models that
+can only utilize information from a fixed number of previous steps.</p></li>
+</ul>
+
+<h3 id="understanding-long-range-interactions-1">UNDERSTANDING LONG-RANGE INTERACTIONS</h3>
+
+<ul>
+<li><p>BASELINES(n-NN)</p>
+
+<p>A fully-connected neural network with one hidden layer and tanh nonlinearities.</p>
+
+<ul>
+<li>Input : a sparse binary vector of dimension \(nK\) that concatenates the one-of-\(K\) encodings of n consecutive characters.</li>
+</ul></li>
+
+<li><p>BASELINES(n-gram)</p>
+
+<p>An unpruned (n + 1)-gram language model using modified Kneser-Ney smoothing</p></li>
+</ul>
+
+<h3 id="understanding-long-range-interactions-2">UNDERSTANDING LONG-RANGE INTERACTIONS</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/10.png" />
+    </div>
+    <a href="/ox-hugo/10.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="understanding-long-range-interactions-3">UNDERSTANDING LONG-RANGE INTERACTIONS</h3>
+
+<ul>
+<li><p>Analysis</p>
+
+<ul>
+<li>The n-gram and n-NN models perform nearly identically for small values of n, but for larger values the n-NN models start to overfit and the n-gram model performs better.</li>
+<li>On both datasets our best recurrent network outperforms the 20-gram model (1.077 vs. 1.195 on WP and 0.84 vs.0.889 on LK).</li>
+<li>The 20-gram model file has 3GB, while our largest recurrent based model is about 11MB.</li>
+</ul></li>
+</ul>
+
+<h3 id="understanding-long-range-interactions-4">UNDERSTANDING LONG-RANGE INTERACTIONS</h3>
+
+
+<link rel="stylesheet" href="/css/hugo-easy-gallery.css" />
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/11.png" />
+    </div>
+    <a href="/ox-hugo/11.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="understanding-long-range-interactions-5">UNDERSTANDING LONG-RANGE INTERACTIONS</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/12.png" />
+    </div>
+    <a href="/ox-hugo/12.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://mingzailao.github.io/posts/adversarial-autoencoders/" data-toggle="tooltip" data-placement="top" title="Adversarial Autoencoders">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://mingzailao.github.io/posts/unsupervised-representation-learning-with-deep-convolutional-generative-adversarial-networks/" data-toggle="tooltip" data-placement="top" title="Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.37.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

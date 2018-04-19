@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mingzaialo&#39;s blog</title>
+    <link>https://mingzailao.github.io/todo/</link>
+    <description>Recent content on mingzaialo&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>© 2017 PPAP blog powered by Hugo</copyright>
+    <lastBuildDate>Wed, 07 Dec 2016 00:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="https://mingzailao.github.io/todo/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Semi-supervised learning with ladder networks</title>
+      <link>https://mingzailao.github.io/todo/semi-supervised-learning-with-ladder-networks/</link>
+      <pubDate>Wed, 07 Dec 2016 00:00:00 +0800</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/semi-supervised-learning-with-ladder-networks/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>CNN</title>
+      <link>https://mingzailao.github.io/todo/notes-for-cnn/</link>
+      <pubDate>Sun, 20 Nov 2016 00:00:00 +0800</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/notes-for-cnn/</guid>
+      <description>  Table of Contents  Introduction  Introduction  Reference   
+Introduction Introduction  Class
+CNN1 is invented by Yan Lecun in 1998,
+  Reference \bibliographystyle{unsrtnat}
+&amp;lt;~/BibTex/mingzailao.bib&amp;gt;
+ In 1998, Yan Lecun first introduced this special neural network in the paper [return]   </description>
+    </item>
+    
+    <item>
+      <title>An Architecture for Deep, Hierarchical Generative Models</title>
+      <link>https://mingzailao.github.io/todo/an-architecture-for-deep-hierarchical-generative-models/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/an-architecture-for-deep-hierarchical-generative-models/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Attention Is All You Need</title>
+      <link>https://mingzailao.github.io/todo/attention-is-all-you-need/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/attention-is-all-you-need/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Deep Reinforcement Learning</title>
+      <link>https://mingzailao.github.io/todo/lecture-1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/lecture-1/</guid>
+      <description>  Table of Contents  What is Reinforcement Learning?  What is Reinforcement Learning?  Terminology &amp;amp; notation  Terminology &amp;amp; notation Terminology &amp;amp; notation    
+What is Reinforcement Learning? What is Reinforcement Learning?  Branch of machine learning concerned with taking sequences of actions Usually described in terms of target interacting with a previously unknown enviroment, trying to maximize cumulative reward Formalized as partially observable Markov decision process (POMDP)      Terminology &amp;amp; notation Terminology &amp;amp; notation     Terminology &amp;amp; notation     </description>
+    </item>
+    
+    <item>
+      <title>Deep Reinforcement Learning-based Image Captioning with Embedding Reward</title>
+      <link>https://mingzailao.github.io/todo/deep-reinforcement-learning-based-image-captioning-with-embedding-reward/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/deep-reinforcement-learning-based-image-captioning-with-embedding-reward/</guid>
+      <description>  Table of Contents  [](#)   
+TODO  </description>
+    </item>
+    
+    <item>
+      <title>Deep Visual-Semantic Alignments for Generating Image Descriptions</title>
+      <link>https://mingzailao.github.io/todo/deep-visual-semantic-alignments-for-generating-image-descriptions/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/deep-visual-semantic-alignments-for-generating-image-descriptions/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Knowing When to Look: Adaptive Attention via A Visual Sentinel for Image Captioning</title>
+      <link>https://mingzailao.github.io/todo/knowing-when-to-look-adaptive-attention-via-a-visual-sentinel-for-image-captioning/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/knowing-when-to-look-adaptive-attention-via-a-visual-sentinel-for-image-captioning/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Maxout Networks</title>
+      <link>https://mingzailao.github.io/todo/maxout-networks/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/maxout-networks/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Optimal Transport</title>
+      <link>https://mingzailao.github.io/todo/optimal-transport/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/optimal-transport/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Predicting Deeper into the Future of Semantic Segmentation</title>
+      <link>https://mingzailao.github.io/todo/predicting-deeper-into-the-future-of-semantic-segmentation/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/predicting-deeper-into-the-future-of-semantic-segmentation/</guid>
+      <description>  Table of Contents  What is this paper about?  What is this paper about?  Predicting future frames and segmentations  Predicting future frames and segmentations    
+What is this paper about? What is this paper about?  Predicting the Semantic Segmentation of the future image.  Predicting future frames and segmentations Predicting future frames and segmentations  Notations  \(X_i\) : the i-th frame of a video sequence \(X_{t:T}\) : the sequences of frames from \(X_t\) to \(X_T\) \(S_i\) : the log-probabilities of frame \(X_t\)  Experiements  </description>
+    </item>
+    
+    <item>
+      <title>SCA-CNN: Spatial and Channel-wise Attention in Convolutional Networks for Image Captioning</title>
+      <link>https://mingzailao.github.io/todo/sca-cnn-spatial-and-channel-wise-attention-in-convolutional-networks-for-image-captioning/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/sca-cnn-spatial-and-channel-wise-attention-in-convolutional-networks-for-image-captioning/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Skeleton Key: Image Captioning by Skeleton-Attribute Decomposition</title>
+      <link>https://mingzailao.github.io/todo/skeleton-key-image-captioning-by-skeleton-attribute-decomposition/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mingzailao.github.io/todo/skeleton-key-image-captioning-by-skeleton-attribute-decomposition/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

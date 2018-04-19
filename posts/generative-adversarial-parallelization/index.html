@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Generative Adversarial Parallelization</title>
+  <meta property="og:title" content="Generative Adversarial Parallelization" />
+  <meta name="twitter:title" content="Generative Adversarial Parallelization" />
+  <meta name="description" content="Table of Contents GANs GANs GANs GANs GANs Paralletizing Generative Adversarial Networks(GAP) Paralletizing Generative Adversarial Networks Paralletizing Generative Adversarial Networks Paralletizing Generative Adversarial Networks Paralletizing Generative Adversarial Networks Paralletizing Generative Adversarial Networks Experiments Experiments Experiments Experiments Experiments Experiments Experiments Experiments Reference GANs GANs min-max \begin{equation} \label{eq:1} \min_{G}\max_{D}\mathbb{E}_{\mathbf{x}\sim P_{data}(\mathbf{x})}[\log D(\mathbf{x})]&#43;\mathbb{E}_{\mathbf{z}\sim P_z(\mathbf{z})}[\log (1-D(G(\mathbf{z})))] \end{equation} GANs Empirical Observations The reality of training GANs is quite different from the ideal case due to the">
+  <meta property="og:description" content="Table of Contents GANs GANs GANs GANs GANs Paralletizing Generative Adversarial Networks(GAP) Paralletizing Generative Adversarial Networks Paralletizing Generative Adversarial Networks Paralletizing Generative Adversarial Networks Paralletizing Generative Adversarial Networks Paralletizing Generative Adversarial Networks Experiments Experiments Experiments Experiments Experiments Experiments Experiments Experiments Reference GANs GANs min-max \begin{equation} \label{eq:1} \min_{G}\max_{D}\mathbb{E}_{\mathbf{x}\sim P_{data}(\mathbf{x})}[\log D(\mathbf{x})]&#43;\mathbb{E}_{\mathbf{z}\sim P_z(\mathbf{z})}[\log (1-D(G(\mathbf{z})))] \end{equation} GANs Empirical Observations The reality of training GANs is quite different from the ideal case due to the">
+  <meta name="twitter:description" content="Table of Contents GANs GANs GANs GANs GANs Paralletizing Generative Adversarial Networks(GAP) Paralletizing Generative Adversarial Networks Paralletizing Generative Adversarial Networks Paralletizing …">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://mingzailao.github.io/posts/generative-adversarial-parallelization/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="mingzaialo&#39;s blog" />
+
+  <meta name="generator" content="Hugo 0.37.1" />
+  <link rel="canonical" href="https://mingzailao.github.io/posts/generative-adversarial-parallelization/" />
+  <link rel="alternate" href="https://mingzailao.github.io/index.xml" type="application/rss+xml" title="mingzaialo&#39;s blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://mingzailao.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://mingzailao.github.io/css/syntax.css" /><link rel="stylesheet" href="https://mingzailao.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              <h1>Generative Adversarial Parallelization</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<div class="ox-hugo-toc toc">
+<div></div>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ul>
+<li><a href="#gans">GANs</a>
+
+<ul>
+<li><a href="#gans">GANs</a></li>
+<li><a href="#gans">GANs</a></li>
+<li><a href="#gans">GANs</a></li>
+<li><a href="#gans">GANs</a></li>
+</ul></li>
+<li><a href="#paralletizing-generative-adversarial-networks--gap">Paralletizing Generative Adversarial Networks(GAP)</a>
+
+<ul>
+<li><a href="#paralletizing-generative-adversarial-networks">Paralletizing Generative Adversarial Networks</a></li>
+<li><a href="#paralletizing-generative-adversarial-networks">Paralletizing Generative Adversarial Networks</a></li>
+<li><a href="#paralletizing-generative-adversarial-networks">Paralletizing Generative Adversarial Networks</a></li>
+<li><a href="#paralletizing-generative-adversarial-networks">Paralletizing Generative Adversarial Networks</a></li>
+<li><a href="#paralletizing-generative-adversarial-networks">Paralletizing Generative Adversarial Networks</a></li>
+</ul></li>
+<li><a href="#experiments">Experiments</a>
+
+<ul>
+<li><a href="#experiments">Experiments</a></li>
+<li><a href="#experiments">Experiments</a></li>
+<li><a href="#experiments">Experiments</a></li>
+<li><a href="#experiments">Experiments</a></li>
+<li><a href="#experiments">Experiments</a></li>
+<li><a href="#experiments">Experiments</a></li>
+<li><a href="#experiments">Experiments</a></li>
+</ul></li>
+<li><a href="#reference">Reference</a></li>
+</ul>
+
+<p></div>
+<!--endtoc--></p>
+
+<h2 id="gans">GANs</h2>
+
+<h3 id="gans-1">GANs</h3>
+
+<ul>
+<li><p>min-max</p>
+
+<p>\begin{equation}
+\label{eq:1}
+\min_{G}\max_{D}\mathbb{E}_{\mathbf{x}\sim P_{data}(\mathbf{x})}[\log D(\mathbf{x})]+\mathbb{E}_{\mathbf{z}\sim P_z(\mathbf{z})}[\log (1-D(G(\mathbf{z})))]
+\end{equation}</p></li>
+</ul>
+
+<h3 id="gans-2">GANs</h3>
+
+<ul>
+<li><p>Empirical Observations</p>
+
+<p>The reality of training GANs is quite different from the ideal case due to the following reasons</p>
+
+<ol>
+<li>the discriminative and the generative networks are bounded by a finite number of parameters, which limits their modeling capacity.</li>
+<li>Partically speaking, the second term of the object function in Eq <a href="#eq:1">eq:1</a> is a bottleneck early on in training, where the discriminator can perfectly distinguish the noisy sample coming from the generator. The argument of the log saturates and gradient will not flow to the generator.</li>
+<li>The GAN objective function is known to be non-convex and it is defined over a high-dimensional space . That often results in failure of gradient-based training to converge.</li>
+</ol></li>
+</ul>
+
+<h3 id="gans-3">GANs</h3>
+
+<ul>
+<li><p>First issue</p>
+
+<p>For this issue, it comes from the nature of the modelling problem, by the empirical observations, we can adopt parameter-efficient convolutional architectures.</p></li>
+
+<li><p>Second issue</p>
+
+<p>The second issue is typically addressed by inverting the generator&rsquo;s minimization into the maximization formulation in Equation <a href="#eq:1">eq:1</a>  accordingly,</p>
+
+<p>\begin{equation}
+\label{eq:2}
+\min_{G}\log(1-D(G(\mathbf{z})))\rightarrow\max_{G}\log (D(G(\mathbf{z})))
+\end{equation}</p>
+
+<p>This provides better gradient flow in the earlier stages of training <sup id="e9941c0b83c0e3a005f7c436105edc61"><a href="#NIPS2014_5423" title="@incollection{NIPS2014_5423,
+title = {Generative Adversarial Nets},
+author = {Goodfellow, Ian and Pouget-Abadie, Jean and Mirza, Mehdi and Xu, Bing and Warde-Farley, David and Ozair, Sherjil and Courville, Aaron and Bengio, Yoshua},
+booktitle = {Advances in Neural Information Processing Systems 27},
+editor = {Z. Ghahramani and M. Welling and C. Cortes and N. D. Lawrence and K. Q. Weinberger},
+pages = {2672--2680},
+year = {2014},
+publisher = {Curran Associates, Inc.},
+url = {http://papers.nips.cc/paper/5423-generative-adversarial-nets.pdf}
+}">NIPS2014_5423</a></sup></p></li>
+</ul>
+
+<h3 id="gans-4">GANs</h3>
+
+<ul>
+<li><p>Third issue</p>
+
+<p>Empirically, convergence of the learning curve does not correspond to improved quality of samples coming from the GAN.
+Gradient-based optimization methods are only guaranteed to converge to a Nash
+Equilibrium for convex functions, whereas the loss surface of the neural networks
+used in GANs are highly non-convex and there is no guarantee that a Nash
+Equilibrium even exists.</p></li>
+</ul>
+
+<h2 id="paralletizing-generative-adversarial-networks--gap">Paralletizing Generative Adversarial Networks(GAP)</h2>
+
+<h3 id="paralletizing-generative-adversarial-networks">Paralletizing Generative Adversarial Networks</h3>
+
+<ul>
+<li><p>Generative Adversarial Metric</p>
+
+<p>The core concept of the Generative Adversarial Metric <sup id="7432c4cd0c7e7a728169511805d085e3"><a href="#im16:gener" title="@incollection{im16:gener,
+  author       = {Daniel Jiwoong Im AND Chris Dongjoo Kim AND Hui Jiang AND
+                  Roland Memisevic},
+  title        = {{Generating images with recurrent adversarial networks}},
+  year         = 2016,
+  archiveprefix= {arXiv},
+  eprint       = {1602.05110v4},
+  primaryclass = {cs.LG}
+}">im16:gener</a></sup>
+is to swap one discriminator (generator) with the other discriminator (generator)
+during the test phase.</p>
+
+<p>The GAM concept can easily be extended from evaluation to the training phase.</p></li>
+</ul>
+
+<h3 id="paralletizing-generative-adversarial-networks-1">Paralletizing Generative Adversarial Networks</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/screenshot_2016-11-22_20-13-05.png" />
+    </div>
+    <a href="/ox-hugo/screenshot_2016-11-22_20-13-05.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="paralletizing-generative-adversarial-networks-2">Paralletizing Generative Adversarial Networks</h3>
+
+<ul>
+<li><p>Keys</p>
+
+<ol>
+<li>trains multiple GANs simultaneously.</li>
+<li>every GAN do not shared parameters.</li>
+<li>randomly swapping different discriminators(generators) every \(K\) updates.</li>
+<li>after training multiple GANS, select the best one based on the GAM</li>
+</ol></li>
+</ul>
+
+<h3 id="paralletizing-generative-adversarial-networks-3">Paralletizing Generative Adversarial Networks</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/screenshot_2016-11-22_20-19-44.png" />
+    </div>
+    <a href="/ox-hugo/screenshot_2016-11-22_20-19-44.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="paralletizing-generative-adversarial-networks-4">Paralletizing Generative Adversarial Networks</h3>
+
+<ul>
+<li><p>My notes</p>
+
+<p>后面是巴拉巴拉的make sense的东东，我的大致理解就是 一个好的拳击手是怎样成长的呢？ 陪练需要不断的
+更换</p></li>
+</ul>
+
+<h2 id="experiments">Experiments</h2>
+
+<h3 id="experiments-1">Experiments</h3>
+
+<ul>
+<li><p>Two GAN-variants</p>
+
+<ol>
+<li>DCGAN</li>
+<li>GRAN</li>
+</ol></li>
+</ul>
+
+<h3 id="experiments-2">Experiments</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/screenshot_2016-11-22_20-41-53.png" />
+    </div>
+    <a href="/ox-hugo/screenshot_2016-11-22_20-41-53.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="experiments-3">Experiments</h3>
+
+
+<link rel="stylesheet" href="/css/hugo-easy-gallery.css" />
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/screenshot_2016-11-22_20-42-17.png" />
+    </div>
+    <a href="/ox-hugo/screenshot_2016-11-22_20-42-17.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="experiments-4">Experiments</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/screenshot_2016-11-22_20-44-38.png" />
+    </div>
+    <a href="/ox-hugo/screenshot_2016-11-22_20-44-38.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="experiments-5">Experiments</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/screenshot_2016-11-22_20-45-42.png" />
+    </div>
+    <a href="/ox-hugo/screenshot_2016-11-22_20-45-42.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="experiments-6">Experiments</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/screenshot_2016-11-22_20-51-35.png" />
+    </div>
+    <a href="/ox-hugo/screenshot_2016-11-22_20-51-35.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h3 id="experiments-7">Experiments</h3>
+
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/ox-hugo/screenshot_2016-11-22_20-52-00.png" />
+    </div>
+    <a href="/ox-hugo/screenshot_2016-11-22_20-52-00.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<h2 id="reference">Reference</h2>
+
+<p>\bibliographystyle{plain}</p>
+
+<h1 id="bibliography">Bibliography</h1>
+
+<p><a id="NIPS2014_5423"></a>[NIPS2014_5423] @incollection{NIPS2014_5423,
+title = {Generative Adversarial Nets},
+author = {Goodfellow, Ian and Pouget-Abadie, Jean and Mirza, Mehdi and Xu, Bing and Warde-Farley, David and Ozair, Sherjil and Courville, Aaron and Bengio, Yoshua},
+booktitle = {Advances in Neural Information Processing Systems 27},
+editor = {Z. Ghahramani and M. Welling and C. Cortes and N. D. Lawrence and K. Q. Weinberger},
+pages = {2672&ndash;2680},
+year = {2014},
+publisher = {Curran Associates, Inc.},
+url = {<a href="http://papers.nips.cc/paper/5423-generative-adversarial-nets.pdf">http://papers.nips.cc/paper/5423-generative-adversarial-nets.pdf</a>}
+} <a href="#e9941c0b83c0e3a005f7c436105edc61">↩</a></p>
+
+<p><a id="im16:gener"></a>[im16:gener] @incollection{im16:gener,
+  author       = {Daniel Jiwoong Im AND Chris Dongjoo Kim AND Hui Jiang AND
+                  Roland Memisevic},
+  title        = {{Generating images with recurrent adversarial networks}},
+  year         = 2016,
+  archiveprefix= {arXiv},
+  eprint       = {1602.05110v4},
+  primaryclass = {cs.LG}
+} <a href="#7432c4cd0c7e7a728169511805d085e3">↩</a></p>
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://mingzailao.github.io/posts/infogan-interpretable-representation-learning-by-information-maximizing-generative-adversarial-nets/" data-toggle="tooltip" data-placement="top" title="InfoGAN: Interpretable Representation Learning by Information Maximizing Generative Adversarial Nets">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://mingzailao.github.io/posts/introduction-to-nlp-and-deep-learning/" data-toggle="tooltip" data-placement="top" title="Introduction to NLP and Deep Learning">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://mingzailao.github.io/">mingzaialo&#39;s blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.37.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://mingzailao.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+
