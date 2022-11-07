@@ -1,0 +1,270 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Mingzailao's Blog | Mingzailao's Blog</title><meta name="author" content="mingzailao"><meta name="copyright" content="mingzailao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Real-time Neural Radiance Caching for Path Tracing  Thomas Müller, Fabrice Rousselle, Jan Novák, Alexander Keller               :::  Neural Network Encodings Frequency Encodings $$enc(x) &#x3D; (sin(2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mingzailao&#39;s Blog">
+<meta property="og:url" content="http://example.com/2022/11/07/Real-time%20Neural%20Radiance%20Caching%20for%20Path%20Tracing-slide/index.html">
+<meta property="og:site_name" content="Mingzailao&#39;s Blog">
+<meta property="og:description" content="Real-time Neural Radiance Caching for Path Tracing  Thomas Müller, Fabrice Rousselle, Jan Novák, Alexander Keller               :::  Neural Network Encodings Frequency Encodings $$enc(x) &#x3D; (sin(2">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-11-07T05:50:09.560Z">
+<meta property="article:modified_time" content="2022-11-07T05:50:09.560Z">
+<meta property="article:author" content="mingzailao">
+<meta name="twitter:card" content="summary"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2022/11/07/Real-time%20Neural%20Radiance%20Caching%20for%20Path%20Tracing-slide/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Mingzailao\'s Blog',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2022-11-07 13:50:09'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">1</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Mingzailao's Blog</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">No title</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-11-07T05:50:09.560Z" title="Created 2022-11-07 13:50:09">2022-11-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-11-07T05:50:09.560Z" title="Updated 2022-11-07 13:50:09">2022-11-07</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p><strong>Real-time Neural Radiance Caching for Path Tracing</strong></p>
+<hr>
+<p>Thomas Müller, Fabrice Rousselle, Jan Novák, Alexander Keller</p>
+<p><video data-autoplay controls  src="https://jannovak.info/publications/NRC/NRC_video.mp4" width=800></video></p>
+<hr>
+<p><video width="800" src="https://nvlabs.github.io/instant-ngp/assets/teaser.mp4"  data-autoplay controls width=800></video></p>
+<hr>
+<p><video data-autoplay controls width="800" src="https://nvlabs.github.io/instant-ngp/assets/tokyo_online_training_counter.mp4" ></video></p>
+<hr>
+<video src="https://nvlabs.github.io/instant-ngp/assets/nerf_grid_lq.mp4" data-autoplay controls/>
+
+
+<hr>
+<video src="https://nvlabs.github.io/instant-ngp/assets/sdf_grid_lq.mp4" />
+
+
+<hr>
+<p>:::</p>
+<ul>
+<li>Neural Network Encodings<ol>
+<li>Frequency Encodings<br> $$enc(x) &#x3D; (sin(2^0x),sin(2^1x),\cdots, sin(2^{L-1}x),cos(2^0x),\cos(2^1x),\cdots,cos(2^{L-1}x))$$</li>
+<li>Parameter Encodings</li>
+<li>Sparse Parametric Encodings<br>  <img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/yo5H7u.png"></li>
+</ol>
+</li>
+</ul>
+<hr>
+<p>:::<br><img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/Bo08GX.png"></p>
+<p>$$m(enc(x,\theta);\Phi)$$</p>
+<hr>
+<p>:::</p>
+<ul>
+<li>Giving $N_{max}$, get $N_l$<br>  $$N_l\coloneqq\lfloor N_{min}\cdot b^l\rfloor \ \ \ \ b\coloneqq \exp(\frac{\ln N_{max}-\ln N_{min}}{L-1}) $$</li>
+<li>Input $x\in \mathbb{R}^d$<br>  $$\lfloor x_l\rfloor\coloneqq \lfloor x\cdot N_l\rfloor \ \ \ \ \ \lceil x_l\rceil\coloneqq \lceil x\cdot N_l\rceil$$<br>  That $\lfloor x_l\rfloor$ and $\lceil x_l\rceil$ span a voxel with $2^d$ integer vertices in $\mathbb{Z}^d$</li>
+<li>Map each corner to an entry in the level’s respective feature vector array, which has fixed size of at most $T$<ul>
+<li>For coarse levels $(N^l)^d\leq T$, this mapping is $1:1$</li>
+<li>Other levels: using Hashinng function $h : \mathbb{Z}^d\rightarrow \mathbb{Z}<em>T$<br>  $$h(\mathbf{x})&#x3D;\left(\bigoplus</em>{i&#x3D;1}^{d} x_{i} \pi_{i}\right) \quad \bmod  T$$<ul>
+<li>$\bigoplus$ : bit-wise XOR operation</li>
+<li>$\pi_i$ : unique large prime nnumbers</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>::: collision handling?</p>
+<ul>
+<li>Rely instead on the gradient-based optimization to store appropriate sparse detail in the array, and the subsequent neural network $m(y;\Phi)$ for collision resolution.</li>
+<li>Analysis it latter.</li>
+</ul>
+<hr>
+<p>:::</p>
+<ul>
+<li>$y\in \mathbb{R}^{LF+E}$ : $L$ levels, each level get a interpolated feature vector in $\mathbb{R}^F$, auxiliary inputs $\xi \in \mathbb{R}^{E}$</li>
+</ul>
+<hr>
+<p>::: Performance vs. Quality</p>
+<ul>
+<li><p>hash table size $T$: $T\uparrow, Q\uparrow, P\downarrow$</p>
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/qZ5qBd.png" width=600>
+</li>
+<li><p>Number of levels $T$, number of feature dimensions $F$ : $T,F\uparrow, Q\uparrow, P\downarrow$ (($F&#x3D;2,L &#x3D; 16$) to be a favorable Pareto optimum in all  experiment applications)</p>
+  <img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/huKRSY.png" width=600></li>
+</ul>
+<hr>
+<p>::: Implicit hash collision resolution</p>
+<ul>
+<li>In high levels, some different voxel edge would assiged same entry in fix-lengh hash table, how to solve the hash collision problem?</li>
+<li>Although those voxel edge have same feature in this level, but it is almost impossible that all levels they have same feature, using multi-resolution solution, we code output $y$ is different.</li>
+<li>In those high level,  a lot of point are used to optimize same feature, the most important point are the surface point, its gradient should be larger than those empty voxel edge. so it would judge the optimization process of those feature.(很多点都在优化同一个feature。但是最重要的点，比如nerf里表面的点，它对应的梯度会比空间中那些空的点更大，因此它也会对这个feature的优化起主导作用，从而让真正重要的点的信息去支配这个最精细feature的学习)</li>
+</ul>
+<hr>
+<p>:::Online adaptivity</p>
+<ul>
+<li>Note that if the distribution of inputs $x$ changes over time during training, for example if they become concentrated in a small region, then finer grid levels will experience fewer colli- sions and a more accurate function can be learned. In other words, the multiresolution hash encoding automatically adapts to the train- ing data distribution, inheriting the benefits of tree-based encod- ings [Takikawa et al. 2021] without task-specific data structure maintenance that might cause discrete jumps during training. One of our applications, neural radiance caching in Section 5.3, con- tinually adapts to animated viewpoints and 3D content, greatly benefitting from this feature.</li>
+</ul>
+<hr>
+<p>:::<br><img width=800 src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/mvKnn7.png" /></p>
+<hr>
+<p>:::<br><img width=800 src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/BKMZ1R.png" /></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://example.com">mingzailao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2022/11/07/Real-time%20Neural%20Radiance%20Caching%20for%20Path%20Tracing-slide/">http://example.com/2022/11/07/Real-time%20Neural%20Radiance%20Caching%20for%20Path%20Tracing-slide/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">mingzailao</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">1</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/11/07/Real-time%20Neural%20Radiance%20Caching%20for%20Path%20Tracing-slide/" title="No title"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="No title"/></a><div class="content"><a class="title" href="/2022/11/07/Real-time%20Neural%20Radiance%20Caching%20for%20Path%20Tracing-slide/" title="No title">No title</a><time datetime="2022-11-07T05:50:09.560Z" title="Created 2022-11-07 13:50:09">2022-11-07</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By mingzailao</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js"></script><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
