@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title></title>
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/league.css" id="theme" />
+    <link rel="stylesheet" href="css/mattropolis.css" />
+	<link rel="stylesheet" href="css/layout.css" />
+	<link rel="stylesheet" href="plugin/customcontrols/style.css">
+	<link rel="stylesheet" href="plugin/chalkboard/style.css">
+
+
+    <script defer src="dist/fontawesome/all.min.js"></script>
+
+	<script type="text/javascript">
+		var forgetPop = true;
+		function onPopState(event) {
+			if(forgetPop){
+				forgetPop = false;
+			} else {
+				parent.postMessage(event.target.location.href, "app://obsidian.md");
+			}
+        }
+		window.onpopstate = onPopState;
+		window.onmessage = event => {
+			if(event.data == "reload"){
+				window.document.location.reload();
+			}
+			forgetPop = true;
+		}
+
+		function fitElements(){
+			const itemsToFit = document.getElementsByClassName('fitText');
+			for (const item in itemsToFit) {
+				if (Object.hasOwnProperty.call(itemsToFit, item)) {
+					var element = itemsToFit[item];
+					fitElement(element,1, 1000);
+					element.classList.remove('fitText');
+				}
+			}
+		}
+
+		function fitElement(element, start, end){
+
+			let size = (end + start) / 2;
+			element.style.fontSize = `${size}px`;
+
+			if(Math.abs(start - end) < 1){
+				while(element.scrollHeight > element.offsetHeight){
+					size--;
+					element.style.fontSize = `${size}px`;
+				}
+				return;
+			}
+
+			if(element.scrollHeight > element.offsetHeight){
+				fitElement(element, start, size);
+			} else {
+				fitElement(element, size, end);
+			}		
+		}
+
+
+		document.onreadystatechange = () => {
+			fitElements();
+			if (document.readyState === 'complete') {
+				if (window.location.href.indexOf("?export") != -1){
+					parent.postMessage(event.target.location.href, "app://obsidian.md");
+				}
+				if (window.location.href.indexOf("print-pdf") != -1){
+					let stateCheck = setInterval(() => {
+						clearInterval(stateCheck);
+						window.print();
+					}, 250);
+				}
+			}
+	};
+
+
+        </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides"><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+**Implicit Neural Representations with Periodic Activation Functions**
+
+NeurIPS2020 (Oral)
+
+[Vincent Sitzmann*](http://www.stanford.edu/~sitzmann/)[Julien N. P. Martel*](http://www.jmartel.net/)
+
+[Alexander Bergman](http://alexanderbergman7.github.io/),  [David B. Lindell](http://www.davidlindell.com/), [Gordon Wetzstein](https://stanford.edu/~gordonwz/) 
+
+
+[Stanford University]()
+</div></script></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ # Overview
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Core
+<iframe width="970" height="546" src="https://www.youtube.com/embed/Q2fLWGBeaiI" title="Implicit Neural Representations with Periodic Activation Functions" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+## Representing images
+- Supervised by `$(p,s_p)$`
+
+<iframe width="1280" height="446" src="https://www.vincentsitzmann.com/siren/img/image_convergence_15s_label.mp4" title="Implicit Neural Representations with Periodic Activation Functions" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## PSNR
+- Supervised by `$(p,s_p)$`
+<iframe width="1280" height="446" src="https://www.vincentsitzmann.com/siren/img/psnr_image_convergence_15s.mp4" title="Implicit Neural Representations with Periodic Activation Functions" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+  ## Solving the Poisson Equation
+- Supervised by `$(p,\nabla s_p)$`
+<iframe width="1280" height="540" src="https://www.vincentsitzmann.com/siren/img/poisson_convergence_15s_label.mp4" title="Implicit Neural Representations with Periodic Activation Functions" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## PSNR
+- Supervised by `$(p,\nabla s_p)$`
+<iframe width="1280" height="446" src="https://www.vincentsitzmann.com/siren/img/psnr_poisson_convergence_15s.mp4" title="Implicit Neural Representations with Periodic Activation Functions" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div></script></section></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ # Formulation
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Class of Functions `$\Phi$`
+****
+`$$
+F\left(\mathbf{x}, \Phi, \nabla_{\mathbf{x}} \Phi, \nabla_{\mathbf{x}}\Phi, \ldots\right)=0, \quad \Phi: \mathbf{x} \mapsto \Phi(\mathbf{x})
+$$`
+
+- More Feasibility:
+	- Consider a function `$\Phi$` is sought that satisfies a set of `$M$` constraints
+`$$
+\left\{\mathcal{C}_m(\mathbf{a}(\mathbf{x}), \Phi(\mathbf{x}), \nabla \Phi(\mathbf{x}), \ldots)\right\}_{m=1}$$`
+
+`$$\texttt{find}\  \Phi(x) \texttt{ subject to } \mathcal{C}_m(\mathbf{a}(\mathbf{x}), \Phi(\mathbf{x}), \nabla \Phi(\mathbf{x}), \ldots)=0, \texttt{ }\forall x\in \Omega_m,\ m=1,\cdots,M $$`
+`$$
+\mathcal{L}=\int_{\Omega} \sum_{m=1}\mathbf{1}_{\Omega_m}(\mathbf{x})\left\|\mathcal{C}_m(\mathbf{a}(\mathbf{x}), \Phi(\mathbf{x}), \nabla \Phi(\mathbf{x}), \ldots)\right\| d \mathbf{x}
+$$`
+
+In practice, the loss function is enforced by sampling `$\Omega$`. A dataset `$\mathcal{D} = \{(\mathbf{x}_i,\mathbf{a}(\mathbf{x}_i))\}_i$` is a set of tuples of coordinates `$\mathbf{x}_i\in \Omega$` along with the samples from the quantities `$\mathbf{a}(\mathbf{x}_i)$`. 
+
+Empirical Error:
+`$$
+\tilde{\mathcal{L}}=\sum_{i \in \mathcal{D}} \sum_{m=1}^M\left\|\mathcal{C}_m\left(a\left(\mathbf{x}_i\right), \Phi\left(\mathbf{x}_i\right), \nabla \Phi\left(\mathbf{x}_i\right), \ldots\right)\right\|
+$$`
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Periodic Activations for Implicit Neural Representations
+****
+`$$
+\Phi(\mathbf{x})=\mathbf{W}_n\left(\phi_{n-1} \circ \phi_{n-2} \circ \ldots \circ \phi_0\right)(\mathbf{x})+\mathbf{b}_n, \quad \mathbf{x}_i \mapsto \phi_i\left(\mathbf{x}_i\right)=\sin \left(\mathbf{W}_i \mathbf{x}_i+\mathbf{b}_i\right)
+$$`
+- Any derivative of `$\texttt{SIREN}$` is a `$\texttt{SIREN}$`.
+- Therefore, the derivatives of a `$\texttt{SIREN}$` inherit the properties of `$\texttt{SIRENs}$`,  enabling us to supervise any derivative of `$\texttt{SIREN}$` with “complicated” signals.
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ### Example: Fitting an Image
+****
+
+
+
+
+
+
+
+
+
+<video data-autoplay controls width=680 height=500 ><source src="https://www.vincentsitzmann.com/siren/img/cat_comparison_label.mp4" type="video/mp4"></video>
+
+
+<div class="" style="position: absolute; left: 54%; top: 10%; height: 90%; width: 45%; display: flex; flex-direction: column; align-items: center; justify-content: center" >
+
+<div class="callout callout-color8">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-list" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Example
+
+</div>
+</div>
+<div class="callout-content">
+
+- `$\Phi: \mathbb{R}^2\rightarrow\mathbb{R}^3$`
+
+- `$\mathcal{D} : \{(\mathbf{x_i},f(\mathbf{x}_i))\}$` where `$f(\mathbf{x_i})$` is the RGB color of coordinate `$\mathbf{x}_i$`
+
+- Constraints: `$\mathcal{C}(f(\mathbf{x}_i), \Phi(\mathbf{x})) : \Phi(\mathbf{x}_i)-f(\mathbf{x}_i)$`
+
+Then
+
+`$$\tilde{\mathcal{L}}=\sum_i\left\|\Phi\left(\mathbf{x}_i\right)-f\left(\mathbf{x}_i\right)\right\|^2$$`
+
+</div>
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ### Example: Fitting an Image
+****
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/hDxfZ4.png" alt="|1200" style="width: 1200px; object-fit: fill">
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Initialization Scheme
+****
+- Preserve the distribution of activations though the network so that the output at initialization does not depend on the number of layers.
+
+<div class="callout callout-color-default">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-pencil-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Statement
+
+</div>
+</div>
+<div class="callout-content">
+
+draw weights according to a uniform `$W\sim \mathcal{U}\left( -\sqrt{\frac{6}{\mathbf{fan\_in}}},\sqrt{\frac{6}{\mathbf{fan\_in}}} \right)$`,
+
+Leading the input of each sine activation being Gauss-Normal distributions and the output of each sine activation approximately arcsin-distributed with a standard deviation of 0.5
+
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Initialization Scheme
+****
+Recall Beta Distribution
+
+<split even >
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Beta_distribution_pdf.svg/1280px-Beta_distribution_pdf.svg.png" alt="|400x400" style="width: 400px; height: 400px; object-fit: fill">
+<img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Beta_distribution_cdf.svg" alt="|700x400" style="width: 700px; height: 400px; object-fit: fill">
+</split>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Initialization Scheme
+****
+Consider a single sine neuron with the uniformly distribution input `$x\in \mathcal{U}(-1,1)$`:
+`$$y = \sin(ax+b)$$`
+
+`$$y\sim \mathbf{arcsine}(-1,1)$$`
+
+- Pushing  input ("Normalized coordinate") through a sine nonlinearity yields an arcsine distribution.
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ### Arcsine Distribution
+****
+
+<div class="callout callout-color-default">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-pencil-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Definition
+
+</div>
+</div>
+<div class="callout-content">
+
+For a random Variable `$X$` if  `$X\sim \mathbf{Arcsine}(a,b)$` with CDF : `$F_{X}(x) = \frac{2}{\pi}\texttt{arcsin}\left(\sqrt{\frac{x-a}{b-a}}\right),b>a$`
+
+</div>
+</div>
+
+<div class="callout callout-color-default">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-pencil-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Lemma
+
+</div>
+</div>
+<div class="callout-content">
+
+Give `$X\sim \mathcal{U}(-1,1),Y = \sin(\frac{\pi}{2}X)$` ,then `$Y\sim \mathbf{Arcsin}(-1,1)$`
+
+Proof:
+
+`$$F_Y(y) = \mathbb{P}\left( \sin\left( \frac{\pi}{2}X \right)\le y \right) = \mathbb{P}\left( X\le \frac{2}{\pi}\mathbf{arcsin}y \right) = F_X\left( \frac{2}{\pi}\mathbf{arcsin}y \right) = \frac{1}{\pi}\mathbf{arcsin}y+\frac{1}{2}$$`
+
+`$$\arcsin \sqrt{x}=\frac{1}{2} \arcsin (2 x-1)+\frac{\pi}{4}$$`
+
+Then `$Y\sim \mathbf{Arcsin}(-1,1)$`
+
+</div>
+</div>
+</div></script></section></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ # Applications
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Solving the Possion Equation
+
+<split even   >
+<video data-autoplay controls width="300"><source src="https://www.vincentsitzmann.com/siren/img/poisson_convergence_15s_label.mp4" type="video/mp4"></video>
+<div class="callout callout-color-default">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-pencil-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Possion equation
+
+</div>
+</div>
+<div class="callout-content">
+
+- `$\Phi: \mathbb{R}^2\rightarrow\mathbb{R}^2$`
+
+- `$\mathcal{D} : \{(\mathbf{x_i},\nabla f(\mathbf{x}_i))\}$` where `$\nabla f(\mathbf{x_i})$` is the gradients `$\nabla$`(or use laplacian`$\Delta$`) of coordinate `$\mathbf{x}_i$`
+
+- Constraints: `$\mathcal{C}(f(\mathbf{x}_i), \Phi(\mathbf{x})) : \nabla \Phi(\mathbf{x}_i)-\nabla f(\mathbf{x}_i)$`
+
+Then
+
+`$$\tilde{\mathcal{L}}=\sum_i\left\|\nabla \Phi\left(\mathbf{x}_i\right)-\nabla f\left(\mathbf{x}_i\right)\right\|^2$$`
+
+</div>
+</div>
+</split>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+<split even >
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/HLkkt7.png" alt="|400" style="width: 400px; object-fit: fill">
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/oSLGL5.png" alt="|400" style="width: 400px; object-fit: fill">
+</split>
+
+<split even >
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/eNRsq6.png" alt="|400" style="width: 400px; object-fit: fill">
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/4i7BL3.png" alt="|400" style="width: 400px; object-fit: fill">
+</split>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/zfwJTw.png" alt="|900" style="width: 900px; object-fit: fill">
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## 3D shapre Representation
+****
+
+<div class="" style="" drag="10,10">
+
+<div class="callout callout-color-default">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-pencil-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Representing shapes with sdf
+
+</div>
+</div>
+<div class="callout-content">
+
+- `$\Phi: \mathbb{R}^3\rightarrow\mathbb{R}$`
+
+- `$\mathcal{D} : \{(\mathbf{x_i},f(\mathbf{x}_i))\}$` where `$f(\mathbf{x_i})$` is the SDF value of coordinate `$\mathbf{x}_i$`
+
+- Constraints: `$\mathcal{C}_1(f(\mathbf{x}_i), \Phi(\mathbf{x})) : \nabla \Phi(\mathbf{x}_i)-1,\Omega_1 =\Omega$`
+
+- Constraints: `$\mathcal{C}_2(f(\mathbf{x}_i), \Phi(\mathbf{x})) :  \mathbb{1}_{f(\mathbf{x})}\Phi(\mathbf{x}),\Omega_2=\Omega$`
+
+- Constraints: `$\mathcal{C}_3(f(\mathbf{x}_i), \Phi(\mathbf{x})) : \mathbb{1}_{f(\mathbf{x})}(1-\left< \nabla\Phi(\mathbf{x},\mathbf{n}(\mathbf{x})) \right>),\Omega_3 = \Omega$`
+
+- Constraints: `$\mathcal{C}_4(f(\mathbf{x}_i), \Phi(\mathbf{x})) : \mathbb{0}_{f(\mathbf{x})}\exp(-\alpha\cdot |\Phi(\mathbf{x})|), \Omega_4 = \Omega$`
+
+Then
+
+`$$\mathcal{L}_{\mathrm{sdf}}=\int_{\Omega}\left\|\left|\boldsymbol{\nabla}_{\mathbf{x}} \Phi(\mathbf{x})\right|-1\right\| d \mathbf{x}+\int_{\Omega_0}\|\Phi(\mathbf{x})\|+\left(1-\left\langle\boldsymbol{\nabla}_{\mathbf{x}} \Phi(\mathbf{x}), \mathbf{n}(\mathbf{x})\right\rangle\right) d \mathbf{x}+\int_{\Omega \backslash \Omega_0} \psi(\Phi(\mathbf{x})) d \mathbf{x}$$`
+
+</div>
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+<split even >
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/u73qMs.png" alt="|600" style="width: 600px; object-fit: fill">
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/8ZEPV4.png" alt="|600" style="width: 600px; object-fit: fill">
+</split>
+</div></script></section></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1280px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Solving Helmholtz and Wave Equations
+****
+Solve PDE discussed in
+</div></script></section></div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script src="plugin/zoom/zoom.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/math/math.js"></script>
+	<script src="plugin/mermaid/mermaid.js"></script>
+	<script src="plugin/chart/chart.min.js"></script>
+	<script src="plugin/chart/plugin.js"></script>
+	<script src="plugin/menu/menu.js"></script>
+	<script src="plugin/customcontrols/plugin.js"></script>
+	<script src="plugin/chalkboard/plugin.js"></script>
+	<script src="plugin/elapsed-time-bar/elapsed-time-bar.js"></script>
+
+    <script>
+      function extend() {
+        var target = {};
+        for (var i = 0; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      }
+
+	  function isLight(color) {
+		let hex = color.replace('#', '');
+
+		// convert #fff => #ffffff
+		if(hex.length == 3){
+			hex = `${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`;
+		}
+
+		const c_r = parseInt(hex.substr(0, 2), 16);
+		const c_g = parseInt(hex.substr(2, 2), 16);
+		const c_b = parseInt(hex.substr(4, 2), 16);
+		const brightness = ((c_r * 299) + (c_g * 587) + (c_b * 114)) / 1000;
+		return brightness > 155;
+	}
+
+	var bgColor = getComputedStyle(document.documentElement).getPropertyValue('--r-background-color').trim();
+
+	if(isLight(bgColor)){
+		document.body.classList.add('has-light-background');
+	} else {
+		document.body.classList.add('has-dark-background');
+	}
+
+      // default options to init reveal.js
+      var defaultOptions = {
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'default', // none/fade/slide/convex/concave/zoom
+        plugins: [
+          RevealMarkdown,
+          RevealHighlight,
+          RevealZoom,
+          RevealNotes,
+          RevealMath.MathJax3,
+		  RevealMermaid,
+		  RevealChart,
+		  RevealCustomControls,
+		  RevealMenu,
+		  RevealChalkboard, 
+		  ElapsedTimeBar
+        ],
+
+
+    	allottedTime: 120 * 1000,
+
+		mathjax3: {
+			mathjax: 'plugin/math/mathjax/tex-mml-chtml.js',
+		},
+		markdown: {
+		  gfm: true,
+		  mangle: true,
+		  pedantic: false,
+		  smartLists: false,
+		  smartypants: false,
+		},
+
+		customcontrols: {
+			controls: [
+				{id: 'toggle-overview',
+				title: 'Toggle overview (O)',
+				icon: '<i class="fa fa-th"></i>',
+				action: 'Reveal.toggleOverview();'
+				},
+				{ icon: '<i class="fa fa-pen-square"></i>',
+				title: 'Toggle chalkboard (B)',
+				action: 'RevealChalkboard.toggleChalkboard();'
+				},
+				{ icon: '<i class="fa fa-pen"></i>',
+				title: 'Toggle notes canvas (C)',
+				action: 'RevealChalkboard.toggleNotesCanvas();'
+				},
+			]
+		},
+		menu: {
+			loadIcons: false
+		}
+      };
+
+      // options from URL query string
+      var queryOptions = Reveal().getQueryHash() || {};
+
+      var options = extend(defaultOptions, {"width":1280,"height":700,"margin":0.04,"controls":true,"progress":true,"slideNumber":true,"center":false,"touch":true,"autoPlayMedia":true,"preloadIframes":false,"transition":"slide","transitionSpeed":"normal"}, queryOptions);
+    </script>
+
+    <script>
+      Reveal.initialize(options);
+    </script>
+  </body>
+
+  <!-- created with Advanced Slides -->
+</html>

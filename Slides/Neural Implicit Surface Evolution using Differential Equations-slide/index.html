@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title></title>
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/league.css" id="theme" />
+    <link rel="stylesheet" href="css/mattropolis.css" />
+	<link rel="stylesheet" href="css/layout.css" />
+	<link rel="stylesheet" href="plugin/customcontrols/style.css">
+	<link rel="stylesheet" href="plugin/chalkboard/style.css">
+
+
+    <script defer src="dist/fontawesome/all.min.js"></script>
+
+	<script type="text/javascript">
+		var forgetPop = true;
+		function onPopState(event) {
+			if(forgetPop){
+				forgetPop = false;
+			} else {
+				parent.postMessage(event.target.location.href, "app://obsidian.md");
+			}
+        }
+		window.onpopstate = onPopState;
+		window.onmessage = event => {
+			if(event.data == "reload"){
+				window.document.location.reload();
+			}
+			forgetPop = true;
+		}
+
+		function fitElements(){
+			const itemsToFit = document.getElementsByClassName('fitText');
+			for (const item in itemsToFit) {
+				if (Object.hasOwnProperty.call(itemsToFit, item)) {
+					var element = itemsToFit[item];
+					fitElement(element,1, 1000);
+					element.classList.remove('fitText');
+				}
+			}
+		}
+
+		function fitElement(element, start, end){
+
+			let size = (end + start) / 2;
+			element.style.fontSize = `${size}px`;
+
+			if(Math.abs(start - end) < 1){
+				while(element.scrollHeight > element.offsetHeight){
+					size--;
+					element.style.fontSize = `${size}px`;
+				}
+				return;
+			}
+
+			if(element.scrollHeight > element.offsetHeight){
+				fitElement(element, start, size);
+			} else {
+				fitElement(element, size, end);
+			}		
+		}
+
+
+		document.onreadystatechange = () => {
+			fitElements();
+			if (document.readyState === 'complete') {
+				if (window.location.href.indexOf("?export") != -1){
+					parent.postMessage(event.target.location.href, "app://obsidian.md");
+				}
+				if (window.location.href.indexOf("print-pdf") != -1){
+					let stateCheck = setInterval(() => {
+						clearInterval(stateCheck);
+						window.print();
+					}, 250);
+				}
+			}
+	};
+
+
+        </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides"><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ **Neural Implicit Surface Evolution using Differential Equations**
+****
+Tiago Novello , Vinicius da Silva , Guilherme Schardong, Luiz Schirmer, Helio Lopes, Luiz Velho
+</div></script></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ # Introduction
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ Main work and some applications
+<split even>
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Main work
+
+</div>
+</div>
+<div class="callout-content">
+
+This Paper investigates the use of smooth neural networks for modeling dynamic variations of implicit surface under partial differential equations. Extending the representation of neural implicit sufraces to the space-time `$\mathbb{R}^{3}\times\mathbb{R}$`
+
+</div>
+</div>
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Examples
+
+</div>
+</div>
+<div class="callout-content">
+
+1. Evolving an initial condition surface towards general vector fields.
+
+2. Smoothing and sharpening using the mean curvature equation.
+
+3. Interpolations of initial conditions regularized by specifical differential equations
+
+</div>
+</div>
+</split>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ Core Idea
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Core Idea
+
+</div>
+</div>
+<div class="callout-content">
+
+`$$f: \mathbb{R}^{3}\times\mathbb{R}\rightarrow \mathbb{R}$$`
+
+Encodes the animation of an implicit surface `$S\in \mathbb{R}^{3}$`
+
+For `$t_{1},t_2\in \mathbb{R}$`, the function `$f$` representes an homotopy between the neural implicit function `$f_{t_1}:=f(\cdot,t_{1})$` and `$f_{t_2}$`.
+
+Consider the homotopy `$f$` to be an approximation of a solution of a given partial differential equation(PDE)
+
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Zero-Level set 
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Zero-level set
+
+</div>
+</div>
+<div class="callout-content">
+
+The zero-level set `$g^{-1}(0)$` of a function `$g: \mathbb{R}^3\rightarrow \mathbb{R}$` represents a regular surface if:
+
+`$\nabla g(g^{-1}(0))\neq 0$`
+
+- For any regular surface `$S\in \mathbb{R}$`, there is a function `$f:\mathbb{R}^3\rightarrow \mathbb{R}$` having `$S$` as its zero-level set<sup id="fnref:1" role="doc-noteref">1</sup>
+
+Therefore, given a sample of points on `$S$`, we want to construct the corresponding implicit function `$g$`.
+
+</div>
+</div>
+
+
+
+<div class="footnotes" role="doc-endnotes">
+<ol>
+<li id="fn:1" role="doc-endnote" class="footnote"><p>
+
+Manfredo P Do Carmo. Differential geometry of curves and surfaces: revised and updated second edition. Courier Dover Publications, 2016. Page 116
+
+</p></li></ol>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Constraints of `$g$`
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Eikonal Problem
+
+</div>
+</div>
+<div class="callout-content">
+
+`$$\begin{cases}\|\nabla g\|=1 & \text { in } \mathbb{R}^3, \\ g=0 & \text { on } S .\end{cases}$$`
+
+- `$\|\nabla g\|=1$` :  `$g$` to be a SDF
+
+- Direchilet Condition: `$g=0$` on `$S$`.
+
+Those two constraints imply the Neumann condition `$\frac{\partial g}{\partial N}=\langle\nabla g, N\rangle=1$` on `$S$`, which forces `$\nabla g$` to be aligned with the normals `$N$` of `$S$`
+
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Neural Homotopies and PDE
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Neural homotopy
+
+</div>
+</div>
+<div class="callout-content">
+
+`$f: \mathbb{R}^3\times\mathbb{R}\rightarrow \mathbb{R} $` be a smooth network representing an one-parameter family of networks `$f_t: \mathbb{R}^3\rightarrow \mathbb{R} $` defined by `$f_t(p) = f(p,t)$`.The family `$f_t$` represents homotipies between any two functions `$f_{t_0},f_{t_1}: \mathbb{R}^3\rightarrow\mathbb{R}$` with `$t_0,t_1\in \mathbb{R}$`.
+
+Thus, we say that `$f$` is a neural homotopy.
+
+</div>
+</div>
+
+The family of the zero-level sets `$S_t := f_t^{-1}(0)$` animates the initial surface `$S_0 = S$`. Observe that these surfaces can contain singularities as their topologies may change over time `$t$`.
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Connections with PDE
+
+</div>
+</div>
+<div class="callout-content">
+
+Consider a neural implicit function as a solution of the Eikonal problem, we assume that the neural homotopy `$f:\mathbb{R}^3\times\mathbb{R}$` is a solution of a PDE:
+
+`$$\mathcal{F}\left({\nabla} ^nf, \ldots, {\nabla} ^1f, f, p, t\right)=0$$`
+
+</div>
+</div>
+
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+force `$f_\theta$` to approximate the solution of a PDE problem:
+
+</div>
+</div>
+<div class="callout-content">
+
+`$$\begin{cases}\mathcal{F}\left({\nabla} ^nf_\theta, \ldots, {\nabla} ^1f_\theta, f_\theta, p, t\right)=0 & \text { in } \mathbb{R}\times(a, b) \\ f_\theta=g_i & \text { on } \mathbb{R}\times\left\{t_i\right\}\end{cases}$$`
+
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ 
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Loss Function
+
+</div>
+</div>
+<div class="callout-content">
+
+`$$\mathcal{L}(\theta)=\underbrace{\int_{\mathbb{R}\times(a, b)}|\mathcal{F}| d p d t}_{\mathcal{L}_{\mathrm{PDE}}}+\underbrace{\sum_{i=1}\int_{\mathbb{R}\times\left\{t_i\right\}}\left|f_\theta-g_i\right| d p}_{\mathcal{L}_{\text {data }}}$$`
+
+</div>
+</div>
+</div></script></section></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+
+<split even>
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Sampling space-time points
+
+</div>
+</div>
+<div class="callout-content">
+
+`$\widetilde{\mathcal{L}_{\mathrm{PDE}}}(\theta)=\frac{1}{l_1} \sum_{j=1}^{l_1}\left|\mathcal{F}\left(\nabla ^nf_\theta, \ldots, \nabla ^1f_\theta, f_\theta, p_j, t_j\right)\right|$`
+
+- Sampling minibatches of `$l_1\in \mathbb{N}$` space-time points `$(p_j,t_j)\in \mathbb{R}^3\times (a,b)$` randomly.
+
+- The Constraints `$\mathcal{L}_{PDE}$` does not need supervision since it only use the space-time points.
+
+</div>
+</div>
+
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Sampling initial conditions
+
+</div>
+</div>
+<div class="callout-content">
+
+`$\mathcal{L}_i=\underbrace{\int_{\mathbb{R}^3\times t_i}|1-| \nabla f_\theta|| d p}_{\mathcal{L}_{\text{Eikonal}}}+\underbrace{\int_{\mathbb{R}\times t_i}\left|f_\theta-g_i\right| d p}_{\mathcal{L}_{\text {Dirichlet }}}+\underbrace{\int_{S_i}\left|1-\left\langle\nabla f_\theta, N_i\right\rangle\right| d S_i}_{\mathcal{L}_{\text {Neumann }}}$`
+
+- sampling minibatches with `$l_2$` on-surface points (`$g_i=0$`) and `$l_3$` off-surface points (`$g_i\neq0$`)
+
+In practice, there are two kinds of initial conditions:
+
+1.  smooth neural network `$g_i$` approximating the SDFs of `$S_i$`
+
+2. oriented point cloud `$\{p_i,N_i\}_i$` sampled from `$S_i$`
+
+For 1, results in faster training since we can evaluate all with the network
+
+For 2, use the framework presented in<sup id="fnref:2" role="doc-noteref">1</sup>
+
+</div>
+</div>
+
+
+</split>
+
+
+
+<div class="footnotes" role="doc-endnotes">
+<ol>
+<li id="fn:2" role="doc-endnote" class="footnote"><p>
+
+Tiago Novello, Guilherme Schardong, Luiz Schirmer, Vin ́ıcius da Silva, He ́lio Lopes, and Luiz Velho. Exploring differential geometry in neural implicits. Computers & Graphics, 108, 2022.
+
+</p></li></ol>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ 
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Network Initialization
+
+</div>
+</div>
+<div class="callout-content">
+
+-  A simple initialization of `$\theta$`(parameter of `$f$`) based on `$\phi$`(parameter of `$g$`) such that `$f_\theta(p, t) = g_\phi (p)$` for all `$t$`
+
+- Details:  Sec 4.4
+
+</div>
+</div>
+</div></script></section></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ # Applications
+## Level set Method
+## The mean curvature equation
+## Interpolation between implicit surfaces
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Level Set Method
+
+Define A time-dependent vector field `$V: \mathbb{R}^3\times\mathbb{R}\rightarrow\mathbb{R}^3$`, where `$V(p,t)=\alpha'(t)$`
+`$$
+\begin{cases}\frac{\partial f}{\partial t}+\left\langle\nabla_p f, V\right\rangle=0 & \text { in } \mathbb{R}\times(a, b) \\ f=g & \text { on } \mathbb{R}\times\{t=0\}\end{cases}
+$$`
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+level set method PDE
+
+</div>
+</div>
+<div class="callout-content">
+
+Let `$g$` be the SDF of `$S$`. A function `$f:\mathbb{R}^3\times \mathbb{R}\rightarrow \mathbb{R}$` such that `$f_t^{-1}=x(S,t)$` for `$t\in R$` must satisfies:
+
+- `$f=g$` on `$\mathbb{R}^3\times\{0\}$`
+
+- `$f$` must be constant along each curve `$\alpha(t):=x(p,t)$` for `$p\in \mathbb{R}^3$`, i.e. `$f(\alpha(t),t)=c$` if and only if  `$g(p)=c$`
+
+The second condition requires each `$c$`-level set of `$f_t$` matches with `$x(g^{-1}(c),t)$`.  To compute `$f$`, we observe that for each point `$p$`, `$f(\alpha(t),t)$` is constant:
+
+`$$\frac{\partial f}{\partial t}(\alpha(t), t)+\left\langle\nabla_p f(\alpha(t), t), \alpha^{\prime}(t)\right\rangle=0$$`
+
+- The derivative `$\alpha'(t)$` is a vector field along the path `$\alpha(t)$`.
+
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+
+<div class="callout callout-color8">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-list" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Example
+
+</div>
+</div>
+<div class="callout-content">
+
+A importaint example for the level set equation is tht transport of the initial condition `$g$` towards a vector field `$V: \mathbb{R}^3\rightarrow \mathbb{R}^3$`, in that case, `$V$` does not depends on the time.
+
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ 
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+The Mean curvature equation
+
+</div>
+</div>
+<div class="callout-content">
+
+`$V(p,t) = -k(p,t)N(p,t)$`
+
+- `$N$`: normal field of the level-set
+
+- `$k=\text{div} N$`: mean curvature
+
+`$$\begin{cases}\frac{\partial f}{\partial t}-\alpha\left\|\nabla_p f\right\| \kappa_\theta=0 & \text { in } \mathbb{R}\times(a, b) \\ f=g & \text { on } \mathbb{R}\times\{t=0\}\end{cases}$$`
+
+</div>
+</div>
+
+
+
+</div>
+
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Interpolation between implicit surfaces
+
+</div>
+</div>
+<div class="callout-content">
+
+`$$V(p, t)=-\left(g_2(p)-f(p, t)\right) \frac{\nabla_p f(t, p)}{\left\|\nabla_p f(t, p)\right\|},$$`
+
+`$$\begin{cases}\frac{\partial f}{\partial t}-\left\|\nabla_p f\right\|\left(g_2-f\right)=0 & \text { in } \mathbb{R}\times \mathbb{R} \\ f=g_i & \text { on } \mathbb{R}\times\left\{t_i\right\}\end{cases}$$`
+
+</div>
+</div>
+</div></script></section></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ # Experiment
+<div class="callout callout-color8">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-list" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Evolving the level sets of Armadillo’s SDF using the vector field that represents a twist of `$\mathbb{R}^3$` along the y-axis.
+
+</div>
+</div>
+<div class="callout-content">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/cDapW7.png" alt="cDapW7" style="object-fit: scale-down">
+
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ 
+<div class="callout callout-color8">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-list" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Evolving the zero-level sets of a network according to a vector field with a source and a sink
+
+</div>
+</div>
+<div class="callout-content">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/OCMpTn.png" alt="OCMpTn" style="object-fit: scale-down">
+
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/wh0IET.png" alt="wh0IET" style="object-fit: scale-down">
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+<split even>
+
+<div class="callout callout-color8">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-list" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Mean curvature equation of cube surface
+
+</div>
+</div>
+<div class="callout-content">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/JKPegu.png" alt="JKPegu" style="object-fit: scale-down">
+
+</div>
+</div>
+
+
+<div class="callout callout-color8">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-list" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Mean curve equation of Dumbbell surface
+
+</div>
+</div>
+<div class="callout-content">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/JZtTKs.png" alt="JZtTKs" style="object-fit: scale-down">
+
+</div>
+</div>
+</split>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+
+<split even>
+<div class="callout callout-color8">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-list" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+ Using the mean curvature equation to smooth the object
+
+</div>
+</div>
+<div class="callout-content">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/2nTAdi.png" alt="2nTAdi" style="object-fit: scale-down">
+
+</div>
+</div>
+
+<div class="callout callout-color8">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-list" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Using the mean curvature equation to enhance the geometrical details
+
+</div>
+</div>
+<div class="callout-content">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/tH1Uht.png" alt="tH1Uht" style="object-fit: scale-down">
+
+</div>
+</div>
+
+
+</split>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/2vtzLx.png" alt="2vtzLx" style="object-fit: scale-down">
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/jcLZl1.png" alt="jcLZl1" style="object-fit: scale-down">
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/FWbGib.png" alt="FWbGib" style="object-fit: scale-down">
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/9InU1f.png" alt="9InU1f" style="object-fit: scale-down">
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/4Iq4J1.png" alt="4Iq4J1" style="object-fit: scale-down">
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/4ZxLEi.png" alt="4ZxLEi" style="object-fit: scale-down">
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 2000px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/3GBJ4P.png" alt="3GBJ4P" style="object-fit: scale-down">
+</div></script></section><section data-markdown><script type="text/template">
+</script></section></section></div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script src="plugin/zoom/zoom.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/math/math.js"></script>
+	<script src="plugin/mermaid/mermaid.js"></script>
+	<script src="plugin/chart/chart.min.js"></script>
+	<script src="plugin/chart/plugin.js"></script>
+	<script src="plugin/menu/menu.js"></script>
+	<script src="plugin/customcontrols/plugin.js"></script>
+	<script src="plugin/chalkboard/plugin.js"></script>
+	<script src="plugin/elapsed-time-bar/elapsed-time-bar.js"></script>
+
+    <script>
+      function extend() {
+        var target = {};
+        for (var i = 0; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      }
+
+	  function isLight(color) {
+		let hex = color.replace('#', '');
+
+		// convert #fff => #ffffff
+		if(hex.length == 3){
+			hex = `${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`;
+		}
+
+		const c_r = parseInt(hex.substr(0, 2), 16);
+		const c_g = parseInt(hex.substr(2, 2), 16);
+		const c_b = parseInt(hex.substr(4, 2), 16);
+		const brightness = ((c_r * 299) + (c_g * 587) + (c_b * 114)) / 1000;
+		return brightness > 155;
+	}
+
+	var bgColor = getComputedStyle(document.documentElement).getPropertyValue('--r-background-color').trim();
+
+	if(isLight(bgColor)){
+		document.body.classList.add('has-light-background');
+	} else {
+		document.body.classList.add('has-dark-background');
+	}
+
+      // default options to init reveal.js
+      var defaultOptions = {
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'default', // none/fade/slide/convex/concave/zoom
+        plugins: [
+          RevealMarkdown,
+          RevealHighlight,
+          RevealZoom,
+          RevealNotes,
+          RevealMath.MathJax3,
+		  RevealMermaid,
+		  RevealChart,
+		  RevealCustomControls,
+		  RevealMenu,
+		  RevealChalkboard, 
+		  ElapsedTimeBar
+        ],
+
+
+    	allottedTime: 120 * 1000,
+
+		mathjax3: {
+			mathjax: 'plugin/math/mathjax/tex-mml-chtml.js',
+		},
+		markdown: {
+		  gfm: true,
+		  mangle: true,
+		  pedantic: false,
+		  smartLists: false,
+		  smartypants: false,
+		},
+
+		customcontrols: {
+			controls: [
+				{id: 'toggle-overview',
+				title: 'Toggle overview (O)',
+				icon: '<i class="fa fa-th"></i>',
+				action: 'Reveal.toggleOverview();'
+				},
+				{ icon: '<i class="fa fa-pen-square"></i>',
+				title: 'Toggle chalkboard (B)',
+				action: 'RevealChalkboard.toggleChalkboard();'
+				},
+				{ icon: '<i class="fa fa-pen"></i>',
+				title: 'Toggle notes canvas (C)',
+				action: 'RevealChalkboard.toggleNotesCanvas();'
+				},
+			]
+		},
+		menu: {
+			loadIcons: false
+		}
+      };
+
+      // options from URL query string
+      var queryOptions = Reveal().getQueryHash() || {};
+
+      var options = extend(defaultOptions, {"width":2000,"height":700,"margin":0.04,"controls":true,"progress":true,"slideNumber":true,"center":false,"touch":true,"autoPlayMedia":true,"preloadIframes":false,"transition":"slide","transitionSpeed":"normal"}, queryOptions);
+    </script>
+
+    <script>
+      Reveal.initialize(options);
+    </script>
+  </body>
+
+  <!-- created with Advanced Slides -->
+</html>

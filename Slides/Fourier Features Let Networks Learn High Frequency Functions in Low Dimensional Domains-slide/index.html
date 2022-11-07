@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title></title>
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/league.css" id="theme" />
+    <link rel="stylesheet" href="css/mattropolis.css" />
+	<link rel="stylesheet" href="css/layout.css" />
+	<link rel="stylesheet" href="plugin/customcontrols/style.css">
+	<link rel="stylesheet" href="plugin/chalkboard/style.css">
+
+
+    <script defer src="dist/fontawesome/all.min.js"></script>
+
+	<script type="text/javascript">
+		var forgetPop = true;
+		function onPopState(event) {
+			if(forgetPop){
+				forgetPop = false;
+			} else {
+				parent.postMessage(event.target.location.href, "app://obsidian.md");
+			}
+        }
+		window.onpopstate = onPopState;
+		window.onmessage = event => {
+			if(event.data == "reload"){
+				window.document.location.reload();
+			}
+			forgetPop = true;
+		}
+
+		function fitElements(){
+			const itemsToFit = document.getElementsByClassName('fitText');
+			for (const item in itemsToFit) {
+				if (Object.hasOwnProperty.call(itemsToFit, item)) {
+					var element = itemsToFit[item];
+					fitElement(element,1, 1000);
+					element.classList.remove('fitText');
+				}
+			}
+		}
+
+		function fitElement(element, start, end){
+
+			let size = (end + start) / 2;
+			element.style.fontSize = `${size}px`;
+
+			if(Math.abs(start - end) < 1){
+				while(element.scrollHeight > element.offsetHeight){
+					size--;
+					element.style.fontSize = `${size}px`;
+				}
+				return;
+			}
+
+			if(element.scrollHeight > element.offsetHeight){
+				fitElement(element, start, size);
+			} else {
+				fitElement(element, size, end);
+			}		
+		}
+
+
+		document.onreadystatechange = () => {
+			fitElements();
+			if (document.readyState === 'complete') {
+				if (window.location.href.indexOf("?export") != -1){
+					parent.postMessage(event.target.location.href, "app://obsidian.md");
+				}
+				if (window.location.href.indexOf("print-pdf") != -1){
+					let stateCheck = setInterval(() => {
+						clearInterval(stateCheck);
+						window.print();
+					}, 250);
+				}
+			}
+	};
+
+
+        </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides"><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+**Fourier Features Let Networks Learn High Frequency Functions in Low Dimensional Domains**
+
+Matthew Tancik, Pratul P. Srinivasan, Ben Mildenhall, Sara Fridovich-Keil, Nithin Raghavan, Utkarsh Singhal, Ravi Ramamoorthi, Jonathan T. Barron, Ren Ng
+
+University of California Berkeley
+
+Google Research 
+
+University of California, San Diego
+</div></script></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ # Introduction
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Overview
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/LbHFmG.png" alt="" style="object-fit: scale-down">
+</div></script></section></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ # Background
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## **Kernel Regression**
+****
+- Training Dataset : `$(\mathbf{X}, \mathbf{y})=\left\{\left(\mathbf{x}_i, y_i\right)\right\}_{i=1}^n$`
+`$$
+\hat{f}(\mathbf{x})=\sum_{i=1}^n\left(\mathbf{K}^{-1} \mathbf{y}\right)_i k\left(\mathbf{x}_i, \mathbf{x}\right)
+$$`
+- `$K$` : `$n\times n$` kernel matrix (Gram) matrix with entries `$K_{ij} = k(\mathbf{x}_i,\mathbf{x}_j)$`
+- `$k$` : symmetric postionve semidefinite(PSD) kernel function which represents the "similarity" between two input vectors.
+
+
+	The Kernel Regression estimate at any point `$x$` can be thought of as a weighted sum of training labels `$y_i$` using the similarity between the corresponding `$x_i$` and `$x$`.
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## **Approximating Deep Networks with Kernel Regression**
+****
+
+- `$f$` :  fully-connected neural network with weight `$\theta$` initialized from Gaussian Distribution `$\mathcal{N}$`
+
+	When the width of the layers in `$f$` tends to infinity and the learning rate for SGD tends to zero
+- The function `$f(x;\theta)$` converges over the course of training to the kernel regression solution using the neural tangent kernel(NTK), defined as :
+`$$
+k_{\mathrm{NTK}}\left(\mathbf{x}_i, \mathbf{x}_j\right)=\mathbb{E}_{\theta \sim \mathcal{N}}\left\langle\frac{\partial f\left(\mathbf{x}_i ; \theta\right)}{\partial \theta}, \frac{\partial f\left(\mathbf{x}_j ; \theta\right)}{\partial \theta}\right\rangle
+$$`
+- When the inputs are restricted to a hypersphere, the NTK for an MLP can be written as a dot product kernel (a kernel in the form `$h_{\textit{NTK}}(\mathbf{x}_i^T\mathbf{x}_j)$` for a scalar function `$h_{\textit{NTK}} : \mathbb{R}\rightarrow  \mathbb{R}$`).
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## **Appriximating Deep Networks with Kernel Regression**
+****
+- Consider a network trained with 
+  - an `$L_{2}$` norm constraint;
+  - a learning rate `$\eta$`,
+  - the network's weights are initialized such that the output of the network at the initialization is close to zero
+
+  Under asymptotic conditions, the network's output for any data `$X_{\texttt{test}}$` after `$t$` training iterations can be approximated as :
+  `$$\hat{y}^{(t)}\approx \textbf{K}_{\texttt{test}}\textbf{K}^{-1}(\textbf{I}-e^{-\eta \textbf{K}t}) $$`
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## **Appriximating Deep Networks with Kernel Regression**
+****
+- Consider training error `$\hat{y}_{\texttt{train}}^{(t)}-y$`, NTK matrix `$\textbf{K}$` is PSD:
+	- `$\textbf{K} = \textbf{Q}\Lambda\textbf{Q}^T$`, `$\textbf{Q}$`: orthogonal; `$\Lambda$`: diagonal matrix whose entries are the eigenvalues `$\lambda_{i}\ge 0 $` of `$\textbf{K}$`
+
+`$$e^{-\eta \textbf{K}t} = \textbf{Q}e^{-\eta\Lambda t}\textbf{Q}^{T}$$`
+
+`$$\textbf{Q}^T(\hat{y}_{\texttt{train}}^{(t)}-y)\approx \textbf{Q}^T((I-e^{-\eta \textbf{K} t})y-y)= -e^{-\eta \Lambda t}\textbf{Q}^Ty$$`
+
+
+This Means that if we consider training convergence in the eigenbasis of the NTK, the `$i^{th}$` component of the absolute error `$\textbf{Q}^T(\hat{y}_{\texttt{train}}^{(t)}-y)$` will decay approximately exponentally at the rate `$\eta\lambda_i$`.
+
+Components of the target function that correspond to kernel eigenvectors with larger eigenvalues will be learned faster.
+
+For a conventional MLP, the eigenvalues of the NTK decay rapidly.  This results in extremely slow convergence to the high frequency components of the target function
+</div></script></section></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+# Fourier Features for a Tunable Stationary Neural Tangent Kernel
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Different with Common Machine Learning
+****
+
+Task|Machine Learning | Low-dimensional Regression
+----|------------ | ------------
+Input-dimension  | High-Dimensional  | Low-Dimensional 
+Input Sparsity|High Sparsity | Low Sparsity(Dense coordinates in a subset of `$\mathbb{R}^d$`)
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Fourier features and the composed neural tangent kernel.
+
+`$$
+\gamma(\mathbf{v})=\left[a_1 \cos \left(2 \pi \mathbf{b}_1^{\mathrm{T}} \mathbf{v}\right), a_1 \sin \left(2 \pi \mathbf{b}_1^{\mathrm{T}} \mathbf{v}\right), \ldots, a_m \cos \left(2 \pi \mathbf{b}_m^{\mathrm{T}} \mathbf{v}\right), a_m \sin \left(2 \pi \mathbf{b}_m^{\mathrm{T}} \mathbf{v}\right)\right]^{\mathrm{T}}
+$$`
+
+`$$
+\begin{gathered}
+k_\gamma\left(\mathbf{v}_1, \mathbf{v}_2\right)=\gamma\left(\mathbf{v}_1\right)^{\mathrm{T}} \gamma\left(\mathbf{v}_2\right)=\sum_{j=1}a_j\cos \left(2 \pi \mathbf{b}_j^{\mathrm{T}}\left(\mathbf{v}_1-\mathbf{v}_2\right)\right)=h_\gamma\left(\mathbf{v}_1-\mathbf{v}_2\right), \\
+\text { where } h_\gamma\left(\mathbf{v}_{\Delta}\right) \triangleq \sum_{j=1}a_j\cos \left(2 \pi \mathbf{b}_j^{\mathrm{T}} \mathbf{v}_{\Delta}\right)
+\end{gathered}
+$$`
+- After computing the Fourier features for our input points, we pass them through an MLP to get `$f(\gamma(v);\theta)$`, As discussed previously, the result of training a network can be approximated by kernel regression using the kernel `$h_{\textit{NTK}}(\mathbf{x}_i^T\mathbf{x}_j)$`, `$x_i = \gamma(v_i)$`;
+
+`$$
+h_{\mathrm{NTK}}\left(\mathbf{x}_i^{\mathrm{T}} \mathbf{x}_j\right)=h_{\mathrm{NTK}}\left(\gamma\left(\mathbf{v}_i\right)^{\mathrm{T}} \gamma\left(\mathbf{v}_j\right)\right)=h_{\mathrm{NTK}}\left(h_\gamma\left(\mathbf{v}_i-\mathbf{v}_j\right)\right)
+$$`
+Thus, training a network on these embedded input points corresponds to kernel regression with the stationary composed NTK function `$h_{\mathrm{NTK}}\circ h_\gamma$`, The MLP function approximates a convolution of the composed NTK with a weighted Dirac delta at each input training point (`$\mathbf{w}=\mathbf{K}^{-1} \mathbf{y}$`)
+`$$
+\hat{f}=\left(h_{\mathrm{NTK}} \circ h_\gamma\right) * \sum_{i=1}w_i \delta_{\mathbf{v}_i}
+$$`
+</div></script></section></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+# Manipulating the Fourier Feature Mapping
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Visualizing the composed NTK
+
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/wvqUEX.png" alt="" style="object-fit: scale-down">
+
+- `$b_j =j,a_j =1/j^p$` 
+- `$p=\infty$` denote `$\gamma(v) = [cos(2\pi v),sin(2\pi v)]$`
+</div></script></section></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+# Experiment
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Different input mappings on a variety of low-dimensional regression tasks
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/LubRMQ.png" alt="" style="object-fit: scale-down">
+</div></script></section></section></div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script src="plugin/zoom/zoom.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/math/math.js"></script>
+	<script src="plugin/mermaid/mermaid.js"></script>
+	<script src="plugin/chart/chart.min.js"></script>
+	<script src="plugin/chart/plugin.js"></script>
+	<script src="plugin/menu/menu.js"></script>
+	<script src="plugin/customcontrols/plugin.js"></script>
+	<script src="plugin/chalkboard/plugin.js"></script>
+	<script src="plugin/elapsed-time-bar/elapsed-time-bar.js"></script>
+
+    <script>
+      function extend() {
+        var target = {};
+        for (var i = 0; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      }
+
+	  function isLight(color) {
+		let hex = color.replace('#', '');
+
+		// convert #fff => #ffffff
+		if(hex.length == 3){
+			hex = `${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`;
+		}
+
+		const c_r = parseInt(hex.substr(0, 2), 16);
+		const c_g = parseInt(hex.substr(2, 2), 16);
+		const c_b = parseInt(hex.substr(4, 2), 16);
+		const brightness = ((c_r * 299) + (c_g * 587) + (c_b * 114)) / 1000;
+		return brightness > 155;
+	}
+
+	var bgColor = getComputedStyle(document.documentElement).getPropertyValue('--r-background-color').trim();
+
+	if(isLight(bgColor)){
+		document.body.classList.add('has-light-background');
+	} else {
+		document.body.classList.add('has-dark-background');
+	}
+
+      // default options to init reveal.js
+      var defaultOptions = {
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'default', // none/fade/slide/convex/concave/zoom
+        plugins: [
+          RevealMarkdown,
+          RevealHighlight,
+          RevealZoom,
+          RevealNotes,
+          RevealMath.MathJax3,
+		  RevealMermaid,
+		  RevealChart,
+		  RevealCustomControls,
+		  RevealMenu,
+		  RevealChalkboard, 
+		  ElapsedTimeBar
+        ],
+
+
+    	allottedTime: 120 * 1000,
+
+		mathjax3: {
+			mathjax: 'plugin/math/mathjax/tex-mml-chtml.js',
+		},
+		markdown: {
+		  gfm: true,
+		  mangle: true,
+		  pedantic: false,
+		  smartLists: false,
+		  smartypants: false,
+		},
+
+		customcontrols: {
+			controls: [
+				{id: 'toggle-overview',
+				title: 'Toggle overview (O)',
+				icon: '<i class="fa fa-th"></i>',
+				action: 'Reveal.toggleOverview();'
+				},
+				{ icon: '<i class="fa fa-pen-square"></i>',
+				title: 'Toggle chalkboard (B)',
+				action: 'RevealChalkboard.toggleChalkboard();'
+				},
+				{ icon: '<i class="fa fa-pen"></i>',
+				title: 'Toggle notes canvas (C)',
+				action: 'RevealChalkboard.toggleNotesCanvas();'
+				},
+			]
+		},
+		menu: {
+			loadIcons: false
+		}
+      };
+
+      // options from URL query string
+      var queryOptions = Reveal().getQueryHash() || {};
+
+      var options = extend(defaultOptions, {"width":960,"height":700,"margin":0.04,"controls":true,"progress":true,"slideNumber":true,"center":false,"autoPlayMedia":true,"preloadIframes":true,"transition":"slide","transitionSpeed":"normal"}, queryOptions);
+    </script>
+
+    <script>
+      Reveal.initialize(options);
+    </script>
+  </body>
+
+  <!-- created with Advanced Slides -->
+</html>

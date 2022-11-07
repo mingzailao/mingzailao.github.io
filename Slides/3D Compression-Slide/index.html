@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title></title>
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/league.css" id="theme" />
+    <link rel="stylesheet" href="css/mattropolis.css" />
+	<link rel="stylesheet" href="css/layout.css" />
+	<link rel="stylesheet" href="plugin/customcontrols/style.css">
+	<link rel="stylesheet" href="plugin/chalkboard/style.css">
+
+
+    <script defer src="dist/fontawesome/all.min.js"></script>
+
+	<script type="text/javascript">
+		var forgetPop = true;
+		function onPopState(event) {
+			if(forgetPop){
+				forgetPop = false;
+			} else {
+				parent.postMessage(event.target.location.href, "app://obsidian.md");
+			}
+        }
+		window.onpopstate = onPopState;
+		window.onmessage = event => {
+			if(event.data == "reload"){
+				window.document.location.reload();
+			}
+			forgetPop = true;
+		}
+
+		function fitElements(){
+			const itemsToFit = document.getElementsByClassName('fitText');
+			for (const item in itemsToFit) {
+				if (Object.hasOwnProperty.call(itemsToFit, item)) {
+					var element = itemsToFit[item];
+					fitElement(element,1, 1000);
+					element.classList.remove('fitText');
+				}
+			}
+		}
+
+		function fitElement(element, start, end){
+
+			let size = (end + start) / 2;
+			element.style.fontSize = `${size}px`;
+
+			if(Math.abs(start - end) < 1){
+				while(element.scrollHeight > element.offsetHeight){
+					size--;
+					element.style.fontSize = `${size}px`;
+				}
+				return;
+			}
+
+			if(element.scrollHeight > element.offsetHeight){
+				fitElement(element, start, size);
+			} else {
+				fitElement(element, size, end);
+			}		
+		}
+
+
+		document.onreadystatechange = () => {
+			fitElements();
+			if (document.readyState === 'complete') {
+				if (window.location.href.indexOf("?export") != -1){
+					parent.postMessage(event.target.location.href, "app://obsidian.md");
+				}
+				if (window.location.href.indexOf("print-pdf") != -1){
+					let stateCheck = setInterval(() => {
+						clearInterval(stateCheck);
+						window.print();
+					}, 250);
+				}
+			}
+	};
+
+
+        </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides"><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+**3D Compression Related Work**
+****
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+[MPEG PCC Organization](https://mpeg-pcc.org/)
+
+- Dataset
+  - [8i Voxelized Surface Light Field (8iVSLF) Dataset](https://mpeg-pcc.org/?page_id=1090) (24G)
+    - Maja Krivokuća, Philip A. Chou, and Patrick Savill, “8i Voxelized Surface Light Field (8iVSLF) Dataset,” ISO/IEC JTC1/SC29 WG11 (MPEG) input document m42914, Ljubljana, July 2018.
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+| Thumbnail                                                    | Name          | **Info**                              | **File**                                                     |
+| ------------------------------------------------------------ | ------------- | ------------------------------------- | ------------------------------------------------------------ |
+| ![img](https://mpeg-pcc.org/wp-content/uploads/2019/07/boxer-gif-1.gif) | Boxer         | Point Cloud 4096 x 4096 x 4096 voxels | [Boxer](https://mpeg-pcc.org/Downloads/8i/single frame/boxer_viewdep_vox12.zip) |
+| ![img](https://mpeg-pcc.org/wp-content/uploads/2019/07/longdress-gif.gif) | Long Dress    | Point Cloud 4096 x 4096 x 4096 voxels | [Longdress](https://mpeg-pcc.org/Downloads/8i/single frame/longdress_viewdep_vox12.zip) |
+| ![img](https://mpeg-pcc.org/wp-content/uploads/2019/07/loot-gif.gif) | Loot          | Point Cloud 4096 x 4096 x 4096 voxels | [Loot](https://mpeg-pcc.org/Downloads/8i/single frame/loot_viewdep_vox12.zip) |
+
+[Owlii Dynamic Human Textured Mesh Sequence Dataset](https://mpeg-pcc.org/?page_id=1083) (Textured) (do not take into consideration)
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Traditional MPEG Standard:
+
+  - GPCC(Geometry-based)	
+    - LPCC(dynamically acquired data)	
+    - SPCC(static point cloud data)
+
+  - VPCC(Video-based)
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<grid absolute="true" drag="100 100" drop="0 0">
+</div>
+
+ ## Papers
+- Learning convolutional transforms for lossy point cloud geometry compression
+-  Point cloud coding: Adopting a deep learning-based approach
+- Learned point cloud geometry compression
+- Deep autoencoder- based lossy geometry compression for point clouds
+	- 3d point cloud geometry compression on deep learning
+	- Lossy geometry compression of 3d point cloud data via an adaptive octree-guided network
+	- Multiscale Point Cloud Geometry Compression
+- Measure 
+	- D1 PSNR(p2point)
+	- D2 PSNR(p2plane)</script></section><section data-markdown><script type="text/template"></grid></script></section></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Data Settings in Geometry based point cloud compression 
+
+1. All Point Cloud are voxelized into a small voxel.
+2. All Voxel has it's occupancy and normals, color information.
+3. Recorvery Includes Geometry Recovery and Attribute Recovery.
+</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Geometry Recovery
+
+- PCGC-V1
+- PCGC-V2
+- SparsePCGC
+</div></script></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Learned point cloud geometry compression([PCGC-V1](https://github.com/NJUVISION/PCGCv1))
+
+<img src="https://cdn.jsdelivr.net/gh/mingzailao/Pic@master/uPic/5BjiP0.png" alt="" style="object-fit: scale-down">
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Point Cloud Geometry Compression
+
+- Conventional
+
+  - Octree (PCL Standard, Efficient for sparse point cloud compression)
+  - Trisoup : Mesh/Surface Model
+  - 3D-to-2D projection(VPCC)
+
+- Learned Image Compression
+
+  - Gated context model with embedded priors for deep image compression
+  - Variational image compression with a scale hyperprior
+  - Joint autoregressive and hierarchical priors for learned image compression
+  - End-to-end optimized image compression
+  - Deepcoder: a deep neural network based video compression
+</div></script></section></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Multiscale Point Cloud Geometry Compression (DCC2021)([PCGC-V2](https://github.com/NJUVISION/PCGCv2))
+
+Keys:
+
+- Multi- Scale
+- End-To-End
+- Progressive Re-Sampling
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+<img src="https://cdn.jsdelivr.net/gh/mingzailao/Pic@master/uPic/IAL2P1.png" alt="" style="object-fit: scale-down">
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Sparse Tensor-based Multiscale Representation for Point Cloud Geometry Compression([SparsePCGC](https://github.com/NJUVISION/SparsePCGC))
+
+
+
+<img src="https://cdn.jsdelivr.net/gh/mingzailao/Pic@master/uPic/pmoH7X.png" alt="" style="object-fit: scale-down">
+</div></script></section></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ # Conclusion:
+
+1. Neural Implicit Representation can be used after preprocessing(Voxelization,Scaling,no partition), Learn a occupy network. sampling
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Network(Origin 80M , SIREN 740K)
+
+- Input : Voxel Point cloud (x,y,z,x',y',z',r,g,b)
+- Output: sdf value
+- bpp : (`$\frac{8*(3*256+256^2+256)}{10^6*3}$`)
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ Marching-Cubes(800x800)
+
+<img src="https://cdn.jsdelivr.net/gh/mingzailao/Pic@master/uPic/longdree800.png" alt="" style="object-fit: scale-down">
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ Original PLY 
+
+<img src="https://cdn.jsdelivr.net/gh/mingzailao/Pic@master/uPic/longdress_ori.png" alt="" style="object-fit: scale-down">
+</div></script></section></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ # Implicit Related Compression
+
+- SIREN for Image
+
+  
+
+  ​	![kodim15](https://cdn.jsdelivr.net/gh/mingzailao/Pic@master/uPic/kodim15.png)
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+<img src="https://cdn.jsdelivr.net/gh/mingzailao/Pic@master/uPic/29314390837_cc42fb6e66_4k_d.jpg" alt="" style="object-fit: scale-down">
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ SIREN for Point Cloud
+  - 存储的不是点，而是对于Scene的理解。也就是重建，所以如果是点云需要 法向maybe 对噪声敏感。
+  - Compute
+    - 1000K 点云 ： 10^ 6 double x 3
+    - Model Parameter:
+      - SIREN : only Neural Network. Small
+      - Instant-ngp : Neural Network(Small) + Encoding (Big)
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+|             Compression Method              |         input Size         |       output Size        | Performance | Encoding Time |      |
+| :-----------------------------------------: | :------------------------: | :----------------------: | :---------: | :-----------: | ---- |
+|               SIREN For Image               |      598.22 KiB(png)       |      29.9k(network)      | 29.4(psnr)  |     30min     |      |
+|         Instant-ngp(#hashmap=2^12)          |        2.4Mb(tokyo)        | 219KiB(encoding+network) | 22.4(psnr)  |     <1min     |      |
+|         Instant-ngp(#hashmap=2^13)          |        2.4Mb(tokyo)        | 388KiB(encoding+network) | 23.5(psnr)  |     <1min     |      |
+|         Instant-ngp(#hashmap=2^14)          |        2.4Mb(tokyo)        | 693KiB(encoding+network) | 24.9(psnr)  |     <1min     |      |
+| SIREN For Point Cloud(shape Reconstruction) | 294 Mb(xyz+normals) or obj |     779KiB(network)      |      -      |  2min/ Epoch  |      |
+|         Instant-ngp(#hashmap=2^12)          |    3.3Mb(armadillo.obj)    | 271KiB(encoding+network) |    18.6     |     <1min     |      |
+|         Instant-ngp(#hashmap=2^13)          |    3.3Mb(armadillo.obj)    | 511KiB(encoding+network) |    20.3     |     <1min     |      |
+|         Instant-ngp(#hashmap=2^14)          |    3.3Mb(armadillo.obj)    | 975KiB(encoding+network) |    22.6     |     <1min     |      |
+|         Instant-ngp(#hashmap=2^15)          |    3.3Mb(armadillo.obj)    | 1.9Mb(encoding+network)  |    23.6     |     <1min     |      |
+|         Instant-ngp(#hashmap=2^16)          |    3.3Mb(armadillo.obj)    | 3.5Mb(encoding+network)  |    24.2     |     <1min     |      |
+|                                             |                            |                          |             |               |      |
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ Conclusion
+1. `$\#HashMap\leq 2^{11}$`,Equality unacceptable in armadillo.obj
+2. Point cloud xyz+normals usually bigger than obj (sampling more points, obj only vertex), 
+
+
+
+Summary:
+
+1. NIR for point cloud more like Scene Reconstruction, it does not save the point's location but the scene information.
+
+2. Input must include normals: for get sampling points
+3. All model compression Tech such as Quatization andd Pruning can be used.
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ Question: 
+
+1. From Network to Point Directly
+
+
+
+
+
+
+
+Volume属性压缩
+</div></script></section></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+## LVAC: Learned Volumetric Attribute Compression for Point Clouds using Coordinate Based Networks
+
+<img src="https://cdn.jsdelivr.net/gh/mingzailao/Pic@master/uPic/4yRsIw.png" alt="" style="object-fit: scale-down">
+
+1. Using Volumetric Feature embedding not vertex-based :  : Sparse in space.
+
+2. `$\theta$` : 250-10K parameters
+3. `$Z$` : 500K-8M parameters
+4. Using RAHT Tech to compress `$Z$`
+</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+### RAHT
+TODO
+</div></script></section></div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script src="plugin/zoom/zoom.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/math/math.js"></script>
+	<script src="plugin/mermaid/mermaid.js"></script>
+	<script src="plugin/chart/chart.min.js"></script>
+	<script src="plugin/chart/plugin.js"></script>
+	<script src="plugin/menu/menu.js"></script>
+	<script src="plugin/customcontrols/plugin.js"></script>
+	<script src="plugin/chalkboard/plugin.js"></script>
+	<script src="plugin/elapsed-time-bar/elapsed-time-bar.js"></script>
+
+    <script>
+      function extend() {
+        var target = {};
+        for (var i = 0; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      }
+
+	  function isLight(color) {
+		let hex = color.replace('#', '');
+
+		// convert #fff => #ffffff
+		if(hex.length == 3){
+			hex = `${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`;
+		}
+
+		const c_r = parseInt(hex.substr(0, 2), 16);
+		const c_g = parseInt(hex.substr(2, 2), 16);
+		const c_b = parseInt(hex.substr(4, 2), 16);
+		const brightness = ((c_r * 299) + (c_g * 587) + (c_b * 114)) / 1000;
+		return brightness > 155;
+	}
+
+	var bgColor = getComputedStyle(document.documentElement).getPropertyValue('--r-background-color').trim();
+
+	if(isLight(bgColor)){
+		document.body.classList.add('has-light-background');
+	} else {
+		document.body.classList.add('has-dark-background');
+	}
+
+      // default options to init reveal.js
+      var defaultOptions = {
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'default', // none/fade/slide/convex/concave/zoom
+        plugins: [
+          RevealMarkdown,
+          RevealHighlight,
+          RevealZoom,
+          RevealNotes,
+          RevealMath.MathJax3,
+		  RevealMermaid,
+		  RevealChart,
+		  RevealCustomControls,
+		  RevealMenu,
+		  RevealChalkboard, 
+		  ElapsedTimeBar
+        ],
+
+
+    	allottedTime: 120 * 1000,
+
+		mathjax3: {
+			mathjax: 'plugin/math/mathjax/tex-mml-chtml.js',
+		},
+		markdown: {
+		  gfm: true,
+		  mangle: true,
+		  pedantic: false,
+		  smartLists: false,
+		  smartypants: false,
+		},
+
+		customcontrols: {
+			controls: [
+				{id: 'toggle-overview',
+				title: 'Toggle overview (O)',
+				icon: '<i class="fa fa-th"></i>',
+				action: 'Reveal.toggleOverview();'
+				},
+				{ icon: '<i class="fa fa-pen-square"></i>',
+				title: 'Toggle chalkboard (B)',
+				action: 'RevealChalkboard.toggleChalkboard();'
+				},
+				{ icon: '<i class="fa fa-pen"></i>',
+				title: 'Toggle notes canvas (C)',
+				action: 'RevealChalkboard.toggleNotesCanvas();'
+				},
+			]
+		},
+		menu: {
+			loadIcons: false
+		}
+      };
+
+      // options from URL query string
+      var queryOptions = Reveal().getQueryHash() || {};
+
+      var options = extend(defaultOptions, {"width":960,"height":700,"margin":0.04,"controls":true,"progress":true,"slideNumber":true,"center":false,"touch":true,"autoPlayMedia":true,"preloadIframes":true,"transition":"slide","transitionSpeed":"normal"}, queryOptions);
+    </script>
+
+    <script>
+      Reveal.initialize(options);
+    </script>
+  </body>
+
+  <!-- created with Advanced Slides -->
+</html>

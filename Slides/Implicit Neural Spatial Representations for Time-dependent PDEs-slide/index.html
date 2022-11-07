@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title></title>
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/league.css" id="theme" />
+    <link rel="stylesheet" href="css/mattropolis.css" />
+	<link rel="stylesheet" href="css/layout.css" />
+	<link rel="stylesheet" href="plugin/customcontrols/style.css">
+	<link rel="stylesheet" href="plugin/chalkboard/style.css">
+
+
+    <script defer src="dist/fontawesome/all.min.js"></script>
+
+	<script type="text/javascript">
+		var forgetPop = true;
+		function onPopState(event) {
+			if(forgetPop){
+				forgetPop = false;
+			} else {
+				parent.postMessage(event.target.location.href, "app://obsidian.md");
+			}
+        }
+		window.onpopstate = onPopState;
+		window.onmessage = event => {
+			if(event.data == "reload"){
+				window.document.location.reload();
+			}
+			forgetPop = true;
+		}
+
+		function fitElements(){
+			const itemsToFit = document.getElementsByClassName('fitText');
+			for (const item in itemsToFit) {
+				if (Object.hasOwnProperty.call(itemsToFit, item)) {
+					var element = itemsToFit[item];
+					fitElement(element,1, 1000);
+					element.classList.remove('fitText');
+				}
+			}
+		}
+
+		function fitElement(element, start, end){
+
+			let size = (end + start) / 2;
+			element.style.fontSize = `${size}px`;
+
+			if(Math.abs(start - end) < 1){
+				while(element.scrollHeight > element.offsetHeight){
+					size--;
+					element.style.fontSize = `${size}px`;
+				}
+				return;
+			}
+
+			if(element.scrollHeight > element.offsetHeight){
+				fitElement(element, start, size);
+			} else {
+				fitElement(element, size, end);
+			}		
+		}
+
+
+		document.onreadystatechange = () => {
+			fitElements();
+			if (document.readyState === 'complete') {
+				if (window.location.href.indexOf("?export") != -1){
+					parent.postMessage(event.target.location.href, "app://obsidian.md");
+				}
+				if (window.location.href.indexOf("print-pdf") != -1){
+					let stateCheck = setInterval(() => {
+						clearInterval(stateCheck);
+						window.print();
+					}, 250);
+				}
+			}
+	};
+
+
+        </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides"><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+**Implicit Neural Spatial Representations for Time-dependent PDEs**
+
+[Honglin Chen](https://arxiv.org/search/cs?searchtype=author&query=Chen%2C+H), [Rundi Wu](https://arxiv.org/search/cs?searchtype=author&query=Wu%2C+R), [Eitan Grinspun](https://arxiv.org/search/cs?searchtype=author&query=Grinspun%2C+E), [Changxi Zheng](https://arxiv.org/search/cs?searchtype=author&query=Zheng%2C+C), [Peter Yichen Chen](https://arxiv.org/search/cs?searchtype=author&query=Chen%2C+P+Y)
+
+Columbia University, University of Toronto
+</div></script></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ # Introduction
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+## Spatiotemporal PDE
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Definition
+
+</div>
+</div>
+<div class="callout-content">
+
+`$$\mathcal{F}\left(\boldsymbol{f}, \boldsymbol{\nabla} \boldsymbol{f}, \boldsymbol{\nabla}\boldsymbol{f}, \ldots, \dot{\boldsymbol{f}}, \ddot{\boldsymbol{f}}, \ldots\right)=\mathbf{0}, \quad \boldsymbol{f}(\boldsymbol{x}, t): \Omega \times \mathcal{T} \rightarrow \mathbb{R}^d$$`
+
+- `$\Omega\in \mathbb{R}^m$`: spatial domain
+
+- `$\mathcal{T} \in \mathbb{R}$`: temporal domain
+
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Temporal Discretization and Finite Element Method
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+How to use Temporal Discretization to Transfer Spatiotemporal PDE to Vector Field
+
+</div>
+</div>
+<div class="callout-content">
+
+`$\{t_n\}_{n=1}^T$` where `$T$` is the number of temporal descretization samples
+
+`$\delta t = t_{n+1}-t_{n}$` is the time step size
+
+The solution of SPDE then becomes a list of spatially dependent vector field as `$\{f^n(x)\}_{n=1}^{T}$`
+
+
+
+</div>
+</div>
+
+- Traditional Approach Represent these spatially dependent vector fields using 
+	- Grids
+	- Meshes
+	- Point Clouds
+
+<div class="callout callout-color-default">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-pencil-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Grid-based Finite element method
+
+</div>
+</div>
+<div class="callout-content">
+
+Grid-based linear finite element methods define a shape function `$N^i$` on each grid node and represents the spatially dependent vecotr fields as `$f^n(x)=\sum_{i=1}^Pf_i^nN^i$`
+
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Drawbacks of traditional spatial representations
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Drawbacks
+
+</div>
+</div>
+<div class="callout-content">
+
+1. Spatial discretization errors abound in fluid simulations(also appera in solid simulation as inaccurate collision resolution) as artificial numerical diffusion
+
+2. Memory usage problem with the number of spatial samples `$P$` grows
+
+3. Adaptive meshing and data structures can reduce memory but often computationally expensive and challenging in implement.
+
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Contributions
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Contributuons
+
+</div>
+</div>
+<div class="callout-content">
+
+Using INR as an alternative spatial representation for PDE Solvers.
+
+- Unlike traditional representation that explicitly discretize the spatial vector via spatial primitives, neural spatial representations implicitly encoder the field through neural network weights
+
+- `$f^n(x) = f_{\theta_n}(x)$` with `$\theta_n$` being the network weights.
+
+- As such, the memory usage for storing the spatial field is independent of the number of spatial samples, but rather it is determined by the number of neural network weights.
+
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Contributions
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Performance
+
+</div>
+</div>
+<div class="callout-content">
+
+1. Under same memory constraint, INRs indeed achieve higher accuracies than traditional discrete representations.
+
+2. INRs are adaptive by construction, allocating the network weights to resolve field details at any spatial location without changing the network architecture
+
+</div>
+</div>
+</div></script></section></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ # Related works
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Physics Informed Neural Network (PINN)
+
+<split even >
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+PINN
+
+</div>
+</div>
+<div class="callout-content">
+
+<img src="https://pic3.zhimg.com/80/v2-c9e2b5a3f3821ca46a1a53eba06d272a_720w.webp" alt="|800" style="width: 800px; object-fit: fill">
+
+</div>
+</div>
+
+- Turbulence<sup id="fnref:4" role="doc-noteref">1</sup>
+- Elasticity<sup id="fnref:5" role="doc-noteref">2</sup>
+- Acoustics<sup id="fnref:6" role="doc-noteref">3</sup>
+- Topology optimization<sup id="fnref:7" role="doc-noteref">4</sup>
+- ...
+
+</split>
+
+
+
+
+
+
+
+<div class="footnotes" role="doc-endnotes">
+<ol>
+<li id="fn:4" role="doc-endnote" class="footnote"><p>
+
+Oliver Hennigh, Susheela Narasimhan, Mohammad Amin Nabian, Akshay Subramaniam, Kaustubh Tangsali, Zhiwei Fang, Max Rietmann, Wonmin Byeon, and Sanjay Choudhry. Nvidia simnetTM: An ai-accelerated multi-physics simulation framework. In International Conference on Computational Science, pp. 447–461. Springer, 2021.
+
+</p></li><li id="fn:5" role="doc-endnote" class="footnote"><p>
+
+Chengping Rao, Hao Sun, and Yang Liu. Physics informed deep learning for computational elasto- dynamics without labeled data. arXiv preprint arXiv:2006.08472, 2020.
+
+</p></li><li id="fn:6" role="doc-endnote" class="footnote"><p>
+
+Vincent Sitzmann, Julien Martel, Alexander Bergman, David Lindell, and Gordon Wetzstein. Im- plicit neural representations with periodic activation functions. Advances in Neural Information Processing Systems, 33, 2020.
+
+</p></li><li id="fn:7" role="doc-endnote" class="footnote"><p>
+
+Jonas Zehnder, Yue Li, Stelian Coros, and Bernhard Thomaszewski. Ntopo: Mesh-free topology optimization using implicit neural representations. Advances in Neural Information Processing Systems, 34:10368–10381, 2021.
+
+</p></li></ol>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ Connections to PINN
+- Same As PINN in core. (Mesh-Free Method).
+- Seperate Temporal and spatial
+	- When it comes to using neural networks to represent vector fields, we face an important design choice as which dimension of the vector field is represented through the network.
+		- In the case of spatiotemporal vector fields, we have the choice of representing both the spatial and temporal dimensions via neural networks;
+		- we can also represent just the spatial dimension or just the temporal dimension with a network.
+- Using `$\texttt{SIREN}$` to replace `$\texttt{MLP}$`
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Why seperate Temporal dimension?
+- the spatial variable `$x$` is oftentimes bounded, e.g., a fixed geometry with well-defined boundaries. However, the temporal variable `$t$` can be unbounded, e.g., in a virtual reality application where the user interacts with a physical environment indefinitely
+- Since our approach only replaces the spatial representations of traditional numerical solvers with neural networks while keeping the rest of the solver intact, it is compatible with any classical time integration schemes (e.g., implicit Euler).
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ # Method: Time-Stepping on Neural Spatial Representation
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Neural network as Spatial Representation
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Neural Spatial Representation
+
+</div>
+</div>
+<div class="callout-content">
+
+- Parameterize each of the time-discretized spatial vector fields with a neural network
+
+`$$f= f_{\theta_n}$$`
+
+</div>
+</div>
+<split even >
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Network Architecture
+
+</div>
+</div>
+<div class="callout-content">
+
+`$\texttt{SIREN}$` with `$\alpha$` hidden layer , each layer of width `$\beta$`.
+
+</div>
+</div>
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Spatial Gradients
+
+</div>
+</div>
+<div class="callout-content">
+
+- Traditional: Basis Functions, High-order gradients require higher-order basis functions.
+
+- Neural Spatial Representation: computation-graph-based auto-differentation with respect to the input, `$C^{\infty}$` by construction
+
+</div>
+</div>
+</split>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Temporal Evaluation
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Temporal Evaluation
+
+</div>
+</div>
+<div class="callout-content">
+
+Given previous-time spatial vector fields `$\{f^n(x)\}_{k=1}^n$`, optimization-based time integrators compute the next time-step (`$t_{n+1}$`) vector field by optimizing
+
+`$$\boldsymbol{f}^{n+1}=\underset{\boldsymbol{f}^{n+1}}{\operatorname{argmin}} \sum_{\boldsymbol{x} \in \mathcal{M} \subset \Omega} \mathcal{I}\left(\Delta t,\left\{\boldsymbol{f}^k\right\}_{k=0}^{n+1},\left\{\nabla \boldsymbol{f}^k\right\}_{k=0}^{n+1},\left\{\nabla\boldsymbol{f}^k\right\}_{k=0}^{n+1}, \ldots\right)$$`
+
+This optimization form can express explicit and implicit traditional time integrators and applies to any spatial representation defined over a finite number of spatial integration samples `$\mathcal{M} : \{x^j\in \Omega|1\le j\le |\mathcal{M}|\}$`
+
+</div>
+</div>
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Applyong to Neural Spatial Representation
+
+</div>
+</div>
+<div class="callout-content">
+
+
+
+`$$\theta^{n+1}=\underset{\theta^{n+1}}{\operatorname{argmin}} \sum_{\boldsymbol{x} \in \mathcal{M} \subset \Omega} \mathcal{I}\left(\Delta t,\left\{\boldsymbol{f}_{\theta^k}\right\}_{k=0}^{n+1},\left\{\nabla \boldsymbol{f}_{\theta^k}\right\}_{k=0}^{n+1},\left\{\nabla\boldsymbol{f}_{\theta^k}\right\}_{k=0}^{n+1}, \ldots\right)$$`
+
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Time integration example
+`$$\theta^{n+1}=\underset{\theta^{n+1}}{\operatorname{argmin}} \sum_{\boldsymbol{x} \in \mathcal{M} \subset \Omega} \mathcal{I}\left(\Delta t,\left\{\boldsymbol{f}_{\theta^k}\right\}_{k=0}^{n+1},\left\{\nabla \boldsymbol{f}_{\theta^k}\right\}_{k=0}^{n+1},\left\{\nabla\boldsymbol{f}_{\theta^k}\right\}_{k=0}^{n+1}, \ldots\right)$$`
+
+<split even >
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/0iNoR0.png" alt="" style="object-fit: scale-down">
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Neural Spatial Representation
+
+</div>
+</div>
+<div class="callout-content">
+
+- `$\{\theta^k\}_{k=0}^n$` are the fixed neural network weights from previous time steps.
+
+- The particular choice of the objective function `$\mathbf{\mathcal{I}}$` depends on the PDE of interest.
+
+- In all experiements, using Adam as the time-integration optimization problem
+
+</div>
+</div>
+</split>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Spatial Sampling
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Spatial Sampling of Explicit spatial representation and Neural Spatial Representation
+
+</div>
+</div>
+<div class="callout-content">
+
+- Explicit Spatial Representation are often tied to a particular spatial sampling; remeshing is sometimes possible, but can also have drawbacks, especially in high dimensions.
+
+- Neural Spatial Representation(Implicit Spatial Representation) allow for arbitrary spatial by construction.
+
+- Sampling Details: For every gradient descent iteration in every time step, use a stochastic sample set `$\mathcal{M}$` from the spatial domain `$\Omega$`
+
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Boundary Condition
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Boundary Condition
+
+</div>
+</div>
+<div class="callout-content">
+
+PDEs are typically accompanied by spatial (e.g., Dirichlet or Neumann) boundary conditions, which can be formulated as additional penalty terms in the objective Equation
+
+`$$\begin{aligned}\theta^{n+1}=\underset{\theta^{n+1}}{\operatorname{argmin}} & \sum_{\boldsymbol{x} \in \mathcal{M} \subset \Omega} \mathcal{I}\left(\Delta t,\left\{\boldsymbol{f}_{\theta^k}\right\}_{k=0}^{n+1},\left\{\nabla \boldsymbol{f}_{\theta^k}\right\}_{k=0}^{n+1},\left\{\nabla\boldsymbol{f}_{\theta^k}\right\}_{k=0}^{n+1}, \ldots\right) \\+\lambda & \sum_{\boldsymbol{x}\in \mathcal{M}\subset \partial \Omega} \mathcal{C}\left(\boldsymbol{f}_{\theta^{n+1}}, \nabla \boldsymbol{f}_{\theta^{n+1}}, \nabla\boldsymbol{f}_{\theta^{n+1}}, \ldots\right)\end{aligned}$$`
+
+- `$\lambda$` : weighting factor
+
+- `$\partial\Omega$`: boundary of the spatial domain
+
+- The particular choice of the boundary constraint function `$\mathbf{\mathcal{C}}$` depends on the problem of interest.
+
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Initial Condition
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Initial Condition
+
+</div>
+</div>
+<div class="callout-content">
+
+The neural network is initialized using the given initial condition, i.e., the field value at time `$t = 0$`, by optimizing
+
+`$$\theta^0=\underset{\theta^0}{\operatorname{argmin}} \sum_{\boldsymbol{x} \in \mathcal{M} \subset \Omega}\left\|\boldsymbol{f}_{\theta^0}(\boldsymbol{x})-\hat{\boldsymbol{f}}^0(\boldsymbol{x})\right\|_2^2$$`
+
+`$\hat{\boldsymbol{f}}^0$` : given initial condition.
+
+Solving this optimization problem by Adam and stochasticlly sample `$\mathcal{M}$` at each gradient descent iteration.
+
+</div>
+</div>
+</div></script></section></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ # Experiement
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Advection Equation
+<split even >
+
+<div class="callout callout-color8">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-list" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+1D Advection Equation
+
+</div>
+</div>
+<div class="callout-content">
+
+`$$\frac{\partial f}{\partial t} + (a\cdot \nabla)f=0$$`
+
+- `$a$` :advection velocuty
+
+We adopt the same time integration scheme in both the traditional representation and ours: the energy-preserving midpoint method
+
+`$$\mathcal{I} = ||\frac{u^{n+1}(x) - u^n(x)}{\Delta t} + (a\cdot \nabla)(\frac{u^{n+1}(x)+u^n(x)}{2})||$$`
+
+</div>
+</div>
+
+<div class="callout callout-color8">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-list" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+2D Advection Simulation
+
+</div>
+</div>
+<div class="callout-content">
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/GaussianUpwind2D.gif" alt="" style="object-fit: scale-down">
+
+</div>
+</div>
+</split>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Advection Equation
+
+<split even >
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Problem Setting
+
+</div>
+</div>
+<div class="callout-content">
+
+- constant `$\alpha=0.25$`
+
+- Network Architecture: `$\alpha=2,\beta=20$` for both PINN and ours
+
+- Finite Difference grid resolution `$901$`(Equal Memory)
+
+- For grid-based and ours: `$\Delta t = 0.05$`, For PINN, `$t$` is the input but need a pre-specified temporal range : `$[0,3]$`
+
+</div>
+</div>
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Results
+
+</div>
+</div>
+<div class="callout-content">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/PfoOur.png" alt="" style="object-fit: scale-down">
+
+</div>
+</div>
+</split>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Navier-Stokes Equations
+
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Navier-Stokes Equations
+
+</div>
+</div>
+<div class="callout-content">
+
+`$$\begin{aligned}\rho_f\left(\frac{\partial \boldsymbol{u}}{\partial t}+\boldsymbol{u} \cdot \nabla \boldsymbol{u}\right) &=-\nabla p+\rho_f \boldsymbol{g} \\\nabla \cdot \boldsymbol{u} &=0\end{aligned}$$`
+
+
+
+- Vector field of interst: `$\boldsymbol{u}$`
+
+- `$p$` : pressure (Represented with another MLP network in Experiment)
+
+- `$\boldsymbol{g}$`: external force (`$\boldsymbol{g} = 0$` in Experiment)
+
+- `$\rho_f$`: fluid density (`$\rho_f = 1$` in Experiement)
+
+
+
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Time Integration: Details in Paper(Chorin-style operator splitting scheme)
+
+</div>
+</div>
+<div class="callout-content">
+
+1. Advection step(Get advected velocity `$\boldsymbol{u}_{adv}$` )
+
+`$$\mathcal{I}_{a d v}=\left\|\boldsymbol{u}_{a d v}{ }^{n+1}(\boldsymbol{x})-\boldsymbol{u}^n\left(\boldsymbol{x}_{b a c k t r a c k}\right)\right\|_2^2$$`
+
+`$\boldsymbol{x}_{backtrack} = \boldsymbol{x} - \Delta t \boldsymbol{u}^n(\boldsymbol{x})$`, in traditional spatial representations compute the backtracked velocity using interpolation(e.g. linear basis function), Neural Spatial Representatioon requires no interpolation.
+
+2. Pressure projection(get pressure `$p^{n+1}$` that enforces incompressibility)
+
+`$$\mathcal{I}_{p r o}=\left\|\nabla^{2} p^{n+1}(\boldsymbol{x})-\nabla \cdot \boldsymbol{u}_{a d v}{ }^{n+1}(\boldsymbol{x})\right\|_2\text {. }$$`
+
+3. Velocity correction
+
+`$$\mathcal{I}_{\text {cor }}=\left\|\boldsymbol{u}^{n+1}-\left(\boldsymbol{u}_{a d v}^{n+1}(\boldsymbol{x})-\nabla p^{n+1}(\boldsymbol{x})\right)\right\|_2^2$$`
+
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Navier-Stokes Equations
+<split even >
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+2D Taylar-Green Vortex with zero viscosity problem setting
+
+</div>
+</div>
+<div class="callout-content">
+
+- Closed-form solution `$\boldsymbol{u}(\boldsymbol{x},t) = (\sin x\cos y,-\cos x\sin y)$` for `$\boldsymbol{x}\in [0,2\pi]\times [0,2\pi]$`
+
+- `$\alpha=3,\beta=32$` for MLP
+
+- grid resolution `$48$`(Equal Memory)
+
+- `$\Delta t = 0.005$` After 100 timesteps
+
+- `$$\hat{\boldsymbol{u}}^0(\boldsymbol{x})=\left(\frac{1}{\pi} \sin [\pi(x+1)] \cos [\pi(y+1)],-\frac{1}{\pi} \cos [\pi(x+1)] \sin [\pi[y+1]]\right)$$`
+
+</div>
+</div>
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Result
+
+</div>
+</div>
+<div class="callout-content">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/CPFgII.png" alt="" style="object-fit: scale-down">
+
+</div>
+</div>
+</split>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Navier-Stokes Equations
+<split even >
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+different initial condition
+
+</div>
+</div>
+<div class="callout-content">
+
+`$$\hat{u}^0(x)= \begin{cases}(\sin [2 \pi(x+1)] \cos [2 \pi(y+1)],-\cos [2 \pi(x+1)] \sin [2 \pi(y+1)]) & \boldsymbol{x} \in[-1,0]\\ \left(\sin \left[8 \pi\left(x-\frac{7}{4}\right)\right] \cos \left[8 \pi\left(y-\frac{7}{4}\right)\right],-\cos \left[8 \pi\left(x-\frac{7}{4}\right)\right] \sin \left[8 \pi\left(y-\frac{7}{4}\right)\right]\right) & \boldsymbol{x} \in\left[\frac{7}{4}, 1\right]\\ (0,0) & \text { otherwise. }\end{cases}$$`
+
+`$$\hat{d}^0(x)= \begin{cases}1 & \|2 x+1\| \leq 0.5 \text { or }\|8 x+7\| \leq 0.5 \\ 0 & \text { otherwise. }\end{cases}$$`
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/G3oKJT.png" alt="" style="object-fit: scale-down">
+
+Reference `$\sim 450\times$` memory compare to network
+
+</div>
+</div>
+
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Result
+
+</div>
+</div>
+<div class="callout-content">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/ZE4Dyo.png" alt="" style="object-fit: scale-down">
+
+</div>
+</div>
+</split>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Elastodynamics Equation
+<div class="callout callout-color-default">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-pencil-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Definition
+
+</div>
+</div>
+<div class="callout-content">
+
+To describe the motions of the deformable solids
+
+`$$\rho_0 \ddot{\boldsymbol{\phi}}=\nabla \cdot \boldsymbol{P}(\boldsymbol{F})+\rho_0 \boldsymbol{b}$$`
+
+- Vector fields of interest is the deformation map `$f = \phi$`
+
+- `$\rho_0$`: density in the reference space
+
+- `$\boldsymbol{P}$` : first Piola-Kirchhorff stree (consider `$\boldsymbol{P} = \frac{\partial \Psi}{\partial \boldsymbol{F}}$`, `$\Psi$` is the energy density function, `$\Psi=\frac{\lambda}{2} \operatorname{tr}^2(\Sigma(\boldsymbol{F})-\boldsymbol{I})+\mu(\operatorname{det}(\boldsymbol{F})-1)^2$`)
+
+- `$\boldsymbol{F} = \nabla \phi$` : deformation gradient
+
+- `$\dot{\boldsymbol{\phi}},\ddot{\boldsymbol{\phi}}$` : velocity and acceleration
+
+- `$\boldsymbol{b}$`: body force
+
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Time integration
+
+</div>
+</div>
+<div class="callout-content">
+
+-  apply the implicit Euler time integration scheme to the (1) tetrahedral finite element, (2) material point method, and (3) our neural representation, using the operator
+
+`$$\mathcal{I}=\underbrace{\frac{1}{2} \rho_0\left(\dot{\phi}^{n+1}-\dot{\phi}^n\right)^T\left(\dot{\phi}^{n+1}-\dot{\phi}^n\right)}_{\text {kinematic energy }}+\underbrace{\Psi\left(\phi^{n+1}\right)}_{\begin{array}{c}\text { elastic } \\ \\\text { energy }\end{array}} \underbrace{-\rho_0 \boldsymbol{b}\phi^{n+1}}_{\begin{array}{c}\text { extermal force } \\\text { potential }\end{array}}$$`
+
+- `$\dot{\phi}^{n+1}=\left(\phi^{n+1}-\phi^n\right) / \Delta t$`
+
+- `$\rho_0$` : density.
+
+- `$\boldsymbol{b}$`: external force.
+
+</div>
+</div>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Elastodynamics Equation
+<split even >
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Experiment Settings
+
+</div>
+</div>
+<div class="callout-content">
+
+PASS
+
+</div>
+</div>
+
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Results
+
+</div>
+</div>
+<div class="callout-content">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/emDh5H.png" alt="" style="object-fit: scale-down">
+
+</div>
+</div>
+
+</split>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Elastodynamics Equation
+<split even >
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Experiment Settings
+
+</div>
+</div>
+<div class="callout-content">
+
+PASS
+
+</div>
+</div>
+
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Results
+
+</div>
+</div>
+<div class="callout-content">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/D8gA2Q.png" alt="" style="object-fit: scale-down">
+
+</div>
+</div>
+
+</split>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Elastodynamics Equation
+<split even >
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Experiment Settings
+
+</div>
+</div>
+<div class="callout-content">
+
+PASS
+
+</div>
+</div>
+
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Results
+
+</div>
+</div>
+<div class="callout-content">
+
+<img src="http://fastly.jsdelivr.net/gh/mingzailao/Pic@master/uPic/gyeNF1.png" alt="" style="object-fit: scale-down">
+
+</div>
+</div>
+
+</split>
+</div></script></section></section><section ><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ # Discussion and Conclusion
+</div>
+
+ ## Benifits and Drawbacks
+<split even  >
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Benifits
+
+</div>
+</div>
+<div class="callout-content">
+
+Accuracy
+
+Reduced Memory
+
+Automatic Adaptively
+
+</div>
+</div>
+
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+Drawbacks
+
+</div>
+</div>
+<div class="callout-content">
+
+- Longer Computation time than existing methods even if there are fewer number of neural network weights than the number of grid nodes.
+
+-  For Bunny example: FEM : less than 1min, Neural Spatial Representation: 30min
+
+</div>
+</div>
+
+
+</split>
+</div></script></section><section data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 1920px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+</div>
+
+ ## Directions to solve the time problem
+<div class="callout callout-color2">
+<div class="callout-title">
+<div class="callout-icon">
+
+<i class="fas fa-fire-alt" ></i>
+
+</div>
+<div class="callout-title-inner">
+
+May help
+
+</div>
+</div>
+<div class="callout-content">
+
+- **sparse Voxel fields** : Lingjie Liu, Jiatao Gu, Kyaw Zaw Lin, Tat-Seng Chua, and Christian Theobalt. Neural sparse voxel fields. Advances in Neural Information Processing Systems, 33:15651–15663, 2020.
+
+- **Adaptive method**: Julien NP Martel, David B Lindell, Connor Z Lin, Eric R Chan, Marco Monteiro, and Gordon Wetzstein. Acorn: Adaptive coordinate networks for neural scene representation. arXiv preprint arXiv:2105.02788, 2021.
+
+- **Multi-Level**: Towaki Takikawa, Joey Litalien, Kangxue Yin, Karsten Kreis, Charles Loop, Derek Nowrouzezahrai, Alec Jacobson, Morgan McGuire, and Sanja Fidler. Neural geometric level of detail: Real-time rendering with implicit 3d shapes. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pp. 11358–11367, 2021.
+
+- **Instant-ngp**: Thomas Mu ̈ller, Alex Evans, Christoph Schied, and Alexander Keller. Instant neural graphics primitives with a multiresolution hash encoding. arXiv preprint arXiv:2201.05989, 2022.
+
+</div>
+</div>
+</div></script></section></section></div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script src="plugin/zoom/zoom.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/math/math.js"></script>
+	<script src="plugin/mermaid/mermaid.js"></script>
+	<script src="plugin/chart/chart.min.js"></script>
+	<script src="plugin/chart/plugin.js"></script>
+	<script src="plugin/menu/menu.js"></script>
+	<script src="plugin/customcontrols/plugin.js"></script>
+	<script src="plugin/chalkboard/plugin.js"></script>
+	<script src="plugin/elapsed-time-bar/elapsed-time-bar.js"></script>
+
+    <script>
+      function extend() {
+        var target = {};
+        for (var i = 0; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      }
+
+	  function isLight(color) {
+		let hex = color.replace('#', '');
+
+		// convert #fff => #ffffff
+		if(hex.length == 3){
+			hex = `${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`;
+		}
+
+		const c_r = parseInt(hex.substr(0, 2), 16);
+		const c_g = parseInt(hex.substr(2, 2), 16);
+		const c_b = parseInt(hex.substr(4, 2), 16);
+		const brightness = ((c_r * 299) + (c_g * 587) + (c_b * 114)) / 1000;
+		return brightness > 155;
+	}
+
+	var bgColor = getComputedStyle(document.documentElement).getPropertyValue('--r-background-color').trim();
+
+	if(isLight(bgColor)){
+		document.body.classList.add('has-light-background');
+	} else {
+		document.body.classList.add('has-dark-background');
+	}
+
+      // default options to init reveal.js
+      var defaultOptions = {
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'default', // none/fade/slide/convex/concave/zoom
+        plugins: [
+          RevealMarkdown,
+          RevealHighlight,
+          RevealZoom,
+          RevealNotes,
+          RevealMath.MathJax3,
+		  RevealMermaid,
+		  RevealChart,
+		  RevealCustomControls,
+		  RevealMenu,
+		  RevealChalkboard, 
+		  ElapsedTimeBar
+        ],
+
+
+    	allottedTime: 120 * 1000,
+
+		mathjax3: {
+			mathjax: 'plugin/math/mathjax/tex-mml-chtml.js',
+		},
+		markdown: {
+		  gfm: true,
+		  mangle: true,
+		  pedantic: false,
+		  smartLists: false,
+		  smartypants: false,
+		},
+
+		customcontrols: {
+			controls: [
+				{id: 'toggle-overview',
+				title: 'Toggle overview (O)',
+				icon: '<i class="fa fa-th"></i>',
+				action: 'Reveal.toggleOverview();'
+				},
+				{ icon: '<i class="fa fa-pen-square"></i>',
+				title: 'Toggle chalkboard (B)',
+				action: 'RevealChalkboard.toggleChalkboard();'
+				},
+				{ icon: '<i class="fa fa-pen"></i>',
+				title: 'Toggle notes canvas (C)',
+				action: 'RevealChalkboard.toggleNotesCanvas();'
+				},
+			]
+		},
+		menu: {
+			loadIcons: false
+		}
+      };
+
+      // options from URL query string
+      var queryOptions = Reveal().getQueryHash() || {};
+
+      var options = extend(defaultOptions, {"width":1920,"height":700,"margin":0.04,"controls":true,"progress":true,"slideNumber":true,"center":false,"touch":true,"autoPlayMedia":true,"preloadIframes":false,"transition":"slide","transitionSpeed":"normal"}, queryOptions);
+    </script>
+
+    <script>
+      Reveal.initialize(options);
+    </script>
+  </body>
+
+  <!-- created with Advanced Slides -->
+</html>

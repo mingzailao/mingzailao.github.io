@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bézier Curves</title>
+    <style>
+        body,
+        html {
+            height: 99%;
+            width: 99%;
+            display: flex;
+            flex-direction: column;
+        }
+        #header {
+            font-size: 2em;
+            display: inline-block;
+            padding-right: 2em;
+        }
+        #info{
+            font-size: 1.2em;
+            display: inline-block;
+        }
+
+        #root {
+            width: 100%;
+            height: 90vh;
+            flex-grow: 1;
+        }
+
+        #val {
+            width: 3em;
+        }
+    </style>
+    <script src="https://cdn.plot.ly/plotly-2.6.3.min.js"></script>
+</head>
+
+<body>
+    <div>
+        <div id="header">
+            Bézier Curves using De Casteljau's algorithm
+        </div>
+        <div id=info>
+            <label for="val" id='tag'>Generate a Bézier Curve of order </label>
+            <input type="number" id='val' min='2' max="50" value="3" onchange="CreateBezierCurveAnimation()">
+            <button id='btn' onclick="CreateBezierCurveAnimation()">Regenerate</button>
+        </div>
+    </div>
+    <div id="root"></div>
+    <script>
+        const root = document.getElementById('root'); // plot container
+        const inp = document.getElementById('val'); // order input
+
+        // random number generator to generate number in a range
+        const randomNumber = (minimum, maximum) => Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
+        const clone = (arr) => [...arr]; // clone an array
+        const xRange = [0, 10], yRange = [0, 10] // minimum and maximum of the plot window
+        const nSteps = 5000 // number of steps to animate
+        const timeDuration = 3 //  time duration of the animation
+        const timeDelay = 0.5 // time delay after each loop completion
+
+        var nPoints = 3, xPoints, yPoints, i = 0, curveX = [], curveY = [], myTimer;
+
+
+        // core linear interpolation function
+        function lerp(t, xList, yList) {
+            order = xList.length - 1;
+
+            var xOutList = new Array(order).fill(0);
+            var yOutList = new Array(order).fill(0);
+
+            for (let i = 0; i < order; i++) {
+                xOutList[i] = t * xList[i] + (1 - t) * xList[i + 1]
+                yOutList[i] = t * yList[i] + (1 - t) * yList[i + 1]
+            }
+            return [xOutList, yOutList];
+        }
+
+
+        // Initiate the plot
+        function initiatePlot() {
+            const layOut = {
+                showlegend: false,
+                xaxis: {
+                    zeroline: false,
+                    showline: false,
+                    showgrid: false,
+                    visible: false,
+                    fixedrange: true,
+                    // range:xRange
+                },
+                yaxis: {
+                    zeroline: false,
+                    showline: false,
+                    showgrid: false,
+                    visible: false,
+                    fixedrange: true,
+                    // range:yRange
+                }
+            }
+            const config = {
+                displayModeBar: false
+            }
+
+            var plotData = [];
+            for (let i = 0; i <= nPoints; i++) { // for nPoints there will be nPoints+1 traces
+                plotData.push({
+                    x: [],
+                    y: [],
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    opacity: 1,
+                    hoverinfo: "none",
+                    line: {
+                        width: 1
+                    }
+                })
+            }
+
+            plotData[0].x = xPoints
+            plotData[0].y = yPoints
+            plotData[0].opacity = 1
+            plotData[0].line.width = 3
+            plotData[0].line.color = 'black'
+            plotData[0].marker = {
+                size: 10,
+                symbol: 'circle-open-dot',
+                line: { width: 3 }
+            }
+            plotData[nPoints].opacity = 1
+            plotData[nPoints - 1].opacity = 1
+            plotData[nPoints].mode = 'lines'
+            plotData[nPoints].line.width = 3
+            plotData[nPoints].line.color = 'red'
+            plotData[nPoints - 1].mode = 'markers'
+            plotData[nPoints - 1].marker = { size: 13, color: "blue" }
+
+            Plotly.newPlot(root, plotData, layOut, config);
+        }
+
+
+        function plotBezier() {
+            var t = i / nSteps;
+            var toPlotX = [xPoints], toPlotY = [yPoints];
+            var x = clone(xPoints), y = clone(yPoints);
+
+            for (let j = 1; j < nPoints; j++) {
+                var [x, y] = lerp(t, x, y)
+                toPlotX.push(clone(x));
+                toPlotY.push(clone(y))
+            }
+
+            curveX.push(x[0])
+            curveY.push(y[0])
+            toPlotX.push(curveX)
+            toPlotY.push(curveY)
+
+            Plotly.restyle(root, { x: toPlotX, y: toPlotY })
+            i = i == nSteps ? 0 : i + 1
+            if (i == 0) {
+                curveX = []; curveY = [];
+                clearInterval(myTimer);
+                setTimeout(startTimer, timeDelay * 1);
+            }
+        }
+
+
+        function startTimer() {
+            myTimer = setInterval(plotBezier, timeDuration * 1 / nSteps);
+        }
+
+
+        function CreateBezierCurveAnimation() {
+            nPoints = parseInt(inp.value) + 1;// number of points, order of the bezier curve nPoints -1
+            // Initial coordinates. generate a list of random points.
+            xPoints = new Array(nPoints).fill(0).map(_ => randomNumber(...xRange))
+            yPoints = new Array(nPoints).fill(0).map(_ => randomNumber(...yRange))
+            initiatePlot();
+            i = 0, curveX = [], curveY = []
+            clearInterval(myTimer);
+            startTimer();
+        }
+        CreateBezierCurveAnimation();
+    </script>
+</body>
+</html>
